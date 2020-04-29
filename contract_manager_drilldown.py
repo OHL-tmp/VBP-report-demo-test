@@ -98,26 +98,30 @@ def dropdownmenu_select_measures():
 	return dbc.DropdownMenu(
                 [
                     dbc.DropdownMenuItem("Volume Based Measures", header=True),
-                    dbc.DropdownMenuItem("measure 1"),
-                    dbc.DropdownMenuItem("measure 2"),
-                    dbc.DropdownMenuItem("measure 3"),
+                    dbc.DropdownMenuItem("YTD Market Share %"),
+                    dbc.DropdownMenuItem("Utilizer Count"),
+                    dbc.DropdownMenuItem("Avg Script(30-day adj) per Utilizer"),
+                    dbc.DropdownMenuItem("Total Script Count (30-day-adj) by Dosage (in thousand)"),
+                    dbc.DropdownMenuItem("Total Units by Dosage (in thousand)"),
                     dbc.DropdownMenuItem(divider=True),
                     dbc.DropdownMenuItem("Value Based Measures", header=True),
-                    dbc.DropdownMenuItem("measure 1"),
-                    dbc.DropdownMenuItem("measure 2", disabled=True),
+                    dbc.DropdownMenuItem("CHF Related Average Cost per Patient", disabled=True),
+                    dbc.DropdownMenuItem("CHF Related Hospitalization Rate"),
+                    dbc.DropdownMenuItem("NT - proBNP Change %"),
+                    dbc.DropdownMenuItem("LVEF LS Mean Change %"),
                     dbc.DropdownMenuItem(divider=True),
                     html.P(
                         "Select measure to drill.",
                     style={"padding-left":"1rem", "font-size":"0.6rem"}),
                 ],
-                label="Measure 1",
+                label="CHF Related Average Cost per Patient",
                 toggle_style={"font-family":"NotoSans-SemiBold","font-size":"1.2rem","border-radius":"5rem","background-color":"#1357DD"},
             )
 
 def card_selected_measures():
 	return html.Div(
 			[
-				html.H2("Current measure : Domain 1 - Measure 1", style={"font-size":"1.5rem"})
+				html.H2("Current measure : Value Based Measures - CHF Related Average Cost per Patient", style={"font-size":"1.5rem"})
 			],
 		)
 
@@ -140,7 +144,7 @@ def col_content_drilldown(app):
                             [
                                 dbc.Col(html.Div(
                                         [
-                                            html.H2("DRILLDOWN GRAPH VIEW", style={"font-size":"3rem"}),
+                                            html.H2("Performance Drilldown", style={"font-size":"3rem"}),
                                             html.H3("check table view for more details...", style={"font-size":"1rem"}),
                                         ],
                                         style={"padding-left":"2rem"}
@@ -174,7 +178,7 @@ def card_overview_drilldown(percentage):
 			[
 				dbc.Row(
                         [
-                            dbc.Col(html.H1("Average Episode Cost", style={"font-size":"1.6rem"}), width="auto"),
+                            dbc.Col(html.H1("CHF Related Average Cost per Patient", style={"font-size":"1.6rem"}), width="auto"),
                             dbc.Card(
                                 dbc.CardBody(
                                     [
@@ -206,7 +210,7 @@ def card_overview_drilldown(percentage):
                             [
                                 html.Div(
                                     [
-                                        html.H3("Target Adj Details", style={"font-size":"1rem","margin-top":"-1.8rem","color":"#919191","background-color":"#f5f5f5","width":"9rem","padding-left":"1rem","padding-right":"1rem","text-align":"center"}),
+                                        html.H3("Risk Adjustment Details", style={"font-size":"0.8rem","margin-top":"-1.8rem","color":"#919191","background-color":"#f5f5f5","width":"9rem","padding-left":"1rem","padding-right":"1rem","text-align":"center"}),
                                         html.Div([dcc.Graph(figure=drill_waterfall(df_drill_waterfall),style={"height":"24rem","padding-bottom":"1rem"},config={'modeBarButtonsToRemove': button_to_rm,'displaylogo': False,})]),
                                     ],
                                     style={"border-radius":"0.5rem","border":"2px solid #d2d2d2","padding":"1rem","height":"25.5rem"}
@@ -228,15 +232,21 @@ def card_key_driver_drilldown(app):
                         dbc.Row(
                             [
                                 dbc.Col(html.Img(src=app.get_asset_url("bullet-round-blue.png"), width="10px"), width="auto", align="start", style={"margin-top":"-4px"}),
-		                        dbc.Col(html.H4("Key Drivers", style={"font-size":"1rem", "margin-left":"10px"})),
-                                dbc.Col([dbc.Button("See All Drivers", id = 'button-all-driver'),
+		                        dbc.Col(html.H4("Key Drivers", style={"font-size":"1rem", "margin-left":"10px"}), width=8),
+                                dbc.Col([dbc.Button("See All Drivers", id = 'button-all-driver',
+                                                        style={"background-color":"#38160f", "border":"none", "border-radius":"10rem", "font-family":"NotoSans-Regular", "font-size":"0.6rem"},
+                                                    ),
                                         dbc.Modal([
                                                 dbc.ModalHeader("All Drivers"),
-                                                dbc.ModalBody(children = [table_driver_all(df_driver_all)]),
+                                                dbc.ModalBody(children = html.Div([table_driver_all(df_driver_all)], style={"padding":"1rem"})),
                                                 dbc.ModalFooter(
-                                                        dbc.Button("Close", id = 'close-all-driver')
+                                                        dbc.Button("Close", id = 'close-all-driver',
+                                                                        style={"background-color":"#38160f", "border":"none", "border-radius":"10rem", "font-family":"NotoSans-Regular", "font-size":"0.8rem"},
+                                                                    )
                                                         )
-                                                ], id = 'modal-all-driver')]),
+                                                ], id = 'modal-all-driver', size="lg")],
+                                        width=3,
+                                        ),
                             ],
                             no_gutters=True,
                         ),
@@ -291,10 +301,10 @@ def card_confounding_factors(app):
                         
                         dbc.Row(
                             [
-                                dbc.Col(element_confounding_factors(0.05, "New technology"), width=3),
-                                dbc.Col(element_confounding_factors(-0.02, "Benefit Change"), width=3),
-                                dbc.Col(element_confounding_factors(-0.03, "Contracting Change"), width=3),
-                                dbc.Col(element_confounding_factors(0.05, "Outlier Impact"), width=3),
+                                dbc.Col(element_confounding_factors(-0.002, "Change in Covered Services"), width=3),
+                                dbc.Col(element_confounding_factors(0.003, "Benefit Change"), width=3),
+                                dbc.Col(element_confounding_factors(-0.002, "Provider Contracting Change"), width=3),
+                                dbc.Col(element_confounding_factors(-0.002, "Outlier Impact"), width=3),
                             ],
                         ),
                     ]

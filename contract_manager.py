@@ -134,10 +134,10 @@ def div_year_to_date_metrics(app):
     return html.Div(
                 [
                     html.H2("Year to Date Metrics", style={"padding-top":"2rem", "font-weight":"lighter", "font-size":"1rem"}),
-                    card_year_to_date_metrics("Total Patients", "464"),
-                    card_year_to_date_metrics("Total Gross Scripts", "1,088"),
-                    card_year_to_date_metrics("Total Scripts(30-day adjusted)", "1,457"),
-                    card_year_to_date_metrics("Total Units(Tablets)", "87,426"),
+                    card_year_to_date_metrics("Entresto Utilization", "810"),
+                    card_year_to_date_metrics("Total Gross Scripts", "1,902"),
+                    card_year_to_date_metrics("Total Scripts(30-day adjusted)", "3,402"),
+                    card_year_to_date_metrics("Total Units(Tablets)", "204,120"),
                 ],
                 className="mb-3",
                 style={"text-align":"center"},
@@ -169,8 +169,8 @@ def div_overall_performance(app):
                             dbc.Card(
                                 dbc.CardBody(
                                     [
-                                        html.H3("Total Scripts (30-day adjusted)", style={"font-size":"0.5rem", "color":"#fff"}),
-                                        html.H2("$ 12,261,985", style={"font-size":"1.5rem", "margin-top":"-5px", "color":"#fff"}),
+                                        html.H3("YTD Revenue (Net of Rebate)", style={"font-size":"0.5rem", "color":"#fff"}),
+                                        html.H2("$ 1,288,299", style={"font-size":"1.5rem", "margin-top":"-5px", "color":"#fff"}),
                                     ],
                                     style={"margin-top":"-16px"}
                                 ),
@@ -209,12 +209,12 @@ def card_main_volumn_based_measures(app):
                                         html.Div(
                                             [
                                                 dbc.Checklist(
-                                                    options = [{'label':"Market Share" , 'value':"Market Share" },
+                                                    options = [{'label':"YTD Market Share %" , 'value':"YTD Market Share %" },
                                                               {'label':"Utilizer Count" , 'value':"Utilizer Count" },
                                                               {'label':"Avg Script (30-day adj) per Utilizer" , 'value':"Avg Script (30-day adj) per Utilizer" },
                                                               {'label':"Total Script Count (30-day adj) by Dosage (in thousand)" , 'value':"Total Script Count (30-day adj) by Dosage (in thousand)" },
-                                                              {'label':"Total Units by Dosage (Mn)", 'value': "Total Units by Dosage (Mn)"},],
-                                                    value = ["Market Share","Utilizer Count","Avg Script (30-day adj) per Utilizer"],
+                                                              {'label':"Total Units by Dosage (in thousand)", 'value': "Total Units by Dosage (in thousand)"},],
+                                                    value = ["YTD Market Share %","Utilizer Count","Avg Script (30-day adj) per Utilizer"],
                                                     labelCheckedStyle={"color": "#057aff"},
                                                     id = "checklist-add-measure",
                                                     style={"font-family":"NotoSans-Condensed", "font-size":"0.8rem", "padding":"1rem"},
@@ -247,11 +247,11 @@ def card_main_volumn_based_measures(app):
                         ),
                         html.Div(
                             [
-                                card_sub1_volumn_based_measures(app,"Market Share",piechart_utilizer1,'fig',0.85),
+                                card_sub1_volumn_based_measures(app,"YTD Market Share %",piechart_utilizer1,'fig',0.85),
                                 card_sub1_volumn_based_measures(app,"Utilizer Count",tbl_utilizer1,'dash',0.6),
                                 card_sub1_volumn_based_measures(app,"Avg Script (30-day adj) per Utilizer",bargraph_script_per_util,'fig',0.6),
                                 card_sub2_volumn_based_measures(app,"Total Script Count (30-day adj) by Dosage (in thousand)",bargraph_tot_script,bargraph_tot_script_split,'fig','fig',1,1),
-                                card_sub2_volumn_based_measures(app,"Total Units by Dosage (Mn)",bargraph_tot_unit,bargraph_tot_unit_split,'fig','fig',1,1),
+                                card_sub2_volumn_based_measures(app,"Total Units by Dosage (in thousand)",bargraph_tot_unit,bargraph_tot_unit_split,'fig','fig',1,1),
                             ],
                             className="mb-3",
                         ),
@@ -566,35 +566,6 @@ def add_close_measure_card( ad, v, h1, h2, h3, h4, h5):
         return states["Market Share"], states["Utilizer Count"], states["Avg Script (30-day adj) per Utilizer"],states["Total Script Count (30-day adj) by Dosage (in thousand)"],states["Total Units by Dosage (Mn)"]
     return h1, h2, h3, h4, h5
 
-
-# generate selected domain button
-
-'''def generate_card_domain_button(color):
-    if color == "primary":
-        return False
-    return True
-
-for i in range(domain_ct):
-    app.callback(
-        Output(f"buttonGroup-domain-selected-{i+1}", "hidden"),
-        [Input(f"dashboard-card-domain-selection-{i+1}", "color")]
-    )(generate_card_domain_button)'''
-    
-
-
-'''@app.callback(
-    [Output("contract_monitor_card", "hidden"),
-    Output("additional_monitor_card", "hidden"),
-    Output("switch-contract-additional-view","children")],
-    [Input("switch-contract-additional-view","n_clicks")]
-)
-def switch_monitor_view(n):    
-    if n and n%2 == 1:
-        return True, False, "Switch to Contract Monitor" 
-        
-    return False, True, "Switch to Additional Watchlist"
-    '''
-        
 
     
 

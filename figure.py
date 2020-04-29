@@ -971,7 +971,9 @@ def drillgraph_lv1(df,tableid,dim):
                 [
                     dbc.Col(
                         [
-                            html.Div(html.H2("YTD Cost per Episode",style={"font-size":"1rem","display":"table-cell", "vertical-align":"middle"}), style={"height":"5.5rem","display":"table"}),
+                            html.Div(html.H2(""), style={"height":"2rem","display":"table"}),
+                            html.Hr(className="ml-1"),
+                            html.Div(html.H2("YTD CHF Related Average Cost per Patient",style={"font-size":"0.8rem","display":"table-cell", "vertical-align":"bottom"}), style={"height":"1rem","display":"table"}),
                             html.Hr(className="ml-1"),
                             html.Div(html.H2("% Diff from Target", style={"font-size":"1rem","display":"table-cell", "vertical-align":"middle"}), style={"height":"7.5rem","display":"table"}),
                             html.Hr(className="ml-1"),
@@ -987,7 +989,7 @@ def drillgraph_lv1(df,tableid,dim):
                                 [
                                     drillgraph_table(df_table,tableid,dim)
                                 ],
-                                style={"padding-left":"3.6rem","padding-right":"7.4rem"}
+                                style={"padding-left":"3.6rem","padding-right":"6.5rem"}
                             ),
                             html.Div(
                                 [

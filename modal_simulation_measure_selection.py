@@ -22,12 +22,12 @@ from dash.dependencies import Input, Output, State
 
 
 
-df_recom_measure = pd.read_csv("data/recom_measure.csv")
+#df_recom_measure = pd.read_csv("data/recom_measure.csv")
 
 Domain_options ={
 "optimizer-checklist-domain-measures-lv1-1" : {
     "Average Cost per Patient" : ["All Causes Average Cost per Patient", "CHF Related Average Cost per Patient"],
-    "Average IP Cost per Patient" : ["All Causes Average IP Cost per Patient", "CHF Related Average IP Cost per Patient"  ],
+    "Average IP Cost per Patient" : ["All Causes Average IP Cost per Patient", "CHF Related Average IP Cost per Patient"],
     "Hospitalization Rate" : ["All Causes Hospitalization Rate", "CHF Related Hospitalization Rate"],
     "ER Rate" : ["All Causes ER Rate", "CHF Related ER Rate"  ],
     "Readmission Rate" : [],
@@ -69,7 +69,8 @@ Domain_options ={
     "Patient Satisfaction" : []
 }}
 
-default_measure = list(df_recom_measure["Measure"])
+#default_measure = list(df_recom_measure["Measure"])
+default_measure = ["CHF Related Average Cost per Patient", "CHF Related Hospitalization Rate", "LVEF LS Mean Change %"]
 
 domain_focus = list(Domain_options.keys())
 
@@ -89,6 +90,8 @@ dollar_input = ["All Causes Average Cost per Patient", "CHF Related Average Cost
 percent_input = ["All Causes Hospitalization Rate", "CHF Related Hospitalization Rate", "All Causes ER Rate", "CHF Related ER Rate",
 "NT-proBNP Change %", "LVEF LS Mean Change %",
 "CV Mortality Rate", "Rate of CHF Progression for 24 months", "Emergent care rate for medication side effect", "Hospitalization rate for medication side effect"]
+
+undisabled_list = ["CHF Related Average Cost per Patient", "CHF Related Hospitalization Rate", "NT-proBNP Change %", "LVEF LS Mean Change %"]
 
 
 domain_ct = len(domain_set)
@@ -133,7 +136,7 @@ def modal_optimizer_domain_selection(n):
                                                                     ]
                                                                 )
                                                             ],
-                                                            style={"box-shadow":"0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05)", "background-color":"none", "border":"#919191", "border-radius":"0.5rem","width":"20rem"}
+                                                            style={"box-shadow":"0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05)", "background-color":"#fff", "border":"#919191", "border-radius":"0.5rem","width":"20rem"}
                                               
                                                         )
                                                     )
@@ -145,7 +148,7 @@ def modal_optimizer_domain_selection(n):
                                     ]
                                 )
                             ],
-                            style={"background-image":"url('./assets/domain_selection_bg_s.png')","backgroud-size":"auto"}
+                            style={"background-image":"url('assets/domain_selection_bg_s.png')","backgroud-size":"auto"}
                             ),
                             dbc.ModalBody(
                                 card_domain_selection(n)
@@ -185,9 +188,9 @@ def card_domain_selection(n):
                     ),
                 ],
                 outline=True,
-                id=u"optimizer-collapse-card-domain-selection-{}".format(i+1),
+                id=u"optimizer-card-domain-selection-{}".format(i+1),
                 className="mb-3",
-                style={"border-radius":"0.5rem"}
+                style={"border-radius":"0.5rem","border":"1px solid #f5f5f5"}
             )], hidden = hidden_status)
         domain_card.append(card)
     return html.Div(domain_card)
@@ -270,7 +273,7 @@ def checklist_domain_measures_lv1(d):
                     dbc.Collapse(
                            dbc.FormGroup([
                                dbc.Checklist(
-                                   options = [{"label" : k, "value": k} for k in measures_lv1[key[i]]],
+                                   options = [{"label" : k, "value": k, 'disabled' : False} if k in undisabled_list else {"label" : k, "value": k, 'disabled' : True} for k in measures_lv1[key[i]]],
                                    value=default,
                                    id=u"optimizer-checklist-domain-measures-lv2-{}-{}".format(d+1,i+1),
                                    inline=True,
