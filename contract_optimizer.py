@@ -629,7 +629,7 @@ def card_overall_likelihood_to_achieve(app):
                                 dbc.Col(html.Img(src=app.get_asset_url("bullet-round-blue.png"), width="10px"), width="auto", align="start", style={"margin-top":"-4px"}),
                                 dbc.Col(html.H4("Overall likelihood to achieve", style={"font-size":"1rem", "margin-left":"10px"}), width=8),
                                 dbc.Col(html.Div(id = 'overall-like-recom'), width=1),
-								dbc.Col(html.Div(id = 'overall-like-user', style = {'background-color' : '#ffffff'}), width=1),
+								dbc.Col(html.Div(id = 'overall-like-user'), width=1),
 								dbc.Col(html.Div(""), width=2),
                             ],
                             no_gutters=True,
@@ -789,9 +789,8 @@ def card_vbc_contract(app):
                                             dcc.Dropdown(
                                                 options = [
                                                                 {'label':'Rebate adjustment', 'value':'Rebate adjustment'},
-                                                                {'label':'Shared savings/loses', 'value':'Shared savings/loses'},
-                                                                {'label':'Money back', 'value':'Money back'},
-                                                                {'label':'Formulary upgrade', 'value':'Formulary upgrade'}
+                                                                {'label':'Shared savings/losses', 'value':'Shared savings/losses'},
+                                                                {'label':'Outcome guarantee', 'value':'Outcome guarantee'}
                                                             ],
                                                 value = 'Rebate adjustment',
                                                 style={"font-family":"NotoSans-Regular","font-size":"0.8rem","width":"11rem"}
