@@ -32,7 +32,7 @@ def modal_simulation_input():
 
 def input_session():
 	return dbc.ListGroup([
-		dbc.ListGroupItem([html.H4("CLient Input Assumptions")]),
+		dbc.ListGroupItem([html.H4("Client Input Assumptions")]),
 		dbc.ListGroupItem([
 			dbc.ListGroupItemHeading("Plan Information", style={"font-family":"NotoSans-SemiBold","font-size":"1.2rem"}),
 			dbc.ListGroupItemText([
@@ -239,7 +239,7 @@ def input_session():
 					], style={"padding-top":"1rem"}),
 				dbc.Row([
 					dbc.Col("Average Entresto Script PPPY (Per Patient Per Year)", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
-					dbc.Col(dbc.Input(value = "6.9%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
+					dbc.Col(dbc.Input(value = "6.9", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
 					], style={"padding-top":"1rem"}),
 				dbc.Row([
 					dbc.Col("Average Units/ Script", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),

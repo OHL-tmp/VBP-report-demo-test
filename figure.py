@@ -816,7 +816,7 @@ def drill_bubble(df):
         len=0.5,
        tickmode='array',
        tickvals=[-valmax+0.05,valmax-0.05],
-       ticktext=['Low risk','High risk'],
+       ticktext=['Better','Worse'],
        thickness=5,
        x=1,y=0.78
     )
@@ -824,7 +824,7 @@ def drill_bubble(df):
         len=0.5,
        tickmode='array',
        tickvals=[-valmax+0.05,valmax-0.05],
-       ticktext=['Low risk','High risk'],
+       ticktext=['Better','Worse'],
        thickness=5,
        x=1,y=0.22
     )
@@ -1027,13 +1027,13 @@ def dashtable_lv3(df,dimension,tableid,row_select):#row_select: numeric 0 or 1
         id=tableid,
         columns=[
         {"name": ["", dimension], "id": dimension},
-        {"name": ["Average CHF Related Cost", "YTD Avg Cost"], "id": "YTD Avg Episode Cost",'type': 'numeric',"format":FormatTemplate.money(0)},
-        {"name": ["Average CHF Related Cost", "% Diff from Benchmark"], "id": "% Cost Diff from Target",'type': 'numeric',"format":FormatTemplate.percentage(1)},
-        {"name": ["Average CHF Related Cost", "Contribution to Overall Performance Difference"], "id": "Contribution to Overall Performance Difference",'type': 'numeric',"format":FormatTemplate.percentage(1)},
-        {"name": ["Utilization Rate", "YTD Avg Utilization Rate"], "id": "YTD Avg Utilization Rate",'type': 'numeric',"format":Format( precision=1, scheme=Scheme.fixed,),},
-        {"name": ["Utilization Rate", "% Diff from Benchmark"], "id": "% Util Diff from Target",'type': 'numeric',"format":FormatTemplate.percentage(1)},
-        {"name": ["Unit Cost", "YTD Avg Cost per Unit"], "id": "YTD Avg Cost per Unit",'type': 'numeric',"format":FormatTemplate.money(0)},
-        {"name": ["Unit Cost", "% Diff from Benchmark"], "id": "% Unit Cost Diff from Target",'type': 'numeric',"format":FormatTemplate.percentage(1)},
+        {"name": ["Average CHF Related Cost Per Patient", "YTD Avg Cost"], "id": "YTD Avg Episode Cost",'type': 'numeric',"format":FormatTemplate.money(0)},
+        {"name": ["Average CHF Related Cost Per Patient", "% Diff from Benchmark"], "id": "% Cost Diff from Target",'type': 'numeric',"format":FormatTemplate.percentage(1)},
+        {"name": ["Average CHF Related Cost Per Patient", "Contribution to Overall Performance Difference"], "id": "Contribution to Overall Performance Difference",'type': 'numeric',"format":FormatTemplate.percentage(1)},
+        {"name": ["Average Utilization Rate Per Patient", "YTD Avg Utilization Rate"], "id": "YTD Avg Utilization Rate",'type': 'numeric',"format":Format( precision=1, scheme=Scheme.fixed,),},
+        {"name": ["Average Utilization Rate Per Patient", "% Diff from Benchmark"], "id": "% Util Diff from Target",'type': 'numeric',"format":FormatTemplate.percentage(1)},
+        {"name": ["Average Unit Cost", "YTD Avg Cost Unit Cost"], "id": "YTD Avg Cost per Unit",'type': 'numeric',"format":FormatTemplate.money(0)},
+        {"name": ["Average Unit Cost", "% Diff from Benchmark"], "id": "% Unit Cost Diff from Target",'type': 'numeric',"format":FormatTemplate.percentage(1)},
     ],
         merge_duplicate_headers=True,
         sort_action="custom",
@@ -1536,8 +1536,8 @@ def table_sim_result(df):
         {"name": ["","Best Estimate(Mn)"], "id": "Best Estimate",'type': 'numeric',"format":Format( precision=1, scheme=Scheme.fixed,),},
         {"name": [ "Full Range","Low(Mn)"], "id": "Worst",'type': 'numeric',"format":Format( precision=1, scheme=Scheme.fixed,),},
         {"name": [ "Full Range","High(Mn)"], "id": "Best",'type': 'numeric',"format":Format( precision=1, scheme=Scheme.fixed,),},
-        {"name": [ "Likely Range(90% Probability)","Low(Mn)"], "id": "Lower End",'type': 'numeric',"format":Format( precision=1, scheme=Scheme.fixed,),},
-        {"name": [ "Likely Range(90% Probability)","High(Mn)"], "id": "Higher End",'type': 'numeric',"format":Format( precision=1, scheme=Scheme.fixed,),},
+        {"name": [ "Most Likely Range","Low(Mn)"], "id": "Lower End",'type': 'numeric',"format":Format( precision=1, scheme=Scheme.fixed,),},
+        {"name": [ "Most Likely Range","High(Mn)"], "id": "Higher End",'type': 'numeric',"format":Format( precision=1, scheme=Scheme.fixed,),},
         ],  
         merge_duplicate_headers=True,
         style_data={
