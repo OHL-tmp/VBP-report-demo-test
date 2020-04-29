@@ -391,7 +391,7 @@ def card_additonal_monitor_measures(app):
                         dbc.Row(
                                 [
                                     dbc.Col(html.Img(src=app.get_asset_url("bullet-round-blue.png"), width="10px"), width="auto", align="start", style={"margin-top":"-4px"}),
-                                    dbc.Col(html.H4("Title", style={"font-size":"1rem", "margin-left":"10px"})),
+                                    dbc.Col(html.H4("Additional Measures", style={"font-size":"1rem", "margin-left":"10px"})),
                                     dbc.Col(modal_dashboard_domain_selection(domain_ct), style={"text-align":"end"}, width=3),
                                 ],
                                 no_gutters=True,
@@ -401,7 +401,7 @@ def card_additonal_monitor_measures(app):
                             [
                                 html.Div(
                                     [
-                                        html.Div(id = "table_measure_watchlist"),
+                                        html.Div(id = "table_measure_watchlist", style={"width":"100%"}),
                                     ],
                                     style={"padding-left":"0.5rem","padding-right":"0.5rem"}
                                 )

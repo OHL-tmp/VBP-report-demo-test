@@ -142,7 +142,7 @@ def modal_dashboard_domain_selection(n):
                                     ]
                                 )
                             ],
-                            style={"background-image":"url('domain_selection_bg_s.png')","backgroud-size":"auto","border":"none"}
+                            style={"background-color":"#bfd4ff","background-image":"url('domain_selection_bg_s.png')","backgroud-size":"auto","border":"none"}
                             ),
                             dbc.ModalBody(
                                 card_domain_selection(n)

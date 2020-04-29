@@ -30,7 +30,7 @@ def launch_layout():
                     ),
                     html.Div(
                         [
-                            html.P("version: beta 0.1.131             © 2020 OneHealthLink. ")
+                            html.P("© 2020 Sinolation. ")
                         ],
                         style={"text-align":"center", "font-size":"0.6rem"}
                     ),
@@ -85,5 +85,5 @@ def display_page(pathname):
      
 
 if __name__ == "__main__":
-    app.run_server(host="127.0.0.1", port = 8050)
+    app.run_server(host="0.0.0.0", port = 8099)
                         

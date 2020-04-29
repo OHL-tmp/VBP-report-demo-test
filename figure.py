@@ -791,7 +791,7 @@ def tbl_non_contract(df,measures):
         style_header={
             'height': 'auto',
             'whiteSpace': 'normal',
-            'maxWidth': '2rem',
+            'maxWidth': '6rem',
             'backgroundColor': table_header_bg_color,
             'fontWeight': 'bold',
             'font-family':'NotoSans-Condensed',
