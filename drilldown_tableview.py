@@ -28,22 +28,22 @@ server = app.server'''
 #df_drilldown['Diff % from Target Unit Cost'] = df_drilldown.apply(lambda x: format( x['Annualized Unit Cost'] - x['Target Unit Cost']/x['Target Unit Cost'], '.2%'), axis = 1)
 
 dimension = {'Age Band' : ['<65', '65-74', '75-85', '>=85'], 'Gender' : ['F', 'M'], 
-'Comorbidity Type' : ['Coronary heart disease ', 'Chronic pulmonary disease', 'Renal disease', 'Atrial fibrillation', 'Cerebrovascular disease', 'Diabetes'], 
-'Risk Score Band' : ['Low', 'Mid', 'High'], 'NYHA Class' : ['I', 'II', 'III', 'IV'], 
+'Patient Health Risk Level' : ['Low', 'Mid', 'High'], 'NYHA Class' : ['I', 'II', 'III', 'IV'], 
        'Medication Adherence' : ['Compliant', 'Non-compliant'], 'Managing Physician (Group)': ['Group A', 'Group B', 'Group C', 'Group D'], 
-       'Weight Band' : [], 'Comorbidity Score' : [], 'Ejection Fraction' : [], 'Years Since HF Diagnosis' : [], 'Prior Use of ACE/ARB' : []}
+       'Weight Band' : [], 'Comorbidity Type' : [], 'Comorbidity Score' : [], 'Ejection Fraction' : [], 'Years Since HF Diagnosis' : [], 'Prior Use of ACE/ARB' : []}
 measure = ['YTD Utilization', 'Annualized Utilization', 'Benchmark Utilization', 'Diff % from Benchmark Utilization',
 		'YTD Total Cost', 'Annualized Total Cost', 'Benchmark Total Cost', 'Diff % from Benchmark Total Cost',
 		'YTD Unit Cost', 'Annualized Unit Cost', 'Benchmark Unit Cost', 'Diff % from Benchmark Unit Cost']
-measure_ori = ['YTD Utilization', 'Annualized Utilization', 'Target Utilization',
-		'YTD Total Cost', 'Annualized Total Cost', 'Target Total Cost']
+measure_ori = ['YTD Utilization',
+       'Annualized Utilization', 'Benchmark Utilization', 'YTD Total Cost',
+       'Annualized Total Cost', 'Benchmark Total Cost']
 filter_list = {
-       'IP' : ['Acute myocardial infarction', 'CABG', 'Cardiac Arrhythmia', 'Cardiac arrest and ventricular fibrillation', 'Heart Failure', 'Hypertension', 'ICD', 'Others', 'PCI', 'Pacemaker Implant', 'Pleural effusion', 'Renal Failure'],
- 		'OP ER' : ['AMI', 'Aftercare following surgery', 'COPD', 'Cardiac dysrhythmias', 'Diabetes', 'Heart Failure', 'Hypertension', 'Others', 'Respiratory system and chest symptoms'], 
- 		'OP Others' : ['Ambulance', 'Durable Medical Equipment (DME)', 'Lab/Pathology', 'Observation', 'Others', 'Outpatient Surgery', 'Radiology'], 
- 		'PH' : [ 'Administered Drugs', 'Anesthesia', 'Lab/Pathology', 'Office Visits', 'Other Services', 'Radiology', 'Surgical'], 
- 		'Drug Others' : ['ACE /ARB', 'Aldosterone receptor antagonists', 'Beta Blocker', 'Diuretics', 'Other Rx', 'Vasodilators'], 
- 		'Drug Entresto': ['Entresto'], 'Home Health' : ['Home Health'], 'SNF' : ['SNF'], 'Hospice' : ['Hospice']}
+       'Inpatient' : ['Acute myocardial infarction', 'CABG', 'Cardiac Arrhythmia', 'Cardiac arrest and ventricular fibrillation', 'Heart Failure', 'Hypertension', 'ICD', 'Others', 'PCI', 'Pacemaker Implant', 'Pleural effusion', 'Renal Failure'],
+ 		'Outpatient ER' : ['AMI', 'Aftercare following surgery', 'COPD', 'Cardiac dysrhythmias', 'Diabetes', 'Heart Failure', 'Hypertension', 'Others', 'Respiratory system and chest symptoms'], 
+ 		'Outpatient Others (Non ER)' : ['Ambulance', 'Durable Medical Equipment (DME)', 'Lab/Pathology', 'Observation', 'Others', 'Outpatient Surgery', 'Radiology'], 
+ 		'Professional Services' : [ 'Administered Drugs', 'Anesthesia', 'Lab/Pathology', 'Office Visits', 'Others', 'Radiology', 'Surgical'], 
+ 		'Drug Others (Excl. Entrestro)' : ['ACE /ARB', 'Aldosterone receptor antagonists', 'Beta Blocker', 'Diuretics', 'Others', 'Vasodilators'], 
+ 		'Drug Entresto': ['Entresto'], 'Home Health' : ['Home Health'], 'Skilled Nursing Facility' : ['Skilled Nursing Facility'], 'Hospice' : ['Hospice']}
 
 
 cate_mix_cnt = 0
@@ -67,7 +67,7 @@ def tableview():
 										placeholder ="...",
 										options = [{"label": 'Service Category', "value": 'Service Category'}, {"label": 'Sub Category', "value": 'Sub Category', 'disabled': True}] 
 										+ [{"label": k, "value": k, 'disabled' : True} if len(dimension[k]) == 0 else {"label": k, "value": k, 'disabled' : False} for k in list(dimension.keys())],
-										value = 'Risk Score Band',
+										value = 'Patient Health Risk Level',
 										clearable = False,
 										style = {"font-family":"NotoSans-Condensed"}
 										),
