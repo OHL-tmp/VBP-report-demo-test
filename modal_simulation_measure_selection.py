@@ -149,7 +149,7 @@ def modal_optimizer_domain_selection(n):
                                     ]
                                 )
                             ],
-                            style={"background-image":"url('assets/domain_selection_bg_s.png')","backgroud-size":"auto"}
+                            style={"background-color":"#bfd4ff","background-image":"url('assets/domain_selection_bg_s.png')","backgroud-size":"auto"}
                             ),
                             dbc.ModalBody(
                                 card_domain_selection(n)
@@ -192,7 +192,7 @@ def card_domain_selection(n):
                 color = 'light',
                 id=u"optimizer-collapse-card-domain-selection-{}".format(i+1),
                 className="mb-3",
-                style={"border-radius":"0.5rem","border":"1px solid #f5f5f5"}
+                style={"border-radius":"0.5rem","border":"1px solid #bfd4ff"}
             )], hidden = hidden_status)
         domain_card.append(card)
     return html.Div(domain_card)

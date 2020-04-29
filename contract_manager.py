@@ -30,7 +30,11 @@ from app import app
 
 #modebar display
 button_to_rm=['zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'hoverClosestCartesian','hoverCompareCartesian','hoverClosestGl2d', 'hoverClosestPie', 'toggleHover','toggleSpikelines']
-
+states = {"Total Script Count (30-day adj) by Dosage (in thousand)": True,
+    "Total Units by Dosage (in thousand)": True,
+    "YTD Market Share %": False, 
+    "Utilizer Count": False, 
+    "Avg Script (30-day adj) per Utilizer": False}
 
 
 
@@ -53,7 +57,7 @@ def load_data(app):
     df_domain_perform=pd.read_csv("data/domain_perform.csv")
     df_domain_waterfall = pd.read_csv("data/domain_waterfall.csv")
     df_measure_perform=pd.read_csv("data/measure_performance.csv")
-    df_nocontract=pd.read_csv("data/meaure_nocontract.csv")
+    df_nocontract=pd.read_csv("data/measure_nocontract.csv")
     
     df_tot_script=pd.DataFrame(df_tot_script_split.sum(axis=0)[1:4,],columns=['tot_script']).iloc[[2,1,0],]
     df_tot_unit=pd.DataFrame(df_tot_unit_split.sum(axis=0)[1:4,],columns=['tot_unit']).iloc[[2,1,0],]
@@ -294,6 +298,7 @@ def card_sub1_volumn_based_measures(app,volumn_measure, fig, tab,size):
 			        )
 	            ],
                 id = u"card-container-{}".format(volumn_measure),
+                hidden = states[volumn_measure],
                 #style={"max-height":"20rem"}
             )
 
@@ -529,42 +534,46 @@ def toggle_popover_add_measure(n1, n2, is_open):
 
 # add/close measure card
 
-states = {"Market Share": True, 
-    "Utilizer Count": True, 
-    "Avg Script (30-day adj) per Utilizer": True,
-    "Total Script Count (30-day adj) by Dosage (in thousand)": True,
-    "Total Units by Dosage (Mn)": True}
+
 
 @app.callback(
-    [Output("card-container-Market Share","hidden"),
+    [Output("card-container-YTD Market Share %","hidden"),
     Output("card-container-Utilizer Count","hidden"),
     Output("card-container-Avg Script (30-day adj) per Utilizer","hidden"),
     Output("card-container-Total Script Count (30-day adj) by Dosage (in thousand)","hidden"),
-    Output("card-container-Total Units by Dosage (Mn)","hidden"),],
+    Output("card-container-Total Units by Dosage (in thousand)","hidden"),],
     [Input("add-button-add-measure","n_clicks"),
     Input("checklist-add-measure","value")],
-    [State("card-container-Market Share","hidden"),
+    [State("card-container-YTD Market Share %","hidden"),
     State("card-container-Utilizer Count","hidden"),
     State("card-container-Avg Script (30-day adj) per Utilizer","hidden"),
     State("card-container-Total Script Count (30-day adj) by Dosage (in thousand)","hidden"),
-    State("card-container-Total Units by Dosage (Mn)","hidden"),],
+    State("card-container-Total Units by Dosage (in thousand)","hidden"),],
 )
 def add_close_measure_card( ad, v, h1, h2, h3, h4, h5):
+
+    m_list = ["YTD Market Share %", 
+            "Utilizer Count",
+            "Avg Script (30-day adj) per Utilizer",
+            "Total Script Count (30-day adj) by Dosage (in thousand)",
+            "Total Units by Dosage (in thousand)"]
+    for i in range(5):
+        if eval('h'+str(i+1)) is None:
+            exec('h'+str(i+1) +' = states[m_list['+str(i)+']]')
+
     triggered = [t["prop_id"] for t in dash.callback_context.triggered]
     edit = len([1 for i in triggered if i == "add-button-add-measure.n_clicks"])
     checked = v
     if edit:
-        for p in ["Market Share", 
-            "Utilizer Count",
-            "Avg Script (30-day adj) per Utilizer",
-            "Total Script Count (30-day adj) by Dosage (in thousand)",
-            "Total Units by Dosage (Mn)"]:
+        for p in m_list:
             if p in checked:
                 states[p] = False
             else:
                 states[p] = True
-        return states["Market Share"], states["Utilizer Count"], states["Avg Script (30-day adj) per Utilizer"],states["Total Script Count (30-day adj) by Dosage (in thousand)"],states["Total Units by Dosage (Mn)"]
-    return h1, h2, h3, h4, h5
+
+        return states["YTD Market Share %"], states["Utilizer Count"], states["Avg Script (30-day adj) per Utilizer"],states["Total Script Count (30-day adj) by Dosage (in thousand)"],states["Total Units by Dosage (in thousand)"]
+    return states["YTD Market Share %"], states["Utilizer Count"], states["Avg Script (30-day adj) per Utilizer"],states["Total Script Count (30-day adj) by Dosage (in thousand)"],states["Total Units by Dosage (in thousand)"]
+    
 
 
     

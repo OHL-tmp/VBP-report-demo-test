@@ -103,7 +103,7 @@ def bargraph_overall(df):  #df_overall['month'] df_overall['base'] df_overall['a
     # Change the bar mode
     fig_overall.update_layout(
         barmode='stack',
-        title='placeholder',
+        title='Monthly and Cumulative Revenue',
         plot_bgcolor=colors['transparent'],
         paper_bgcolor=colors['transparent'],
         legend=dict(
@@ -182,7 +182,7 @@ def waterfall_overall(x,y1,y2): #df_waterfall['label']  df_waterfall['base'] df_
     # Change the bar mode
     fig_waterfall.update_layout(
         barmode='stack',
-        title='placeholder',
+        title='Revenue Projection',
         plot_bgcolor=colors['transparent'],
         paper_bgcolor=colors['transparent'],
         yaxis = dict(
@@ -990,7 +990,7 @@ def drillgraph_lv1(df,tableid,dim):
                                 [
                                     drillgraph_table(df_table,tableid,dim)
                                 ],
-                                style={"padding-left":"3.6rem","padding-right":"6.5rem"}
+                                style={"padding-left":"3rem","padding-right":"5rem"}
                             ),
                             html.Div(
                                 [
@@ -1328,13 +1328,17 @@ def sim_result_box(df_sim_result):
         df=df_sim_result.iloc[[0,3,6,9]]
         k=k-1
         bartext='Baseline:<br><br>'
+        x=['Contract w/o<br>VBC Payout','Contract with VBC Payout<br>(Recommended)','Contract with VBC Payout<br>(User Defined)']
+        m=0.4
     else:
         df=df_sim_result.iloc[[2,5,8]]
         bartext='Contract w/o<br>VBC Payout:<br><br>'
-    
+        x=['Contract with VBC Payout<br>(Recommended)','Contract with VBC Payout<br>(User Defined)']
+        m=0.3
     n=len(df)
     
-    x=df['Contract Type'].to_list()[1:n]
+    
+    #x=df['Contract Type'].to_list()[1:n]
     median=df['Best Estimate'].to_list()[1:n]
     base=df.values[0,2]
     
@@ -1398,7 +1402,7 @@ def sim_result_box(df_sim_result):
             ),  
         )
         annotations.append(dict(xref='x', yref='y',axref='x', ayref='y',
-                        x=0+i, y=df['Best'].to_list()[1:n][i],ax=0.3+i, ay=df['Best'].to_list()[1:n][i],
+                        x=0+i, y=df['Best'].to_list()[1:n][i],ax=m+i, ay=df['Best'].to_list()[1:n][i],
                         startstandoff=10,
                         text='Best: '+str(round(df['Best'].to_list()[1:n][i],1))+'Mn',
                         font=dict(family='NotoSans-CondensedLight', size=12, color='green'),
@@ -1410,7 +1414,7 @@ def sim_result_box(df_sim_result):
                        )
                   )
         annotations.append(dict(xref='x', yref='y',axref='x', ayref='y',
-                        x=0+i, y=df['Worst'].to_list()[1:n][i],ax=0.3+i, ay=df['Worst'].to_list()[1:n][i],
+                        x=0+i, y=df['Worst'].to_list()[1:n][i],ax=m+i, ay=df['Worst'].to_list()[1:n][i],
                         startstandoff=10,
                         text='Worst: '+str(round(df['Worst'].to_list()[1:n][i],1))+'Mn',
                         font=dict(family='NotoSans-CondensedLight', size=12, color='red'),
@@ -1442,7 +1446,7 @@ def sim_result_box(df_sim_result):
                            )
                       )
     annotations.append(dict(xref='paper', yref='y',
-                            x=1.1, y=base/2,
+                            x=1.12, y=base/2,
                             text=bartext+str(round(base,1))+'Mn',
                             font=dict(family='NotoSans-CondensedLight', size=12, color='#38160f'),
                             showarrow=False,

@@ -33,6 +33,7 @@ df_sim_cost=pd.read_csv("data/Total_Cost.csv")
 #df_setup=pd.read_csv("data/setup.csv")
 df_setup1=pd.read_csv("data/setup_1.csv")
 df_setup2=pd.read_csv("data/setup_2.csv")
+df_initial=df_setup1[df_setup1['id'].isin([0,1,2,9,11])]
 ## 初始化
 global measures_select,df_setup_filter
 
@@ -40,7 +41,7 @@ df_setup_filter=pd.read_csv('data/setup_1.csv')
 measures_select=['Cost & Utilization Reduction', 'Improving Disease Outcome', 'CHF Related Average Cost per Patient', 'CHF Related Hospitalization Rate', 'NT-proBNP Change %', 'LVEF LS Mean Change %']
 domain_index=[0,3]
 domain1_index=[1,2]
-domain2_index=[4,5]
+domain2_index=[4]
 domain3_index=[]
 domain4_index=[]
 domain5_index=[]
@@ -87,7 +88,7 @@ def create_layout(app):
             )
 
 def table_setup(df,cohort_change):#,rows
-    global df_setup_filter
+    global df_setup_filter,domain_index,domain1_index,domain2_index,domain3_index,domain4_index,domain5_index
 
     if cohort_change:
         dff=df
@@ -102,6 +103,16 @@ def table_setup(df,cohort_change):#,rows
                 dff.loc[i]=df_setup_filter[df_setup_filter['measures']==df.values[i,0]].iloc[0,:].tolist()            
             else:
                 dff.loc[i]=df.iloc[i,:].tolist()
+        
+        k=0
+        for i in domain_index:
+            k=k+1
+            weight_str=dff['weight_user'].iloc[eval('domain'+str(k)+'_index')]
+            weight=[int(i.replace('$','').replace('%','').replace(',','')) for i in weight_str ]
+            dff['weight_user'][i]=str(sum(weight))+'%'
+            weight2_str=dff['weight_recom'].iloc[eval('domain'+str(k)+'_index')]
+            weight2=[int(i.replace('$','').replace('%','').replace(',','')) for i in weight2_str ]
+            dff['weight_recom'][i]=str(sum(weight2))+'%'
         
             
     table=dash_table.DataTable(
@@ -129,15 +140,22 @@ def table_setup(df,cohort_change):#,rows
             { 'if': {'row_index':c[0],'column_editable': c[1] }, 
              'color': 'grey', 
              'backgroundColor': 'white',
-             'font-family': 'NotoSans-CondensedLight',
-             'font-weight':'bold', 
+             'font-family': 'NotoSans-Regular',
+             'font-size':'0.8rem',
+             'font-weight':'bold',
+             'text-align':'start',
              'border':'0px',
              'border-bottom': '1px solid grey',
              'border-top': '1px solid grey',
              #'border-right': '0px',
      
               } if (c[0] in domain_index) and (c[1]==False) else 
-            { 'if': {'row_index':c[0] ,'column_editable': c[1],},   
+            { 'if': {'row_index':c[0] ,'column_editable': c[1],},
+             'color': 'grey', 
+             'font-family': 'NotoSans-Regular',
+             'font-size':'0.8rem',
+             'font-weight':'bold',
+             'text-align':'start',   
              'border-bottom': '1px solid blue', 
              'border-top': '1px solid grey', 
              #'border-right': '0px',    
@@ -165,8 +183,8 @@ def table_setup(df,cohort_change):#,rows
                 'column_id': 'probrecom',
                 'filter_query': '{highlight_recom} eq "yellow"'
             },
-            'backgroundColor': 'yellow',
-            'color': 'white',
+            'backgroundColor': '#f5b111',
+            'color': 'black',
         },
         {
             'if': {
@@ -189,8 +207,8 @@ def table_setup(df,cohort_change):#,rows
                 'column_id': 'probuser',
                 'filter_query': '{highlight_user} eq "yellow"'
             },
-            'backgroundColor': 'yellow',
-            'color': 'white',
+            'backgroundColor': '#f5b111',
+            'color': 'black',
         },
         {
             'if': {
@@ -215,21 +233,21 @@ def table_setup(df,cohort_change):#,rows
             'if': {
                 'column_id': 'recom_value',
             },
-            'backgroundColor': 'grey',
+            'backgroundColor': '#bfbfbf',
             'color': 'black',
         },
         {
             'if': {
                 'column_id': 'tarrecom_value',
             },
-            'backgroundColor': 'grey',
+            'backgroundColor': '#bfbfbf',
             'color': 'black',
         },
         {
             'if': {
                 'column_id': 'weight_recom',
             },
-            'backgroundColor': 'grey',
+            'backgroundColor': '#bfbfbf',
             'color': 'black',
         },
             
@@ -291,7 +309,7 @@ def tab_setup(app):
 				[
 					dbc.Row(
 						[
-							dbc.Col(html.H1("VBC Contract Simulation Setup", style={"padding-left":"2rem","font-size":"3"}), width=9),
+							dbc.Col(html.H1("Contract Simulation Setup", style={"padding-left":"2rem","font-size":"3"}), width=9),
 							dbc.Col([
                                 modal_simulation_input()
                                 ], 
@@ -362,7 +380,7 @@ def card_target_patient(app):
                     	dbc.Row(
                             [
                                 dbc.Col(html.Img(src=app.get_asset_url("bullet-round-blue.png"), width="10px"), width="auto", align="start", style={"margin-top":"-4px"}),
-                                dbc.Col(html.H4("Target Patient", style={"font-size":"1rem", "margin-left":"10px"}), width=8),
+                                dbc.Col(html.H4("Patient Cohort Setup", style={"font-size":"1rem", "margin-left":"10px"}), width=8),
                             ],
                             no_gutters=True,
                         ),
@@ -380,7 +398,7 @@ def card_target_patient(app):
                                 ),
                                 dbc.Col(
                                     [
-                                        html.H3("Payer Contract", style={"font-size":"1rem"}),
+                                        html.H3("Select Patient Cohort", style={"font-size":"1rem"}),
                                         html.Div([
                                             dcc.Dropdown(
                                                 id = 'target-patient-input',
@@ -412,7 +430,28 @@ def card_outcome_measure(app):
                         dbc.Row(
                             [
                                 dbc.Col(html.Img(src=app.get_asset_url("bullet-round-blue.png"), width="10px"), width="auto", align="start", style={"margin-top":"-4px"}),
-                                dbc.Col(html.H4("Outcome Measure", style={"font-size":"1rem", "margin-left":"10px"}), width=8),
+                                dbc.Col(
+                                    [
+                                        html.H4(
+                                            [
+                                                "Value Based Measure ",
+                                                html.Span(
+                                                    "\u24D8",
+                                                    style={"font-size":"0.8rem"}
+                                                )
+                                            ],
+                                            id="tooltip-vbc-measure",
+                                            style={"font-size":"1rem", "margin-left":"10px"}
+                                        ),
+                                        dbc.Tooltip(
+                                            "Value based measures are recommended based on each measure’s stability, improvement level from baseline, data availability and ease to implement/monitor, efficacy results from clinical trials, payer’s acceptance level, pharma’s preference, etc.",
+                                            target="tooltip-vbc-measure",
+                                            style={"text-align":"start"}
+                                        ),
+                                    ],
+                                    
+                                    width="auto"
+                                ),
                             ],
                             no_gutters=True,
                         ),
@@ -442,7 +481,26 @@ def card_outcome_measure(app):
                                 	[
                                 		html.Div(
                                 			[
-                                				html.H4("Target", style={"font-size":"1rem"}),
+                                				html.Div(
+                                                    [
+                                                        html.H4(
+                                                            [
+                                                                "Target ",
+                                                                html.Span(
+                                                                    "\u24D8",
+                                                                    style={"font-size":"0.8rem"}
+                                                                )
+                                                            ],
+                                                            id="tooltip-vbc-target",
+                                                            style={"font-size":"1rem"}
+                                                        ),
+                                                        dbc.Tooltip(
+                                                            "Recommended target is determined as the threshold value where the probability to achieve is no less than a predetermined threshold (can be customized)",
+                                                            target="tooltip-vbc-target",
+                                                            style={"text-align":"start"}
+                                                        ),
+                                                    ],
+                                                ),
                                                 html.Hr(className="ml-1"),
                                 				
                                 			]
@@ -467,12 +525,31 @@ def card_outcome_measure(app):
                                 dbc.Col(
                                 	[
                                 		html.Div(
-                                			[
-                                				html.H4("Weight", style={"font-size":"1rem"}),
+                                            [
+                                                html.Div(
+                                                    [
+                                                        html.H4(
+                                                            [
+                                                                "Weight ",
+                                                                html.Span(
+                                                                    "\u24D8",
+                                                                    style={"font-size":"0.8rem"}
+                                                                )
+                                                            ],
+                                                            id="tooltip-vbc-weight",
+                                                            style={"font-size":"1rem"}
+                                                        ),
+                                                        dbc.Tooltip(
+                                                            "Recommended weights are assigned based on each measure’s stability (i.e., higher weight is assigned more stable measures)",
+                                                            target="tooltip-vbc-weight",
+                                                            style={"text-align":"start"}
+                                                        ),
+                                                    ],
+                                                ),
                                                 html.Hr(className="ml-1"),
-                                				
-                                			]
-                                		)
+                                                
+                                            ]
+                                        )
                                 	],
                                     style={"text-align":"center"},
                                     width=2,
@@ -485,7 +562,7 @@ def card_outcome_measure(app):
 #                        card_measure_modifier(domain_ct),
 #                        card_measure_modifier(),
 #,[0,1,2,9,11]
-                        html.Div([table_setup(df_setup1,False)],id='table_setup'),
+                        html.Div([table_setup(df_initial,False)],id='table_setup'),
                     ]
                 ),
                 className="mb-3",
@@ -785,7 +862,7 @@ def card_vbc_contract(app):
                                 dbc.Col(
                                     html.Div(
                                         [
-                                            html.Div("Risk Share Method", style={"font-family":"NotoSans-Condensed","font-size":"1rem","text-align":"start"}),
+                                            html.Div("VBC Adjustment Method", style={"font-family":"NotoSans-Condensed","font-size":"1rem","text-align":"start"}),
                                             dcc.Dropdown(
                                                 options = [
                                                                 {'label':'Rebate adjustment', 'value':'Rebate adjustment'},
@@ -840,13 +917,13 @@ def card_contract_adjust_sub(app):
                             [
                                 dbc.Col(html.Div(""), width=6),
 								dbc.Col(html.H3("Recommended", style={"font-size":"0.8rem"}), width=3),
-								dbc.Col(html.H3("Payer Contract", style={"font-size":"0.8rem"}), width=3),
+								dbc.Col(html.H3("User Defined", style={"font-size":"0.8rem"}), width=3),
                             ],
                             no_gutters=True,
                         ),
                         dbc.Row(
                             [
-                                dbc.Col(html.H3("\u2460 Performance Level Threshold", style={"color":"#919191","font-size":"1rem"}), width=6),
+                                dbc.Col(html.H3("\u2460 Performance Threshold", style={"color":"#919191","font-size":"1rem"}), width=6),
 								dbc.Col(html.Div("120%", id = 'recom-pos-perf', style={"font-family":"NotoSans-Regular","font-size":"1rem", "text-align":"center"}), width=3),
 								dbc.Col(
                                     dbc.InputGroup(
@@ -909,13 +986,35 @@ def card_contract_adjust_sub(app):
                             [
                                 dbc.Col(html.Div(""), width=6),
 								dbc.Col(html.H3("Recommended", style={"font-size":"0.8rem"}), width=3),
-								dbc.Col(html.H3("Payer Contract", style={"font-size":"0.8rem"}), width=3),
+								dbc.Col(html.H3("User Defined", style={"font-size":"0.8rem"}), width=3),
                             ],
                             no_gutters=True,
                         ),
                         dbc.Row(
                             [
-                                dbc.Col(html.H3("\u2462 Performance Level Threshold", style={"color":"#919191","font-size":"1rem"}), width=6),
+                                dbc.Col(
+                                    html.Div(
+                                        [
+                                            html.H3(
+                                                [
+                                                    "\u2462 Performance Threshold ",
+                                                    html.Span(
+                                                        "\u24D8",
+                                                        style={"font-size":"0.8rem"}
+                                                    )
+                                                ],
+                                                id="tooltip-vbc-negperf",
+                                                style={"color":"#919191", "font-size":"1rem"}
+                                            ),
+                                            dbc.Tooltip(
+                                                "Recommended performance threshold is determined at the level where the probability to hit maximum negative rebate adjustment is no greater than a predetermined threshold (can be customized)",
+                                                target="tooltip-vbc-negperf",
+                                                style={"text-align":"start"}
+                                            ),
+                                        ],
+                                    ),
+                                    width=6
+                                ),
 								dbc.Col(html.Div("80%", id = 'recom-neg-perf', style={"font-family":"NotoSans-Regular","font-size":"1rem", "text-align":"center"}), width=3),
 								dbc.Col(
                                     dbc.InputGroup(
@@ -983,8 +1082,9 @@ def tab_result(app):
 				[
 					dbc.Row(
 						[
-							dbc.Col(html.H1("Contract Simulation Result"))
-						]
+							dbc.Col(html.H1("Contract Simulation Result"), width=9),
+                            
+                        ]
 					),
 					html.Div(
 					    [
@@ -1017,7 +1117,7 @@ def tab_result(app):
 					        dbc.Collapse(
 					            collapse_result_2(app),
 					            id="optimizer-collapse_result_2",
-                                is_open = True,
+                                #is_open = True,
 					        ),
 					    ],
                         style={"padding-top":"1rem"}
@@ -1035,7 +1135,7 @@ def tab_result(app):
 					        dbc.Collapse(
 					            collapse_result_3(app),
 					            id="optimizer-collapse_result_3",
-                                is_open = True,
+                                #is_open = True,
 					        ),
 					    ],
                         style={"padding-top":"1rem"}
@@ -1073,9 +1173,14 @@ def collapse_result_1(app):
 	return dbc.Card(
             	dbc.CardBody(
             		[
+                        html.Div(html.Img(src=app.get_asset_url("simulation_intro.png"), style={"max-width":"100%","max-height":"100%", "border-radius":"0.5rem","border":"1px dotted #919191"}), style={"height":"4rem"}),
             			dbc.Row(
             				[
-            					dbc.Col(html.Div([dcc.Graph(id = 'sim_result_box_1',style={"height":"50vh", "width":"90vh"},config={'modeBarButtonsToRemove': button_to_rm,'displaylogo': False,})]),width=6 ),
+            					dbc.Col(html.Div(
+                                    [
+                                        dcc.Graph(id = 'sim_result_box_1',style={"height":"50vh", "width":"80vh"},config={'modeBarButtonsToRemove': button_to_rm,'displaylogo': False,})
+                                    ]
+                                ),width=6 ),
             					dbc.Col(html.Div(id = 'sim_result_table_1'), width=6)
             				]
             			)
@@ -1090,9 +1195,10 @@ def collapse_result_2(app):
 	return dbc.Card(
             	dbc.CardBody(
             		[
-            			dbc.Row(
+            			html.Div(html.Img(src=app.get_asset_url("simulation_intro2.png"), style={"max-width":"100%","max-height":"100%", "border-radius":"0.5rem","border":"1px dotted #919191"}), style={"height":"4rem"}),
+                        dbc.Row(
             				[
-            					dbc.Col(html.Div([dcc.Graph(id = 'sim_result_box_2',style={"height":"50vh", "width":"90vh"},config={'modeBarButtonsToRemove': button_to_rm,'displaylogo': False,})]),width=6 ),
+            					dbc.Col(html.Div([dcc.Graph(id = 'sim_result_box_2',style={"height":"50vh", "width":"80vh"},config={'modeBarButtonsToRemove': button_to_rm,'displaylogo': False,})]),width=6 ),
             					dbc.Col(html.Div(id = 'sim_result_table_2'), width=6)
             				]
             			)
@@ -1107,9 +1213,10 @@ def collapse_result_3(app):
 	return dbc.Card(
             	dbc.CardBody(
             		[
-            			dbc.Row(
+            			html.Div(html.Img(src=app.get_asset_url("simulation_intro2.png"), style={"max-width":"100%","max-height":"100%", "border-radius":"0.5rem","border":"1px dotted #919191"}), style={"height":"4rem"}),
+                        dbc.Row(
             				[
-            					dbc.Col(html.Div([dcc.Graph(id = 'sim_result_box_3',style={"height":"50vh", "width":"90vh"},config={'modeBarButtonsToRemove': button_to_rm,'displaylogo': False,})]),width=6 ),
+            					dbc.Col(html.Div([dcc.Graph(id = 'sim_result_box_3',style={"height":"50vh", "width":"80vh"},config={'modeBarButtonsToRemove': button_to_rm,'displaylogo': False,})]),width=6 ),
             					dbc.Col(html.Div(id = 'sim_result_table_3'), width=6)
             				]
             			)
@@ -1124,17 +1231,6 @@ def collapse_confounding_factors(app):
 	return dbc.Card(
             	dbc.CardBody(
             		[
-            			html.Div(
-            				[
-            					dbc.Row(
-                                    [
-                                        dbc.Col(html.H1("All Confounding Factors", style={"color":"#f0a800", "font-size":"1.5rem","padding-top":"1.2rem"}), width=6),
-                                        dbc.Col(html.H1("All Confounding Factors", style={"color":"#f0a800", "font-size":"1.5rem","padding-top":"1.2rem"}), width=6),
-                                    ]
-                                ),
-                                html.Img(src=app.get_asset_url("logo-demo.png")),
-            				]
-            			),
             			dbc.Row(
             				[
             					dbc.Col(html.Div([table_factor_doc(df_factor_doc)], style={"width":"100%"}), width=12),
@@ -1678,15 +1774,15 @@ def update_columns(timestamp, data):
         row['weight_user']=str(row['weight_user']).replace('$','').replace('%','').replace(',','')
         row['taruser_value']=str(row['taruser_value']).replace('$','').replace('%','').replace(',','')      
         if i in domain1_index:
-            weight_1=weight_1+float(row['weight_user'])
+            weight_1=weight_1+int(row['weight_user'])
         if i in domain2_index:
-            weight_2=weight_2+float(row['weight_user'])
+            weight_2=weight_2+int(row['weight_user'])
         if i in domain3_index:
-            weight_3=weight_3+float(row['weight_user'])
+            weight_3=weight_3+int(row['weight_user'])
         if i in domain4_index:
-            weight_4=weight_4+float(row['weight_user'])
+            weight_4=weight_4+int(row['weight_user'])
         if i in domain5_index:
-            weight_5=weight_5+float(row['weight_user'])
+            weight_5=weight_5+int(row['weight_user'])
             
         row['weight_user']= '{}%'.format(row['weight_user']) 
         
