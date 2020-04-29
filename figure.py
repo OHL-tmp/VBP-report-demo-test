@@ -920,11 +920,11 @@ def drill_bubble(df):
     return fig
 
 
-def drillgraph_table(df_table,tableid):
+def drillgraph_table(df_table,tableid,dim):
     tbl=dash_table.DataTable(
         id=tableid,
         data=df_table.to_dict('records'),
-        columns=[ {'id': c, 'name': c,"selectable": True,'type': 'numeric',"format":FormatTemplate.money(0)} for c in df_table.columns ],
+        columns=[ {'id': c, 'name': dim+':'+c,"selectable": True,'type': 'numeric',"format":FormatTemplate.money(0)} for c in df_table.columns ],
         column_selectable="single",
         selected_columns=[],
         style_data={
@@ -960,7 +960,7 @@ def drillgraph_table(df_table,tableid):
     )
     return tbl
 
-def drillgraph_lv1(df,tableid):
+def drillgraph_lv1(df,tableid,dim):
 
     df=df.merge(df_dim_order[df_dim_order['dimension']==df.columns[0]],how='left',left_on=df.columns[0],right_on='value').sort_values(by='ordering')
     df_table=df[['YTD Avg Episode Cost']].T
@@ -985,7 +985,7 @@ def drillgraph_lv1(df,tableid):
                         [
                             html.Div(
                                 [
-                                    drillgraph_table(df_table,tableid)
+                                    drillgraph_table(df_table,tableid,dim)
                                 ],
                                 style={"padding-left":"3.6rem","padding-right":"7.4rem"}
                             ),
@@ -1092,16 +1092,21 @@ def drilldata_process(df_drilldown,dimension,dim1='All',f1='All',dim2='All',f2='
     
     df=df_pre2.groupby([dimension]).agg(YTD_Total_cost=pd.NamedAgg(column='YTD Total Cost',aggfunc=sum)
                                              ,Annualized_Total_cost=pd.NamedAgg(column='Annualized Total Cost',aggfunc=sum)
-                                             ,Target_Total_cost=pd.NamedAgg(column='Target Total Cost',aggfunc=sum)
+                                             ,Target_Total_cost=pd.NamedAgg(column='Benchmark Total Cost',aggfunc=sum)
                                              ,YTD_Utilization=pd.NamedAgg(column='YTD Utilization',aggfunc=sum)
                                              ,Annualized_Utilization=pd.NamedAgg(column='Annualized Utilization',aggfunc=sum)
-                                             ,Target_Utilization=pd.NamedAgg(column='Target Utilization',aggfunc=sum)
+                                             ,Target_Utilization=pd.NamedAgg(column='Benchmark Utilization',aggfunc=sum)
                                              ,Pt_Count=pd.NamedAgg(column='Pt Count',aggfunc=np.mean)
                                              ).reset_index()
     allvalue=df.sum().values 
     allvalue[0]='All'
     if dimension in ['Service Category', 'Sub Category']:
         allvalue[-1]=df['Pt_Count'].mean()
+    if len(df[df[dimension]=='Others'])>0:
+        otherpos=df[df[dimension]=='Others'].index[0]
+        otherlist=df.loc[otherpos]
+        df.loc[otherpos]=df.loc[len(df)-1]
+        df.loc[len(df)-1]=otherlist
   
     df.loc[len(df)] = allvalue
     
@@ -1139,6 +1144,8 @@ def drill_waterfall(df):
             y=[y_base,y_base,y_base+y_adjust],
             text=[y_base,y_base,y_base+y_adjust],
             textposition='inside',
+            textangle=0,
+            constraintext='none',
             width=0.5,
             textfont=dict(color=['black',colors['transparent'],'black'],
                           family="NotoSans-Condensed",
@@ -1316,7 +1323,10 @@ def sim_result_box(df_sim_result):
     if len(df_sim_result)==10:
         df=df_sim_result.iloc[[0,3,6,9]]
         k=k-1
-    else:df=df_sim_result.iloc[[2,5,8]]
+        bartext='Baseline:<br><br>'
+    else:
+        df=df_sim_result.iloc[[2,5,8]]
+        bartext='Contract w/o<br>VBC Payout:<br><br>'
     
     n=len(df)
     
@@ -1429,7 +1439,7 @@ def sim_result_box(df_sim_result):
                       )
     annotations.append(dict(xref='paper', yref='y',
                             x=1.1, y=base/2,
-                            text='Contract w/o<br>VBC Payout:<br><br>'+str(round(base,1))+'Mn',
+                            text=bartext+str(round(base,1))+'Mn',
                             font=dict(family='NotoSans-CondensedLight', size=12, color='#38160f'),
                             showarrow=False,
                            )
@@ -1492,6 +1502,7 @@ def sim_result_box(df_sim_result):
                 size=14,
                 color="#38160f"
             ),
+        hovermode=False,
         annotations=annotations,
         shapes=shapes,
         )

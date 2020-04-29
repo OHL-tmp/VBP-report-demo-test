@@ -36,7 +36,7 @@ df_setup2=pd.read_csv("data/setup_2.csv")
 ## 初始化
 global measures_select,df_setup_filter
 
-df_setup_filter=pd.read_csv('data/df_setup_filter.csv')
+df_setup_filter=pd.read_csv('data/setup_1.csv')
 measures_select=['Cost & Utilization Reduction', 'Improving Disease Outcome', 'CHF Related Average Cost per Patient', 'CHF Related Hospitalization Rate', 'NT-proBNP Change %', 'LVEF LS Mean Change %']
 domain_index=[0,3]
 domain1_index=[1,2]
@@ -45,7 +45,7 @@ domain3_index=[]
 domain4_index=[]
 domain5_index=[]
 list_forborder=[[0, True], [0, False], [1, True], [1, False], [2, True], [2, False], [3, True], [3, False], [4, True], [4, False]]
-percent_list=[2,4,7,8,10,11,12,13,14,15,16,17,19,20,22,23,24,26,27,28]
+percent_list=[2,4,7,8,10,11,12,13,14,15,16,17,18,20,21,23,24,25,27,28,29]
 dollar_list=[1,3,5,6]
 
 df_factor_doc=pd.read_csv("data/confounding_factors_doc.csv")
@@ -86,12 +86,26 @@ def create_layout(app):
                 style={"background-color":"#f5f5f5"},
             )
 
-def table_setup(df,rows):
-    
-    df=df[df['id'].isin(rows)]
-    
+def table_setup(df,cohort_change):#,rows
+    global df_setup_filter
+
+    if cohort_change:
+        dff=df
+        
+    else:
+        dff=df[df['measures']=='1'].copy()
+        
+        for i in range(len(df)):
+            
+            if df.values[i,0] in df_setup_filter['measures'].tolist():
+               
+                dff.loc[i]=df_setup_filter[df_setup_filter['measures']==df.values[i,0]].iloc[0,:].tolist()            
+            else:
+                dff.loc[i]=df.iloc[i,:].tolist()
+        
+            
     table=dash_table.DataTable(
-        data=df.to_dict('records'),
+        data=dff.to_dict('records'),
         id='computed-table',
         columns=[
         {"name": '', "id":'measures'} ,
@@ -470,7 +484,8 @@ def card_outcome_measure(app):
                         ),
 #                        card_measure_modifier(domain_ct),
 #                        card_measure_modifier(),
-                        html.Div([table_setup(df_setup1,[0,1,2,9,11])],id='table_setup'),
+#,[0,1,2,9,11]
+                        html.Div([table_setup(df_setup1,False)],id='table_setup'),
                     ]
                 ),
                 className="mb-3",
@@ -1203,35 +1218,64 @@ for d in range(domain_ct):
             Input(f'outcome-measure-row-{d+1}-{m+1}', 'hidden')]
             )(cal_measure_likelihood)
 
+# overall likelihood
 @app.callback(
-    Output('overall-like-recom', 'children'),
-    [Input(f'measure-like-recom-1-{m+1}', 'children') for m in range(8)]
-    + [Input(f'measure-like-recom-2-{m+1}', 'children') for m in range(10)]
-    + [Input(f'measure-like-recom-4-{m+1}', 'children') for m in range(2)]
-    + [Input(f'measure-like-recom-5-{m+1}', 'children') for m in range(3)]
-    + [Input(f'measure-like-recom-6-{m+1}', 'children') for m in range(4)]
+    [Output('overall-like-recom', 'children'),
+    Output('overall-like-user', 'children'),],
+    [Input('computed-table', 'derived_virtual_data'),
+    Input('target-patient-input', 'value')]
     )
-def overall_like(l1,l2,l3,l4,l5,l6,l7,l8,l9,l10,l11,l12,l13,l14,l15,l16,l17,l18,l19,l20,l21,l22,l23,l24,l25,l26,l27):
+def overall_like(data, cohort_selected):
+    if cohort_selected == 'CHF+AF (Recommended)':
+            df = df_setup1
+    else:
+        df = df_setup2
+            
+    dff = df if data is None else pd.DataFrame(data)
+    measure_list = list(dff['measures'])
     ml_list = []
-    for i in range(27):
-        if eval('l'+str(i+1)):
-            if eval('l'+str(i+1) +'[0]') == 'High':
+    ul_list = []
+    for i in range(len(measure_list)):
+        if measure_list[i] not in ['Cost & Utilization Reduction','Improving Disease Outcome','Increasing Patient Safety','Enhancing Care Quality','Better Patient Experience']:
+            if dff['probrecom'][i] == 'High':
                 ml = 3
-            elif eval('l'+str(i+1) +'[0]') == 'Mid':
+            elif dff['probrecom'][i] == 'Mid':
                 ml = 2
             else:
                 ml = 1
             ml_list.append(ml)
+            
+            if dff['probuser'][i] == 'High':
+                ul = 3
+            elif dff['probuser'][i] == 'Mid':
+                ul = 2
+            else:
+                ul = 1
+            ul_list.append(ul)
+    
+    avg_ul = np.mean(ul_list)
     avg_ml = np.mean(ml_list)
     if avg_ml <= 1.5:
-        return 'Low'
+        recom_like= 'Low'
     elif avg_ml <= 2.5:
-        return 'Mid'
+        recom_like= 'Mid'
     elif avg_ml > 2.5:
-        return 'High'
+        recom_like= 'High'
     else:
-        return ''
+        recom_like= ''
 
+    if avg_ul <= 1.5:
+        user_like= 'Low'
+    elif avg_ul <= 2.5:
+        user_like= 'Mid'
+    elif avg_ul > 2.5:
+        user_like= 'High'
+    else:
+        user_like= ''
+
+    return recom_like,user_like
+
+'''   
 @app.callback(
     [Output('overall-like-user', 'children'),
     Output('overall-like-user', 'style')],
@@ -1553,6 +1597,12 @@ def toggle_popover(n1, n2, is_open):
     )
 def update_table(d1,d2,d3,d4,d5,d6,mc1,mc2,mc3,mc4,mc5,mc6,mc7,mc8,mc9,mc10,mc11,cohort):#,timestamp, data
     global domain_index,domain1_index,domain2_index,domain3_index,domain4_index,domain5_index,list_forborder,df_setup_filter,measures_select,df_setup
+   
+    ctx = dash.callback_context
+    if ctx.triggered[0]['prop_id'] == 'target-patient-input.value':
+        cohort_change = True
+    else:
+        cohort_change = False
     if cohort == 'CHF+AF (Recommended)':
         df_setup = df_setup1
     else:
@@ -1565,17 +1615,12 @@ def update_table(d1,d2,d3,d4,d5,d6,mc1,mc2,mc3,mc4,mc5,mc6,mc7,mc8,mc9,mc10,mc11
     for i in range(11):
         if eval('mc'+str(i+1)) and len(eval('mc'+str(i+1))) > 0:
             measure_selected.extend(eval('mc'+str(i+1)))
-    #ctx = dash.callback_context.triggered
-    #print(ctx)
-    #triggered = dash.callback_context.triggered[0]['prop_id']
-        
-    #if triggered == 'dashboard-card-domain-selection-1.color':
+    
     measures_select = domain_selected + measure_selected
     #print(measures_select)
     #df=df_setup[df_setup['measures'].isin(measures_select)]
     rows=df_setup[df_setup['measures'].isin(measures_select)]['id'].to_list()
-    
-    temp=df_setup[df_setup['measures'].isin(measures_select)]#pd.DataFrame(data)
+    temp=df_setup[df_setup['measures'].isin(measures_select)]
     domain_index=[]
     domain1_index=[]
     domain2_index=[]
@@ -1600,7 +1645,7 @@ def update_table(d1,d2,d3,d4,d5,d6,mc1,mc2,mc3,mc4,mc5,mc6,mc7,mc8,mc9,mc10,mc11
                 if (j>domain_index[i]) & (j<domain_index[i+1]):
                     eval('domain'+str(i+1)+'_index').append(j)
                     
-    return table_setup(df_setup,rows)
+    return table_setup(temp,cohort_change) 
     
 
 #    return False #table_setup(df)
@@ -1610,29 +1655,21 @@ def update_table(d1,d2,d3,d4,d5,d6,mc1,mc2,mc3,mc4,mc5,mc6,mc7,mc8,mc9,mc10,mc11
     [Input('computed-table', 'data_timestamp')],
     [State('computed-table', 'data')])
 def update_columns(timestamp, data):
-    #df_setup_filter=pd.read_csv('data/df_setup_filter.csv')
-    #print(measures_select)
-    #print(pd.DataFrame(data)['measures'].to_list())
-    #global measures_select,df_setup_filter
-    #print(set(measures_select)==set(pd.DataFrame(data)['measures'].to_list()))
-    #if set(measures_select)==set(pd.DataFrame(data)['measures'].to_list()):
+
     
 
-    #print(domain_index)
-    #print(domain1_index)
-    #print(domain2_index)
-    #print(domain1_index+domain2_index+domain3_index+domain4_index+domain5_index)
+    global measures_select,df_setup_filter
+
     weight_1=0
     weight_2=0
     weight_3=0
     weight_4=0
     weight_5=0 
     for i in domain1_index+domain2_index+domain3_index+domain4_index+domain5_index:
-        #print(i)
+
         row=data[i]
         row['weight_user']=str(row['weight_user']).replace('$','').replace('%','')
-        row['taruser_value']=str(row['taruser_value']).replace('$','').replace('%','')
-                       
+        row['taruser_value']=str(row['taruser_value']).replace('$','').replace('%','')      
         if i in domain1_index:
             weight_1=weight_1+float(row['weight_user'])
         if i in domain2_index:
@@ -1647,7 +1684,7 @@ def update_columns(timestamp, data):
         row['weight_user']= '{}%'.format(row['weight_user']) 
         
         if row['measures'] in ["LVEF LS Mean Change %", "Change in Self-Care Score", "Change in Mobility Score", "DOT", "PDC", "MPR"] :
-           # print(row['taruser_value'])
+
             if float(row['taruser_value'])<=float(row['yellow_thres']):
                 row['highlight_user']='yellow'
                 row['probuser']='Mid'
@@ -1659,7 +1696,7 @@ def update_columns(timestamp, data):
                 row['probuser']='Low'
                 
         else:
-            #print(row)
+
             if float(row['taruser_value'])>=float(row['yellow_thres']):
                 row['highlight_user']='yellow'
                 row['probuser']='Mid'
@@ -1669,9 +1706,9 @@ def update_columns(timestamp, data):
             else:
                 row['highlight_user']='red'
                 row['probuser']='Low'
-        
-        if row['measures'] not in ['CHF Related Average Cost per Patient','CHF Related Average IP Cost per Patient','All Causes Average Cost per Patient','All Causes Average IP Cost per Patient']:    
-        
+       
+        if row['measures'] not in ['CHF Related Average Cost per Patient','CHF Related Average IP Cost per Patient','All Causes Average Cost per Patient','All Causes Average IP Cost per Patient']:
+            
             row['taruser_value']='{}%'.format(row['taruser_value'])
         else:
             row['taruser_value']='${}'.format(row['taruser_value']) 
@@ -1681,10 +1718,11 @@ def update_columns(timestamp, data):
         j=j+1
         data[i]['taruser_value']=''
         data[i]['weight_user']=str(eval('weight_'+str(j)))+'%'
-#else:
-#    data=df_setup_filter.to_dict('records')
 
-    return data #,rows
+
+    df_setup_filter=pd.DataFrame(data)
+
+    return data 
 
 @app.callback(
     [Output('tab_container', 'active_tab'),
@@ -1710,7 +1748,7 @@ def update_columns(timestamp, data):
     +[Input('computed-table','derived_virtual_data')]
 )
 def simulation(submit_button, re_pos_perf, re_neg_perf, re_pos_adj, re_neg_adj, in_pos_perf, in_neg_perf, in_pos_adj, in_neg_adj, cohort_recom, cohort_selected, rebate_novbc, rebate_vbc,data):
-#    m1,m2,m3,m4,t1,t2,t3,t4,w1,w2,w3,w4):
+
     if cohort_selected == 'CHF+AF (Recommended)':
         df = df_setup1
     else:
@@ -1729,7 +1767,7 @@ def simulation(submit_button, re_pos_perf, re_neg_perf, re_pos_adj, re_neg_adj, 
                     'Adj_Limit_L': [re_neg_adj/100]} 
         Recom_Contract = pd.DataFrame(input1, columns = ['Perf_Range_U_Min','Perf_Range_U_Max','Adj_Limit_U','Perf_Range_L_Min','Perf_Range_L_Max', 'Adj_Limit_L'])
         
-#        selected_measure = []
+
         measure_list = list(dff['measures'])
         measure_name = []
         target_list = []
@@ -1740,18 +1778,7 @@ def simulation(submit_button, re_pos_perf, re_neg_perf, re_pos_adj, re_neg_adj, 
                 target_list.append(float(str(list(dff['taruser_value'])[i]).replace('$','').replace('%','')))
                 weight_list.append(float(str(list(dff['weight_user'])[i]).replace('$','').replace('%','')))  
                 
-        print(target_list)
-#        target_list = [float(str(i).replace('$','').replace('%','')) for i in  list(dff['taruser_value'])] 
-#        weight_list = [float(str(i).replace('$','').replace('%','')) for i in list(dff['weight_user'])]
-#        for i in range(27):
-#            if eval('h'+str(i+1)) ==False:
-#                selected_measure.append(i+1)
-#        for k in selected_measure:
-#            measure_name.append(eval('m'+str(i+1)))
-#            target_list.append(eval('t'+str(i+1)))
-#            weight_list.append(eval('w'+str(i+1)))
-        
-#        print(selected_measure,measure_name,target_list,weight_list)
+
         input2 = {'Measure': measure_name, 
                 'Target': target_list, 
                 'Weight': list(np.array(weight_list)/100)} 
