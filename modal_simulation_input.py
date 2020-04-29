@@ -18,9 +18,9 @@ from app import app
 
 def modal_simulation_input():
 	return html.Div([
-		dbc.Button("Edit Assumption", id = 'button-edit-assumption', style={"border-radius":"5rem"}),
+		dbc.Button("Input & Edit Assumption", id = 'button-edit-assumption', style={"border-radius":"5rem"}),
                                 dbc.Modal([
-                                    dbc.ModalHeader(html.H1("Edit Assumption", style={"font-family":"NotoSans-Black","font-size":"1.5rem"})),
+                                    dbc.ModalHeader(html.H1("Input & Edit Assumption", style={"font-family":"NotoSans-Black","font-size":"1.5rem"})),
                                     dbc.ModalBody([
                                     	input_session(),
                                     	]),
@@ -116,9 +116,8 @@ def input_session():
 						dcc.Upload(
 						id = 'upload-data',
 						children = html.Div([
-							'Drag and Drop or ',
-							html.A('Select Files')
-							]),
+							'Select Related Files to Upload'
+							],style={"font-family":"NotoSans-Regular","font-size":"1rem","text-decoration":"underline","color":"#1357DD"}),
 						style={
 							'height': '60px',
 							'lineHeight': '60px',
