@@ -7,10 +7,10 @@ Age Band,>=85,5
 Gender,All,1
 Gender,M,2
 Gender,F,3
-Risk Score Band,All,1
-Risk Score Band,Low,2
-Risk Score Band,Mid,3
-Risk Score Band,High,4
+Patient Health Risk Level,All,1
+Patient Health Risk Level,Low,2
+Patient Health Risk Level,Mid,3
+Patient Health Risk Level,High,4
 NYHA Class,All,1
 NYHA Class,I,2
 NYHA Class,II,3

@@ -1,0 +1,10 @@
+﻿scenario,metrics,best estimate,low_range,high_range,low_likelyrange,high_likelyrange
+Contract w/o VBC Payout,Gross Revenue,1000000,NA,NA,NA,NA
+Contract w/o VBC Payout,Rebate Payout,400000,NA,NA,NA,NA
+Contract w/o VBC Payout,Net Revenue,600000,NA,NA,NA,NA
+Contract with VBC Payout (Recommended),Gross Revenue,1000000,1000000,1000000,1000000,1000000
+Contract with VBC Payout (Recommended),Rebate Payout,350000,250000,450000,293750,406250
+Contract with VBC Payout (Recommended),Net Revenue,650000,550000,750000,593750,706250
+Contract with VBC Payout (User Defined),Gross Revenue,1000000,1000000,1000000,1000000,1000000
+Contract with VBC Payout (User Defined),Rebate Payout,400000,200000,500000,320000,460000
+Contract with VBC Payout (User Defined),Net Revenue,600000,500000,800000,540000,680000

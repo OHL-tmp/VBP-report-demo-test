@@ -1,0 +1,7 @@
+﻿measures,recom_value,tarrecom_value,taruser_value,probrecom,probuser,weight_recom,weight_user,highlight_recom,highlight_user,green_thres,yellow_thres,id
+Cost & Utilization Reduction,,,,,,75%,75,,,,,0
+CHF Related Average Cost per Patient,"$48,000 ","$47,566 ",47566,High,Mid,50%,50,green,yellow,47566,45187,1
+CHF Related Hospitalization Rate,40%,35%,35,High,Mid,25%,25,green,yellow,35,33,2
+Improving Disease Outcome,,,,,,25%,25,,,,,9
+NT-proBNP Change %,0%,-25%,-25,High,High,0%,0,green,green,-25,-30,10
+LVEF LS Mean Change %,0%,3%,3,High,High,25%,25,green,green,3,4,11

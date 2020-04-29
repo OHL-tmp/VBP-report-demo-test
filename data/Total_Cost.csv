@@ -1,0 +1,11 @@
+Contract Type,Item,Best Estimate,Worst,Best,Lower End,Higher End
+Baseline,Total Cost,36.0,NA,NA,NA,NA
+Contract w/o VBC Payout,Total Cost,35.5005,42.183,28.818,38.84175,32.15925
+Contract w/o VBC Payout,Rebate Adjustment,0,0,0,0,0
+Contract w/o VBC Payout,Total Cost (After Rebate Adj),35.5005,42.183,28.818,38.84175,32.15925
+Contract with VBC Payout (Recommended),Total Cost,35.6745,42.357,28.992,39.01575,32.33325
+Contract with VBC Payout (Recommended),Rebate Adjustment,0.0,-1.044,1.044,-0.8658794396958216,0.8658794396958215
+Contract with VBC Payout (Recommended),Total Cost (After Rebate Adj),35.6745,41.313,30.036,38.14987056030417,33.199129439695824
+Contract with VBC Payout (Payor Contract),Total Cost,35.6745,42.357,28.992,39.01575,32.33325
+Contract with VBC Payout (Payor Contract),Rebate Adjustment,-0.4701248,-1.3920000000000001,1.3920000000000001,-1.3920000000000001,0.5464992000000011
+Contract with VBC Payout (Payor Contract),Total Cost (After Rebate Adj),35.2043752,40.964999999999996,30.384,37.623749999999994,32.8797492

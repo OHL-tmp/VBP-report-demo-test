@@ -1,0 +1,5 @@
+﻿Confounding Factor,Issues,Impact to Pharma,Adjustment Methodology
+Health Risk,Patient’s health status difference will cause utilization pattern difference,Unfavorable,
+Benefit Change,"Benefit difference will induce utilization pattern change. When comparing actual episode cost against target for outcome based payment adjustment, significant benefit change between baseline and performance year should be adjusted and normalized","1.Benefit becomes richer : Unfavorable
+2.Benefit becomes learner : Favorable",Compare actuarial value between baseline and performance year products and apply induced utilization factors to normalize the difference
+Provider Contracting Change,,,
