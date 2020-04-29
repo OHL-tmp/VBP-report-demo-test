@@ -25,6 +25,15 @@ from modal_dashboard_domain_selection import *
 
 from app import app
 
+
+
+
+#modebar display
+button_to_rm=['zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'hoverClosestCartesian','hoverCompareCartesian','hoverClosestGl2d', 'hoverClosestPie', 'toggleHover','toggleSpikelines']
+
+
+
+
 ## load data
 def load_data(app):
     global waterfall_domain1, waterfall_domain2, waterfall_domain3, waterfall_domain4, waterfall_domain5, waterfall_domain6, waterfall_domain7
@@ -172,8 +181,8 @@ def div_overall_performance(app):
                     html.P("As of June 30th.", style={"color":"#000", "font-size":"0.8rem"}),
                     dbc.Row(
                         [
-                            dbc.Col(dcc.Graph(figure=bargraph_overall1), width=7),
-                            dbc.Col(dcc.Graph(figure=waterfall_overall1), width=5),
+                            dbc.Col(dcc.Graph(figure=bargraph_overall1,config={'modeBarButtonsToRemove': button_to_rm,'displaylogo': False,}), width=7),
+                            dbc.Col(dcc.Graph(figure=waterfall_overall1,config={'modeBarButtonsToRemove': button_to_rm,'displaylogo': False,}), width=5),
                         ],
                     ),
                 ],
@@ -258,7 +267,7 @@ def card_sub1_volumn_based_measures(app,volumn_measure, fig, tab,size):
     if tab=='dash':
         figure=html.Div([fig],style=style)
     else:
-        figure=dcc.Graph(figure=fig,style=style)
+        figure=dcc.Graph(figure=fig,style=style,config={'modeBarButtonsToRemove': button_to_rm,'displaylogo': False,})
 
     return html.Div(
 	    		[
@@ -297,12 +306,12 @@ def card_sub2_volumn_based_measures(app,volumn_measure,fig1,fig2,tab1,tab2,heigh
     if tab1=='dash':
         figure1=html.Div([fig1],style=style1)
     else:
-        figure1=dcc.Graph(figure=fig1,style=style1)
+        figure1=dcc.Graph(figure=fig1,style=style1,config={'modeBarButtonsToRemove': button_to_rm,'displaylogo': False,})
     
     if tab2=='dash':
         figure2=html.Div([fig2],style=style2)
     else:
-        figure2=dcc.Graph(figure=fig2, style=style2)
+        figure2=dcc.Graph(figure=fig2, style=style2,config={'modeBarButtonsToRemove': button_to_rm,'displaylogo': False,})
 
     return html.Div(
 			    [
@@ -412,7 +421,7 @@ def card_overview_value_based_measures(app):
                         ),
                         
                         dcc.Graph(style={"height":"22rem"}, id = "bubble_graph_domain",
-                            figure = bubblegraph(df_domain_perform,[0,1],'Domain'))
+                            figure = bubblegraph(df_domain_perform,[0,1],'Domain'),config={'modeBarButtonsToRemove': button_to_rm,'displaylogo': False,})
                     ]
                 ),
                 className="mb-3",
@@ -448,7 +457,7 @@ def card_buttonGroup_domain_selected(app):
                 dbc.CardBody([
                     html.Div([dbc.Button("Cost & Utilization Reduction", active = True,
                                       id = "button-domain-1", outline=True, color="primary", className="mr-1", style = {"font-family":"NotoSans-Regular", "font-size":"0.8rem"})],
-                             id = "buttonGroup-domain-selected-1", 
+                             id = "buttonGroup-domain-selected-1",
                              hidden = False),
                     html.Div([dbc.Button("Improving Disease Outcome", 
                                       id = "button-domain-2", outline=True, color="primary", className="mr-1", style = {"font-family":"NotoSans-Regular", "font-size":"0.8rem"})],
@@ -489,7 +498,7 @@ def card_sub_value_based_measures(app):
                         html.Div(
                             [
                                 html.Div(waterfall_domain1, id = "graph-container-domain-selected-1", style={"max-height":"20rem"}),
-                                dcc.Graph(figure = domain1_perform, id = "graph-container-domain-selected-2", style={"height":"15rem"}),
+                                dcc.Graph(figure = domain1_perform, id = "graph-container-domain-selected-2", style={"height":"15rem"},config={'modeBarButtonsToRemove': button_to_rm,'displaylogo': False,}),
                             ],
                         ),
                     ]

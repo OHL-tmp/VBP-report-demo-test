@@ -24,9 +24,10 @@ from app import app
 
 
 df_drilldown=pd.read_csv("data/drilldown_sample_6.csv")
-dimensions=df_drilldown.columns[0:12]
+#dimensions=df_drilldown.columns[0:12]
 df_drill_waterfall=pd.read_csv("data/drilldown waterfall graph.csv")
 df_driver=pd.read_csv("data/Drilldown Odometer.csv")
+df_driver_all=pd.read_csv("data/Drilldown All Drivers.csv")
 data_lv3=drilldata_process(df_drilldown,'Service Category')
 data_lv4=drilldata_process(df_drilldown,'Sub Category')
 
@@ -36,6 +37,24 @@ for i in list(df_drilldown.columns[0:14]):
     for j in list(df_drilldown[i].unique()):
         all_dimension.append([i,j])
 all_dimension=pd.DataFrame(all_dimension,columns=['dimension','value'])
+
+#for modify criteria list
+dimensions = ['Age Band' , 'Gender'  , 'Patient Health Risk Level' , 'NYHA Class' , 'Medication Adherence' , 'Comorbidity Type',  'Weight Band' , 'Comorbidity Score' , 'Ejection Fraction' , 'Years Since HF Diagnosis' , 'Prior Use of ACE/ARB' ]
+
+disable_list=['Comorbidity Type', 'Weight Band','Comorbidity Score','Ejection Fraction','Years Since HF Diagnosis','Prior Use of ACE/ARB']
+
+# Path
+BASE_PATH = pathlib.Path(__file__).parent.resolve()
+DATA_PATH = BASE_PATH.joinpath("Data").resolve()
+
+#modebar display
+button_to_rm=['zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'hoverClosestCartesian','hoverCompareCartesian','hoverClosestGl2d', 'hoverClosestPie', 'toggleHover','toggleSpikelines']
+
+app = dash.Dash(__name__, url_base_pathname='/vbc-demo/contract-manager-drilldown/')
+
+server = app.server
+
+
 
 
 def create_layout(app):
@@ -183,7 +202,7 @@ def card_overview_drilldown(percentage):
                             [
                                 html.Div(
                                     [
-                                        dcc.Graph(figure=drill_bar(df_drill_waterfall)),
+                                        dcc.Graph(figure=drill_bar(df_drill_waterfall),config={'modeBarButtonsToRemove': button_to_rm,'displaylogo': False,}),
                                     ]
                                 )
                             ],
@@ -195,7 +214,7 @@ def card_overview_drilldown(percentage):
                                 html.Div(
                                     [
                                         html.H3("Target Adj Details", style={"font-size":"1rem","margin-top":"-1.8rem","color":"#919191","background-color":"#f5f5f5","width":"9rem","padding-left":"1rem","padding-right":"1rem","text-align":"center"}),
-                                        html.Div([dcc.Graph(figure=drill_waterfall(df_drill_waterfall),style={"height":"24rem","padding-bottom":"1rem"})]),
+                                        html.Div([dcc.Graph(figure=drill_waterfall(df_drill_waterfall),style={"height":"24rem","padding-bottom":"1rem"},config={'modeBarButtonsToRemove': button_to_rm,'displaylogo': False,})]),
                                     ],
                                     style={"border-radius":"0.5rem","border":"2px solid #d2d2d2","padding":"1rem","height":"25.5rem"}
                                 )
@@ -216,15 +235,15 @@ def card_key_driver_drilldown(app):
                         dbc.Row(
                             [
                                 dbc.Col(html.Img(src=app.get_asset_url("bullet-round-blue.png"), width="10px"), width="auto", align="start", style={"margin-top":"-4px"}),
-		                        dbc.Col(html.H4("Key Drivers", style={"font-size":"1rem", "margin-left":"10px"}), width=8),
-                                dbc.Col(dbc.Button(
-                                    "Show All Drivers",
-                                    #id="button-mod-dim-lv1",
-                                    className="mb-3",
-                                    style={"background-color":"#38160f", "border":"none", "border-radius":"10rem", "font-family":"NotoSans-Regular", "font-size":"0.6rem"},
-                                    ),
-                                    width=3
-                                )
+		                        dbc.Col(html.H4("Key Drivers", style={"font-size":"1rem", "margin-left":"10px"})),
+                                dbc.Col([dbc.Button("See All Drivers", id = 'button-all-driver'),
+                                        dbc.Modal([
+                                                dbc.ModalHeader("All Drivers"),
+                                                dbc.ModalBody(children = [table_driver_all(df_driver_all)]),
+                                                dbc.ModalFooter(
+                                                        dbc.Button("Close", id = 'close-all-driver')
+                                                        )
+                                                ], id = 'modal-all-driver')]),
                             ],
                             no_gutters=True,
                         ),
@@ -334,7 +353,7 @@ def card_graph1_performance_drilldown(app):
                                     ],
                                     style={"padding-left":"2rem","padding-right":"1rem","border-radius":"5rem","background-color":"#f7f7f7","margin-top":"2rem"}
                                 ), 
-                                html.Div(drillgraph_lv1(drilldata_process(df_drilldown,'Risk Score Band'),'dashtable_lv1'),id="drill_lv1",style={"padding-top":"2rem","padding-bottom":"2rem"}), 
+                                html.Div(drillgraph_lv1(drilldata_process(df_drilldown,'Patient Health Risk Level'),'dashtable_lv1','Patient Health Risk Level'),id="drill_lv1",style={"padding-top":"2rem","padding-bottom":"2rem"}), 
                             ], 
                             style={"max-height":"80rem"}
                         ),
@@ -358,9 +377,9 @@ def mod_criteria_button():
                                         html.Div(
                                             [
                                                 dbc.RadioItems(
-                                                    options = [{'label':c , 'value':c} for c in dimensions
+                                                    options = [{'label':c , 'value':c,'disabled' : False} if c not in disable_list else {'label':c , 'value':c,'disabled' : True} for c in dimensions
                                                               ],
-                                                    value = "Risk Score Band",
+                                                    value = "Patient Health Risk Level",
                                                     labelCheckedStyle={"color": "#057aff"},
                                                     id = "list-dim-lv1",
                                                     style={"font-family":"NotoSans-Condensed", "font-size":"0.8rem", "padding":"1rem"},
@@ -418,7 +437,7 @@ def card_graph2_performance_drilldown(app):
                                     ],
                                     style={"padding-left":"2rem","padding-right":"1rem","border-radius":"5rem","background-color":"#f7f7f7","margin-top":"2rem"}
                                 ), 
-                                html.Div(drillgraph_lv1(drilldata_process(df_drilldown,'Managing Physician (Group)'),'dashtable_lv2'),id="drill_lv2",style={"padding-top":"2rem","padding-bottom":"2rem"}), 
+                                html.Div(drillgraph_lv1(drilldata_process(df_drilldown,'Managing Physician (Group)'),'dashtable_lv2','Managing Physician (Group)'),id="drill_lv2",style={"padding-top":"2rem","padding-bottom":"2rem"}), 
                             ], 
                             style={"max-height":"80rem"}
                         ),
@@ -507,7 +526,7 @@ def card_table2_performance_drilldown(app):
                                     [
                                         dbc.Row(
                                             [
-                                                dbc.Col(html.H1("By Service Categories", style={"color":"#f0a800", "font-size":"1.5rem","padding-top":"1.2rem"}), width=5),
+                                                dbc.Col(html.H1("By Sub Categories", style={"color":"#f0a800", "font-size":"1.5rem","padding-top":"1.2rem"}), width=5),
                                                 
                                                 dbc.Col(
                                                     [
@@ -552,9 +571,18 @@ def card_table2_performance_drilldown(app):
                 style={"box-shadow":"0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05)", "border":"none", "border-radius":"0.5rem"}
             )
 
-
-
 layout = create_layout(app)
+
+@app.callback(
+    Output("modal-all-driver","is_open"),
+    [Input("button-all-driver","n_clicks"),
+     Input("close-all-driver","n_clicks")],
+    [State("modal-all-driver","is_open")]        
+)
+def open_all_driver(n1,n2,is_open):
+    if n1 or n2:
+        return not is_open
+    return is_open
 
 
 
@@ -587,7 +615,7 @@ def update_table_dimension(dim):
     f1_name=dim
     filter1_value_list=[{'label': i, 'value': i} for i in all_dimension[all_dimension['dimension']==dim].loc[:,'value']]
     
-    return drillgraph_lv1(drilldata_process(df_drilldown,dim),'dashtable_lv1'),f1_name,filter1_value_list,f1_name,filter1_value_list,f1_name,filter1_value_list,'By '+f1_name
+    return drillgraph_lv1(drilldata_process(df_drilldown,dim),'dashtable_lv1',dim),f1_name,filter1_value_list,f1_name,filter1_value_list,f1_name,filter1_value_list,'By '+f1_name
 
 #update filter1 on following page based on selected columns
 
@@ -648,7 +676,7 @@ def update_filter3value(row,data):
 )
 def update_table2(dim,val):       
     
-    return drillgraph_lv1(drilldata_process(df_drilldown,'Managing Physician (Group)',dim1=dim,f1=val),'dashtable_lv2')
+    return drillgraph_lv1(drilldata_process(df_drilldown,'Managing Physician (Group)',dim1=dim,f1=val),'dashtable_lv2','Managing Physician (Group)')
 
 
 #update lv3 on filter1,filter2
@@ -699,8 +727,8 @@ def update_table4(dim1,val1,dim2,val2,dim3,val3,sort_dim):
     if sort_dim==[]:
         sort_dim=[{"column_id":"Contribution to Overall Performance Difference","direction":"desc"}]
   
-    df1=data_lv4[0:len(data_lv4)-1].sort_values(by=sort_dim[0]['column_id'],ascending= sort_dim[0]['direction']=='asc')
-    df1=pd.concat([df1,data_lv4[len(data_lv4)-1:len(data_lv4)]])
+    df1=data_lv4[0:len(data_lv4)-2].sort_values(by=sort_dim[0]['column_id'],ascending= sort_dim[0]['direction']=='asc')
+    df1=pd.concat([df1,data_lv4[len(data_lv4)-2:len(data_lv4)]])
     
     return df1.to_dict('records')
 
@@ -726,9 +754,9 @@ def sort_table3(sort_dim):
 
 ## modal
 @app.callback(
-    Output("drilldown_modal-centered", "is_open"),
-    [Input("open-centered", "n_clicks"), Input("close-centered", "n_clicks")],
-    [State("drilldown_modal-centered", "is_open")],
+    Output("drilldown-modal-centered", "is_open"),
+    [Input("drilldown-open-centered", "n_clicks"), Input("drilldown-close-centered", "n_clicks")],
+    [State("drilldown-modal-centered", "is_open")],
 )
 def toggle_modal_dashboard_domain_selection(n1, n2, is_open):
     if n1 or n2:
