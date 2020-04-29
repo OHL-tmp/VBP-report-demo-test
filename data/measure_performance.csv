@@ -1,7 +1,5 @@
 ﻿Domain,Measure,YTD Level,Annualized Level ,Target(Risk Adj) ,Performance Diff from Target,Weight
-Cost & Utilization  Reduction,CHF Related Average Cost per Patient,"13,408.00","28,673.00","28,398.00",-0.01,0.4
-Cost & Utilization  Reduction,CHF Related Hospitalization Rate,0.2,0.4,0.43,0.03,0.2
-Improving Disease Outcome,NT-proBNP Change %,-0.2,-0.3,-0.25,0.05,0.2
-Improving Disease Outcome,LVEF LS Mean Change %,0.025,0.04,0.032,0.008,0.2
-,,,,,,
-,,,,,,
+Cost & Utilization  Reduction,CHF Related Average Cost per Patient,"12,951.68","28,493.70","28,232.33",-0.01,0.25
+Cost & Utilization  Reduction,CHF Related Hospitalization Rate,0.2,0.45,0.42,-0.03,0.25
+Improving Disease Outcome,NT-proBNP Change %,-0.25,-0.3,-0.28,0.02,0.25
+Improving Disease Outcome,LVEF LS Mean Change %,0.035,0.04,0.03,0.01,0.25

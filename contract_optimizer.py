@@ -1615,7 +1615,7 @@ def update_table(d1,d2,d3,d4,d5,d6,mc1,mc2,mc3,mc4,mc5,mc6,mc7,mc8,mc9,mc10,mc11
     for i in range(11):
         if eval('mc'+str(i+1)) and len(eval('mc'+str(i+1))) > 0:
             measure_selected.extend(eval('mc'+str(i+1)))
-    
+
     measures_select = domain_selected + measure_selected
     #print(measures_select)
     #df=df_setup[df_setup['measures'].isin(measures_select)]

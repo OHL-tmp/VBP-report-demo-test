@@ -624,9 +624,10 @@ def waterfall_domain(x,y1,y2): #df_waterfall['label']  df_waterfall['base'] df_w
 
 def bargraph_perform(df_measure_perform,d): #df_measure_perform, 0 or 1 or 2.... domain number
 
-    x=df_measure_perform[df_measure_perform['Domain']==domain_set[d]]['Performance Diff from Target']
-    y=df_measure_perform[df_measure_perform['Domain']==domain_set[d]]['Measure']
-    
+    x=df_measure_perform[df_measure_perform['Domain']==domain_set[d]]['Performance Diff from Target'].tolist()
+    y=df_measure_perform[df_measure_perform['Domain']==domain_set[d]]['Measure'].tolist()
+    x.reverse()
+    y.reverse()
     fig_measure_perform = go.Figure(data=[
         go.Bar(
             name='',
@@ -636,7 +637,7 @@ def bargraph_perform(df_measure_perform,d): #df_measure_perform, 0 or 1 or 2....
             textposition='inside',
             texttemplate='%{x}',
             marker=dict(
-                    color=x.apply(lambda x: 'green' if x>0 else 'red'),
+                    color=['green' if i>0 else 'red' for i in x ],
                     opacity=0.7
                     ),
             orientation='h',
@@ -1102,6 +1103,7 @@ def drilldata_process(df_drilldown,dimension,dim1='All',f1='All',dim2='All',f2='
     allvalue[0]='All'
     if dimension in ['Service Category', 'Sub Category']:
         allvalue[-1]=df['Pt_Count'].mean()
+
     if len(df[df[dimension]=='Others'])>0:
         otherpos=df[df[dimension]=='Others'].index[0]
         otherlist=df.loc[otherpos]
