@@ -1,0 +1,10 @@
+Contract Type,Item,Best Estimate,Worst,Best,Lower End,Higher End
+Contract w/o VBC Payout,Base Rebate Payout,2.7840000000000003,NA,NA,NA,NA
+Contract w/o VBC Payout,Outcome Based Rebate Adjustment,0,NA,NA,NA,NA
+Contract w/o VBC Payout,Net Rebate Payout,2.7840000000000003,NA,NA,NA,NA
+Contract with VBC Payout (Recommended),Base Rebate Payout,2.436,2.436,2.436,2.436,2.436
+Contract with VBC Payout (Recommended),Outcome Based Rebate Adjustment,0.030279154078549926,-1.044,1.044,-0.8877492015537333,0.9483075097108331
+Contract with VBC Payout (Recommended),Net Rebate Payout,2.40572084592145,3.48,1.392,3.323749201553733,1.4876924902891668
+Contract with VBC Payout (Payor Contract),Base Rebate Payout,2.436,2.436,2.436,2.436,2.436
+Contract with VBC Payout (Payor Contract),Outcome Based Rebate Adjustment,-0.4631618064516126,-1.3920000000000001,1.3920000000000001,-1.3920000000000001,0.7401698064516138
+Contract with VBC Payout (Payor Contract),Net Rebate Payout,2.8991618064516125,3.8280000000000003,1.0439999999999998,3.8280000000000003,1.6958301935483862

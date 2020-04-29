@@ -1,0 +1,88 @@
+﻿dimension,value,ordering
+Age Band,All,1
+Age Band,<65,2
+Age Band,65-74,3
+Age Band,75-85,4
+Age Band,>=85,5
+Gender,All,1
+Gender,M,2
+Gender,F,3
+Risk Score Band,All,1
+Risk Score Band,Low,2
+Risk Score Band,Mid,3
+Risk Score Band,High,4
+NYHA Class,All,1
+NYHA Class,I,2
+NYHA Class,II,3
+NYHA Class,III,4
+NYHA Class,IV,5
+Medication Adherence,All,1
+Medication Adherence,Compliant,2
+Medication Adherence,Non-compliant,3
+Managing Physician (Group),All,1
+Managing Physician (Group),Group A,2
+Managing Physician (Group),Group B,3
+Managing Physician (Group),Group C,4
+Managing Physician (Group),Group D,5
+Weight Band,All,1
+Comorbidity Type,All,1
+Comorbidity Type,Coronary heart disease ,2
+Comorbidity Type,Chronic pulmonary disease,3
+Comorbidity Type,Renal disease,4
+Comorbidity Type,Atrial fibrillation,5
+Comorbidity Type,Cerebrovascular disease,6
+Comorbidity Type,Diabetes,7
+Comorbidity Score,All,1
+Ejection Fraction,All,1
+Years Since HF Diagnosis,All,1
+Prior Use of ACE/ARB,All,1
+Service Category,All,1
+Service Category,IP,2
+Service Category,OP ER,3
+Service Category,OP Others,4
+Service Category,PH,5
+Service Category,Drug Others,6
+Service Category,Drug Entresto,7
+Service Category,Home Health,8
+Service Category,SNF,9
+Service Category,Hospice,10
+Sub Category,All,1
+Sub Category,Heart Failure,2
+Sub Category,Renal Failure,3
+Sub Category,Pleural effusion,4
+Sub Category,Acute myocardial infarction,5
+Sub Category,Cardiac Arrhythmia,6
+Sub Category,Cardiac arrest and ventricular fibrillation,7
+Sub Category,Hypertension,8
+Sub Category,CABG,9
+Sub Category,CEA,10
+Sub Category,PCI,11
+Sub Category,ICD,12
+Sub Category,Others,13
+Sub Category,Cardiac dysrhythmias,14
+Sub Category,Respiratory system and chest symptoms,15
+Sub Category,COPD,16
+Sub Category,Diabetes,17
+Sub Category,AMI,18
+Sub Category,Aftercare following surgery,19
+Sub Category,Durable Medical Equipment (DME),20
+Sub Category,Lab/Pathology,21
+Sub Category,Radiology,22
+Sub Category,Ambulance,23
+Sub Category,Observation,24
+Sub Category,Outpatient Surgery,25
+Sub Category,Administered Drugs,26
+Sub Category,Anesthesia,27
+Sub Category,Office Visits,28
+Sub Category,Surgical,29
+Sub Category,Other Services,30
+Sub Category,ACE /ARB,31
+Sub Category,Beta Blocker,32
+Sub Category,Aldosterone receptor antagonists,33
+Sub Category,Vasodilators,34
+Sub Category,Diuretics,35
+Sub Category,Other Rx,36
+Sub Category,Entresto,37
+Sub Category,Home Health,38
+Sub Category,SNF,39
+Sub Category,Hospice,40

@@ -1,0 +1,9 @@
+﻿Cohort,Measure,Medical_Worst,Medical_Worse,Medical_Mid,Medical_Better,Medical_Best,Rx_Before_Rebate_Worst,Rx_Before_Rebate_Worse,Rx_Before_Rebate_Mid,Rx_Before_Rebate_Better,Rx_Before_Rebate_Best,Scoring Method
+CHF+AF (Recommended),CHF Related Average Cost per Patient,34367,31654,30146,28639,25926,4640,4640,4640,4640,4640,-1
+CHF+AF (Recommended),CHF Related Hospitalization Rate,,0.4956,0.4675,0.4395,,,,,,,-1
+CHF+AF (Recommended),NT-proBNP Change %,,-0.27,-0.3,-0.33,,,,,,,1
+CHF+AF (Recommended),LVEF LS Mean Change %,,0.045,0.05,0.055,,,,,,,1
+All CHF Patients,CHF Related Average Cost per Patient,28101,25901,24435,22969,20770,4640,4640,4640,4640,4640,-1
+All CHF Patients,CHF Related Hospitalization Rate,,0.4253,0.405,0.3848,,,,,,,-1
+All CHF Patients,NT-proBNP Change %,,-0.225,-0.25,-0.275,,,,,,,1
+All CHF Patients,LVEF LS Mean Change %,,0.0270,0.0300,0.0330,,,,,,,1

@@ -1,0 +1,75 @@
+
+    
+/* original style sheet */
+
+
+.tab {
+  font-family: 'NotoSans-Condensed';
+  font-size: 1rem;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.2);
+  border-bottom-style: none;
+  border-top-style: none;
+  border-right-style: none;
+  border-width: thin;
+  color: black;
+  padding: 1px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.tab.first {
+  font-family: 'NotoSans-Condensed';
+  font-size: 1rem;
+  border-left-style: none;
+}
+
+.tab:focus {
+  border-style: solid;
+/*  border-color: rgba(0,0,0,0.2);*/
+  border-right-style: none;
+  border-bottom-style: none;
+  border-top-style: none;
+  color: #fff;
+  padding: 1px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-weight: bold;
+  background-color: #fff;
+} 
+
+.tab:hover {
+  border-style: solid;
+/*  border-color: rgba(0,0,0,0.2);*/
+  border-right-style: none;
+  border-bottom-style: none;
+  border-top-style: none;
+  color: #000;
+  padding: 1px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+} 
+
+.tab.first:focus {
+    border-left-style: none;
+}
+
+.tab.first:hover {
+    border-left-style: none;
+}
+
+#page-content > div:nth-child(n + 2) > a {
+  visibility: hidden;
+}
+
+._dash-loading {
+  font-family: "NotoSans-CondensedBlackItalic";
+  font-size: 4rem;
+  text-align: center;
+  margin-top: 20rem;
+  color: #1357DD;
+  
+}

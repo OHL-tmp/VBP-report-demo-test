@@ -1,0 +1,38 @@
+@font-face {
+font-family: "NotoSans-CondensedLight";
+src: url("./fonts/NotoSans-CondensedLight.ttf") format("truetype");
+}
+
+@font-face {
+font-family: "NotoSans-CondensedBlack";
+src: url("./fonts/NotoSans-CondensedBlack.ttf") format("truetype");
+}
+@font-face {
+font-family: "NotoSans-CondensedBlackItalic";
+src: url("./fonts/NotoSans-CondensedBlackItalic.ttf") format("truetype");
+}
+
+@font-face {
+font-family: "NotoSans-Black";
+src: url("./fonts/NotoSans-Black.ttf") format("truetype");
+}
+
+@font-face {
+font-family: "NotoSans-Regular";
+src: url("./fonts/NotoSans-Regular.ttf") format("truetype");
+}
+
+@font-face {
+font-family: "NotoSans-Light";
+src: url("./fonts/NotoSans-Light.ttf") format("truetype");
+}
+
+@font-face {
+font-family: "NotoSans-Condensed";
+src: url("./fonts/NotoSans-Condensed.ttf") format("truetype");
+}
+
+@font-face {
+font-family: "NotoSans-SemiBold";
+src: url("./fonts/NotoSans-SemiBold.ttf") format("truetype");
+}
