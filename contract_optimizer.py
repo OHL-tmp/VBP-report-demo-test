@@ -629,7 +629,7 @@ def card_overall_likelihood_to_achieve(app):
                                 dbc.Col(html.Img(src=app.get_asset_url("bullet-round-blue.png"), width="10px"), width="auto", align="start", style={"margin-top":"-4px"}),
                                 dbc.Col(html.H4("Overall likelihood to achieve", style={"font-size":"1rem", "margin-left":"10px"}), width=8),
                                 dbc.Col(html.Div(id = 'overall-like-recom'), width=1),
-								dbc.Col(html.Div(id = 'overall-like-user', style = {'background-color' : '#ffffff'}), width=1),
+								dbc.Col(html.Div(id = 'overall-like-user'), width=1),
 								dbc.Col(html.Div(""), width=2),
                             ],
                             no_gutters=True,
@@ -789,9 +789,8 @@ def card_vbc_contract(app):
                                             dcc.Dropdown(
                                                 options = [
                                                                 {'label':'Rebate adjustment', 'value':'Rebate adjustment'},
-                                                                {'label':'Shared savings/loses', 'value':'Shared savings/loses'},
-                                                                {'label':'Money back', 'value':'Money back'},
-                                                                {'label':'Formulary upgrade', 'value':'Formulary upgrade'}
+                                                                {'label':'Shared savings/losses', 'value':'Shared savings/losses'},
+                                                                {'label':'Outcome guarantee', 'value':'Outcome guarantee'}
                                                             ],
                                                 value = 'Rebate adjustment',
                                                 style={"font-family":"NotoSans-Regular","font-size":"0.8rem","width":"11rem"}
@@ -1217,12 +1216,12 @@ for d in range(domain_ct):
             Input(f'measure-name-{d+1}-{m+1}', 'children'),
             Input(f'outcome-measure-row-{d+1}-{m+1}', 'hidden')]
             )(cal_measure_likelihood)
-
+'''
 # overall likelihood
 @app.callback(
     [Output('overall-like-recom', 'children'),
     Output('overall-like-user', 'children'),],
-    [Input('computed-table', 'derived_virtual_data'),
+    [Input('computed-table', 'data'),
     Input('target-patient-input', 'value')]
     )
 def overall_like(data, cohort_selected):
@@ -1309,7 +1308,7 @@ def overall_like(l1,l2,l3,l4,l5,l6,l7,l8,l9,l10,l11,l12,l13,l14,l15,l16,l17,l18,
     else:
         return '',{"background-color": '#ffffff'}
 
-
+'''
 #input modal measure
 @app.callback(
     Output("optimizer-modal-centered", "is_open"),
@@ -1607,15 +1606,23 @@ def update_table(d1,d2,d3,d4,d5,d6,mc1,mc2,mc3,mc4,mc5,mc6,mc7,mc8,mc9,mc10,mc11
         df_setup = df_setup1
     else:
         df_setup = df_setup2
+
     domain_selected = []
-    for i in range(6):
-        if eval('d' + str(i+1)) == 'primary':
-            domain_selected.append(domain_set[i])
     measure_selected = []
     for i in range(11):
         if eval('mc'+str(i+1)) and len(eval('mc'+str(i+1))) > 0:
+            if i in [0,1,2,3]:
+                domain_selected.append(domain_set[0])
+            elif i in [4,5,6,7]:
+                domain_selected.append(domain_set[1])
+            elif i == 8:
+                domain_selected.append(domain_set[3])
+            elif i == 9:
+                domain_selected.append(domain_set[4])
+            else:
+                domain_selected.append(domain_set[5])
             measure_selected.extend(eval('mc'+str(i+1)))
-    
+
     measures_select = domain_selected + measure_selected
     #print(measures_select)
     #df=df_setup[df_setup['measures'].isin(measures_select)]
@@ -1668,8 +1675,8 @@ def update_columns(timestamp, data):
     for i in domain1_index+domain2_index+domain3_index+domain4_index+domain5_index:
 
         row=data[i]
-        row['weight_user']=str(row['weight_user']).replace('$','').replace('%','')
-        row['taruser_value']=str(row['taruser_value']).replace('$','').replace('%','')      
+        row['weight_user']=str(row['weight_user']).replace('$','').replace('%','').replace(',','')
+        row['taruser_value']=str(row['taruser_value']).replace('$','').replace('%','').replace(',','')      
         if i in domain1_index:
             weight_1=weight_1+float(row['weight_user'])
         if i in domain2_index:
@@ -1711,7 +1718,7 @@ def update_columns(timestamp, data):
             
             row['taruser_value']='{}%'.format(row['taruser_value'])
         else:
-            row['taruser_value']='${}'.format(row['taruser_value']) 
+            row['taruser_value']='${:,}'.format(int(row['taruser_value'])) 
     
     j=0
     for i in domain_index:
@@ -1764,7 +1771,7 @@ def simulation(submit_button, re_pos_perf, re_neg_perf, re_pos_adj, re_neg_adj, 
                     'Adj_Limit_U': [re_pos_adj/100],
                     'Perf_Range_L_Min': [1],
                     'Perf_Range_L_Max': [float(re_neg_perf[:-1])/100],
-                    'Adj_Limit_L': [re_neg_adj/100]} 
+                    'Adj_Limit_L': [-re_neg_adj/100]} 
         Recom_Contract = pd.DataFrame(input1, columns = ['Perf_Range_U_Min','Perf_Range_U_Max','Adj_Limit_U','Perf_Range_L_Min','Perf_Range_L_Max', 'Adj_Limit_L'])
         
 
@@ -1775,8 +1782,8 @@ def simulation(submit_button, re_pos_perf, re_neg_perf, re_pos_adj, re_neg_adj, 
         for i in range(len(measure_list)):
             if measure_list[i] not in ['Cost & Utilization Reduction','Improving Disease Outcome','Increasing Patient Safety','Enhancing Care Quality','Better Patient Experience']:
                 measure_name.append(measure_list[i])
-                target_list.append(float(str(list(dff['taruser_value'])[i]).replace('$','').replace('%','')))
-                weight_list.append(float(str(list(dff['weight_user'])[i]).replace('$','').replace('%','')))  
+                target_list.append(float(str(list(dff['taruser_value'])[i]).replace('$','').replace('%','').replace(',','')))
+                weight_list.append(float(str(list(dff['weight_user'])[i]).replace('$','').replace('%','').replace(',','')))  
                 
 
         input2 = {'Measure': measure_name, 
@@ -1790,9 +1797,8 @@ def simulation(submit_button, re_pos_perf, re_neg_perf, re_pos_adj, re_neg_adj, 
                         'Adj_Limit_U': [in_pos_adj/100],
                         'Perf_Range_L_Min': [1],
                         'Perf_Range_L_Max': [in_neg_perf/100],
-                        'Adj_Limit_L': [in_neg_adj/100]} 
+                        'Adj_Limit_L': [-in_neg_adj/100]} 
         UD_Contract = pd.DataFrame(input3, columns = ['Perf_Range_U_Min','Perf_Range_U_Max','Adj_Limit_U','Perf_Range_L_Min','Perf_Range_L_Max', 'Adj_Limit_L']) 
-
 
         t1,t2,t3=Contract_Calculation(Recom_Contract, UD_Measure,UD_Contract,cohort_selected,rebate_novbc/100, rebate_vbc/100)
         t1.reset_index(inplace = True)

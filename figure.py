@@ -624,9 +624,10 @@ def waterfall_domain(x,y1,y2): #df_waterfall['label']  df_waterfall['base'] df_w
 
 def bargraph_perform(df_measure_perform,d): #df_measure_perform, 0 or 1 or 2.... domain number
 
-    x=df_measure_perform[df_measure_perform['Domain']==domain_set[d]]['Performance Diff from Target']
-    y=df_measure_perform[df_measure_perform['Domain']==domain_set[d]]['Measure']
-    
+    x=df_measure_perform[df_measure_perform['Domain']==domain_set[d]]['Performance Diff from Target'].tolist()
+    y=df_measure_perform[df_measure_perform['Domain']==domain_set[d]]['Measure'].tolist()
+    x.reverse()
+    y.reverse()
     fig_measure_perform = go.Figure(data=[
         go.Bar(
             name='',
@@ -636,7 +637,7 @@ def bargraph_perform(df_measure_perform,d): #df_measure_perform, 0 or 1 or 2....
             textposition='inside',
             texttemplate='%{x}',
             marker=dict(
-                    color=x.apply(lambda x: 'green' if x>0 else 'red'),
+                    color=['green' if i>0 else 'red' for i in x ],
                     opacity=0.7
                     ),
             orientation='h',
@@ -815,7 +816,7 @@ def drill_bubble(df):
         len=0.5,
        tickmode='array',
        tickvals=[-valmax+0.05,valmax-0.05],
-       ticktext=['Low risk','High risk'],
+       ticktext=['Better','Worse'],
        thickness=5,
        x=1,y=0.78
     )
@@ -823,7 +824,7 @@ def drill_bubble(df):
         len=0.5,
        tickmode='array',
        tickvals=[-valmax+0.05,valmax-0.05],
-       ticktext=['Low risk','High risk'],
+       ticktext=['Better','Worse'],
        thickness=5,
        x=1,y=0.22
     )
@@ -1028,13 +1029,13 @@ def dashtable_lv3(df,dimension,tableid,row_select):#row_select: numeric 0 or 1
         id=tableid,
         columns=[
         {"name": ["", dimension], "id": dimension},
-        {"name": ["Average CHF Related Cost", "YTD Avg Cost"], "id": "YTD Avg Episode Cost",'type': 'numeric',"format":FormatTemplate.money(0)},
-        {"name": ["Average CHF Related Cost", "% Diff from Benchmark"], "id": "% Cost Diff from Target",'type': 'numeric',"format":FormatTemplate.percentage(1)},
-        {"name": ["Average CHF Related Cost", "Contribution to Overall Performance Difference"], "id": "Contribution to Overall Performance Difference",'type': 'numeric',"format":FormatTemplate.percentage(1)},
-        {"name": ["Utilization Rate", "YTD Avg Utilization Rate"], "id": "YTD Avg Utilization Rate",'type': 'numeric',"format":Format( precision=1, scheme=Scheme.fixed,),},
-        {"name": ["Utilization Rate", "% Diff from Benchmark"], "id": "% Util Diff from Target",'type': 'numeric',"format":FormatTemplate.percentage(1)},
-        {"name": ["Unit Cost", "YTD Avg Cost per Unit"], "id": "YTD Avg Cost per Unit",'type': 'numeric',"format":FormatTemplate.money(0)},
-        {"name": ["Unit Cost", "% Diff from Benchmark"], "id": "% Unit Cost Diff from Target",'type': 'numeric',"format":FormatTemplate.percentage(1)},
+        {"name": ["Average CHF Related Cost Per Patient", "YTD Avg Cost"], "id": "YTD Avg Episode Cost",'type': 'numeric',"format":FormatTemplate.money(0)},
+        {"name": ["Average CHF Related Cost Per Patient", "% Diff from Benchmark"], "id": "% Cost Diff from Target",'type': 'numeric',"format":FormatTemplate.percentage(1)},
+        {"name": ["Average CHF Related Cost Per Patient", "Contribution to Overall Performance Difference"], "id": "Contribution to Overall Performance Difference",'type': 'numeric',"format":FormatTemplate.percentage(1)},
+        {"name": ["Average Utilization Rate Per Patient", "YTD Avg Utilization Rate"], "id": "YTD Avg Utilization Rate",'type': 'numeric',"format":Format( precision=1, scheme=Scheme.fixed,),},
+        {"name": ["Average Utilization Rate Per Patient", "% Diff from Benchmark"], "id": "% Util Diff from Target",'type': 'numeric',"format":FormatTemplate.percentage(1)},
+        {"name": ["Average Unit Cost", "YTD Avg Cost Unit Cost"], "id": "YTD Avg Cost per Unit",'type': 'numeric',"format":FormatTemplate.money(0)},
+        {"name": ["Average Unit Cost", "% Diff from Benchmark"], "id": "% Unit Cost Diff from Target",'type': 'numeric',"format":FormatTemplate.percentage(1)},
     ],
         merge_duplicate_headers=True,
         sort_action="custom",
@@ -1104,6 +1105,7 @@ def drilldata_process(df_drilldown,dimension,dim1='All',f1='All',dim2='All',f2='
     allvalue[0]='All'
     if dimension in ['Service Category', 'Sub Category']:
         allvalue[-1]=df['Pt_Count'].mean()
+
     if len(df[df[dimension]=='Others'])>0:
         otherpos=df[df[dimension]=='Others'].index[0]
         otherlist=df.loc[otherpos]
@@ -1536,8 +1538,8 @@ def table_sim_result(df):
         {"name": ["","Best Estimate(Mn)"], "id": "Best Estimate",'type': 'numeric',"format":Format( precision=1, scheme=Scheme.fixed,),},
         {"name": [ "Full Range","Low(Mn)"], "id": "Worst",'type': 'numeric',"format":Format( precision=1, scheme=Scheme.fixed,),},
         {"name": [ "Full Range","High(Mn)"], "id": "Best",'type': 'numeric',"format":Format( precision=1, scheme=Scheme.fixed,),},
-        {"name": [ "Likely Range(90% Probability)","Low(Mn)"], "id": "Lower End",'type': 'numeric',"format":Format( precision=1, scheme=Scheme.fixed,),},
-        {"name": [ "Likely Range(90% Probability)","High(Mn)"], "id": "Higher End",'type': 'numeric',"format":Format( precision=1, scheme=Scheme.fixed,),},
+        {"name": [ "Most Likely Range","Low(Mn)"], "id": "Lower End",'type': 'numeric',"format":Format( precision=1, scheme=Scheme.fixed,),},
+        {"name": [ "Most Likely Range","High(Mn)"], "id": "Higher End",'type': 'numeric',"format":Format( precision=1, scheme=Scheme.fixed,),},
         ],  
         merge_duplicate_headers=True,
         style_data={

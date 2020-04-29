@@ -5,7 +5,7 @@ from scipy import interpolate
 
 # Pre-determined input
 Gross_Revenue=6960000/1000000
-Baseline_Net_Medical_Cost=33100/10000
+#Baseline_Net_Medical_Cost=33100/10000
 Pt_Cnt=1500 
 
 
@@ -16,13 +16,8 @@ Recom_Measure_all.set_index(['Cohort','Measure'],inplace=True)
 Pt_Info=pd.read_csv('data/patient_cohort_basic_info.csv')
 
 def Contract_Calculation(Recom_Contract, UD_Measure,UD_Contract,UD_Pt_Cohort,Rebate_noVBC, Rebate_VBC):    
-  
-    import numpy as np
-    import pandas as pd
-    from scipy import interpolate
-
-    Recom_Pt_cohort=UD_Pt_Cohort 
-    Recom_Measure=Recom_Measure_all.loc[Recom_Pt_cohort]   
+    Recom_Pt_cohort=UD_Pt_Cohort  
+    Recom_Measure=Recom_Measure_all.loc[Recom_Pt_cohort]
     
     Recom_Performance_assumption=[]
     UD_Performance_assumption=[]
@@ -117,7 +112,7 @@ def Contract_Calculation(Recom_Contract, UD_Measure,UD_Contract,UD_Pt_Cohort,Reb
     Output_Medical_Cost=Output_Medical_Cost[1:]
     Output_Medical_Cost.columns=header
     
-    Output_Medical_Cost.insert(0, 'Contract Type',['Baseline']*1+ ['Contract w/o VBC Payout']*3+['Contract with VBC Payout (Recommended)']*3+['Contract with VBC Payout (Payor Contract)']*3)
+    Output_Medical_Cost.insert(0, 'Contract Type',['Baseline']*1+ ['Contract w/o VBC Payout']*3+['Contract with VBC Payout (Recommended)']*3+['Contract with VBC Payout (User Defined)']*3)
     Output_Medical_Cost.insert(1, 'Item',['Total Cost']*1+ ['Total Cost','Rebate Adjustment','Total Cost (After Rebate Adj)']*3)
     
     Output_Medical_Cost.reset_index()  
@@ -130,7 +125,7 @@ def Contract_Calculation(Recom_Contract, UD_Measure,UD_Contract,UD_Pt_Cohort,Reb
     Output_Pharma_Net_Revenue=Output_Pharma_Net_Revenue[1:]
     Output_Pharma_Net_Revenue.columns=header
     
-    Output_Pharma_Net_Revenue.insert(0, 'Contract Type', ['Contract w/o VBC Payout']*5+['Contract with VBC Payout (Recommended)']*5+['Contract with VBC Payout (Payor Contract)']*5)
+    Output_Pharma_Net_Revenue.insert(0, 'Contract Type', ['Contract w/o VBC Payout']*5+['Contract with VBC Payout (Recommended)']*5+['Contract with VBC Payout (User Defined)']*5)
     Output_Pharma_Net_Revenue.insert(1, 'Item', ['Gross Revenue','Base Rebate Payout','Outcome Based Rebate Adjustment','Net Rebate Payout','Net Revenue']*3)
     
         

@@ -69,8 +69,10 @@ Domain_options ={
     "Patient Satisfaction" : []
 }}
 
-#default_measure = list(df_recom_measure["Measure"])
 default_measure = ["CHF Related Average Cost per Patient", "CHF Related Hospitalization Rate", "LVEF LS Mean Change %"]
+
+undisabled_list = ["CHF Related Average Cost per Patient", "CHF Related Hospitalization Rate", "NT-proBNP Change %", "LVEF LS Mean Change %"]
+
 
 domain_focus = list(Domain_options.keys())
 
@@ -91,7 +93,6 @@ percent_input = ["All Causes Hospitalization Rate", "CHF Related Hospitalization
 "NT-proBNP Change %", "LVEF LS Mean Change %",
 "CV Mortality Rate", "Rate of CHF Progression for 24 months", "Emergent care rate for medication side effect", "Hospitalization rate for medication side effect"]
 
-undisabled_list = ["CHF Related Average Cost per Patient", "CHF Related Hospitalization Rate", "NT-proBNP Change %", "LVEF LS Mean Change %"]
 
 
 domain_ct = len(domain_set)
@@ -188,7 +189,8 @@ def card_domain_selection(n):
                     ),
                 ],
                 outline=True,
-                id=u"optimizer-card-domain-selection-{}".format(i+1),
+                color = 'light',
+                id=u"optimizer-collapse-card-domain-selection-{}".format(i+1),
                 className="mb-3",
                 style={"border-radius":"0.5rem","border":"1px solid #f5f5f5"}
             )], hidden = hidden_status)
@@ -273,7 +275,7 @@ def checklist_domain_measures_lv1(d):
                     dbc.Collapse(
                            dbc.FormGroup([
                                dbc.Checklist(
-                                   options = [{"label" : k, "value": k, 'disabled' : False} if k in undisabled_list else {"label" : k, "value": k, 'disabled' : True} for k in measures_lv1[key[i]]],
+                                   options = [{"label" : k, "value": k, "disabled" : False} if k in undisabled_list else {"label" : k, "value": k, "disabled" : True} for k in measures_lv1[key[i]]],
                                    value=default,
                                    id=u"optimizer-checklist-domain-measures-lv2-{}-{}".format(d+1,i+1),
                                    inline=True,
