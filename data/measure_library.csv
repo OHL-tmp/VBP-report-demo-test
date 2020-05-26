@@ -1,0 +1,51 @@
+﻿Triple Aim,Domain,Category,Metrics,Published VBP Agreement Counts,Detail,id
+,,Average Cost per Patient ,All Causes/Disease Related Average Cost,2,1 Endocrinology and metabolics; 1 Central nervous system and neurology ,0
+,,Average Cost per Patient by Medical Service Type,All Causes/Disease Related Average IP Cost,,,1
+,Cost Reduction,,All Causes/Disease Related Average ER Cost,1,1 Central nervous system and neurology ,2
+,,Average Rx Cost per Patient,All Causes/Disease Related Average Rx Cost,,,3
+Reducing Cost,,Preventable Cost,Drug/Procedure Specific Preventable Cost,,,4
+,,,Prodcut Specific Cost/Operational Savings,3,2 Equipment/Device/Supply; 1 Platform/Digital solution,5
+,,Hospitalization Rate,All Causes/Disease Related Hospitalization Rate,2,2 Cardiovascular,6
+,Utilization Reduction,Readmission Rate,All Causes/Disease Related Readmission Rate,3,2 Cardiovascular; 1 Central nervous system and neurology,7
+,,ER Rate,All Causes/Disease Related ER Rate,,,8
+,,Surgery/Procedure,Incidence of Disease Related Surgery/Procedure,2,1 Equipment/Device/Supply; 1 Platform/Digital solution,9
+,,,Biomarker Change,10,6 Endocrinology and metabolics; 2 Oncology and hematology;1 Renal; 1 Other,10
+,,,Structural Measure Change,,,11
+,,Improvement in Clinical Measures,Organ Functional Measure Change,2,1 Respiratory and pulmonary; 1 Ophthalmology,12
+,,,Imaging Feature Change,,,13
+,,,Symptom Control,,,14
+,,Clinical Measures Adherence Level,Clinical Measures Adherence Level,,,15
+,,Disease Progression,Disease Progression related clinical measure deteriation,,,16
+,,,Remission Rate,,,17
+,,Disease Control,Relapse Rate,1,1 Behavioral health,18
+,,,Reccurance Rate,,,19
+,Improving Disease Outcome,Degenerative Disease Outcome,Occurrence of Worsening Symptoms/Exacerbations,1,1 Respiratory and pulmonary,20
+,,,Change in Disease Specific Functional Queationnair Score,,,21
+Improving Health,,Functional Outcome,Change in Disease Specific Performance Test Score,,,22
+,,,ADLs,,,23
+,,Life Expectancy,Disease Related Mortality Rate,,,24
+,,,QALYs,,,25
+,,,Depression and Anxiety Score,,,26
+,,Psychosocial Outcome,Confidence/Self-esteem  Score,,,27
+,,,Cognitive Score,,,28
+,,Clinical Event Reduction Outcome,Disease Related Clinical Event Incidence Rate Reduction,6,2 Endocrinology and metabolics; 2 Cardiovascular; 1 Oncology and hematology; 1 Orthopedics,29
+,,,Occurrence of Related Clinical Event Treatment/procedure,1,1 Equipment/Device/Supply,30
+,,Benefit Coverage,Treatment Choice by Subpopulation,,,31
+,Decreasing Health Disparities,,Adequcy of Coverage of Specific Test/Drug/Procedure/Treatment,,,32
+,,Screening Rate,Screening Rate for Specific Disease by Subpopulation,,,33
+,,,Screening Rate for Specific Drug by Subpopulation,,,34
+,,Adverse Event,Emergent care rate for medication adverse effect,,,35
+,,,Hospitalization rate for medication adverse effect,,,36
+,Increasing Patient Safety,Side Effect,Emergent care rate for medication side effect,,,37
+,,,Hospitalization rate for medication side effect,,,38
+,,Treatment Complication,Occurrence of Treatment Complications,,,39
+,,Inappropriate Use,% of Inappropriate Use,,,40
+,,Patient-reported Care Quality Outcome,Effectiveness of Disease Specifc Care/Intervention,,,41
+Improving Patient Care,,,Patient-Reported Outcome Measures,,,42
+,,,DOT,,,43
+,Enhancing Care Quality,Medication Adherence,PDC,,,44
+,,,MPR,,,45
+,,Encounter Process,Disease/Product Related Encounter Process Measures ,,,46
+,,Healthcare-Associated Infections,Occurrence of Healthcare-Associated Infections,1,1 Equipment/Device/Supply,47
+,Better Patient Experience,Symptom management,Self-Reported Disease Specific Sympton Changes,,,48
+,,Patient Satisfaction,Patient Experience Queationnaire Score,,,49

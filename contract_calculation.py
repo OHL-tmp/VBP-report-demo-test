@@ -78,8 +78,8 @@ def Contract_Calculation(Recom_Contract, UD_Measure,UD_Contract,UD_Pt_Cohort,Reb
     for i in Type:
         Output_Pharma_Net_Revenue[i+ 'VBC Gross Revenue']=Gross_Revenue
         Output_Pharma_Net_Revenue[i+'VBC Base Rebate Payout']=Gross_Revenue*Rebate_VBC
-        Output_Pharma_Net_Revenue[i+'VBC Outcome Based Rebate Adjustment']=Output_Pharma_Net_Revenue[i+'VBC Gross Revenue']*Rebate_Adj_Perc[i]
-        Output_Pharma_Net_Revenue[i+'VBC Net Rebate Payout']=Output_Pharma_Net_Revenue[i+'VBC Base Rebate Payout']-Output_Pharma_Net_Revenue[i+'VBC Outcome Based Rebate Adjustment']
+        Output_Pharma_Net_Revenue[i+'VBC Outcome Based Rebate Adjustment']=Output_Pharma_Net_Revenue[i+'VBC Gross Revenue']*Rebate_Adj_Perc[i]*(-1)
+        Output_Pharma_Net_Revenue[i+'VBC Net Rebate Payout']=Output_Pharma_Net_Revenue[i+'VBC Base Rebate Payout']+Output_Pharma_Net_Revenue[i+'VBC Outcome Based Rebate Adjustment']
         Output_Pharma_Net_Revenue[i+'VBC Net Revenue']=Output_Pharma_Net_Revenue[i+'VBC Gross Revenue']-Output_Pharma_Net_Revenue[i+'VBC Net Rebate Payout']
     
     #Produce output table - Plan's medical cost
@@ -100,11 +100,11 @@ def Contract_Calculation(Recom_Contract, UD_Measure,UD_Contract,UD_Pt_Cohort,Reb
 
     Output_Medical_Cost=pd.DataFrame(data) 
 
-    Output_Medical_Cost['RecomVBC Rebate Adjustment']=Output_Pharma_Net_Revenue['RecomVBC Outcome Based Rebate Adjustment']
+    Output_Medical_Cost['RecomVBC Rebate Adjustment']=-Output_Pharma_Net_Revenue['RecomVBC Outcome Based Rebate Adjustment']
     Output_Medical_Cost['RecomVBC Total Cost (After Rebate Adj)']=Output_Medical_Cost['RecomVBC Total Cost']+Output_Medical_Cost['RecomVBC Rebate Adjustment']
 
     Output_Medical_Cost['UDVBC Total Cost']=[x * Baseline.iat[0,1]/1000000 for x in UDVBC_Cost]
-    Output_Medical_Cost['UDVBC Rebate Adjustment']=Output_Pharma_Net_Revenue['UDVBC Outcome Based Rebate Adjustment']
+    Output_Medical_Cost['UDVBC Rebate Adjustment']=-Output_Pharma_Net_Revenue['UDVBC Outcome Based Rebate Adjustment']
     Output_Medical_Cost['UDVBC Total Cost (After Rebate Adj)']=Output_Medical_Cost['UDVBC Total Cost']+Output_Medical_Cost['UDVBC Rebate Adjustment']
 
     Output_Medical_Cost=Output_Medical_Cost.T

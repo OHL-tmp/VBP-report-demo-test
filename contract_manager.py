@@ -140,7 +140,7 @@ def div_year_to_date_metrics(app):
     return html.Div(
                 [
                     html.H2("Year to Date Metrics", style={"padding-top":"2rem", "font-weight":"lighter", "font-size":"1rem"}),
-                    card_year_to_date_metrics("Entresto Utilization", "810"),
+                    card_year_to_date_metrics("Entresto Utilizer", "810"),
                     card_year_to_date_metrics("Total Gross Scripts", "1,902"),
                     card_year_to_date_metrics("Total Scripts(30-day adjusted)", "3,402"),
                     card_year_to_date_metrics("Total Units(Tablets)", "204,120"),
@@ -827,7 +827,8 @@ def generate_measure_watchlist(n, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, 
         for i in range(24):
             if eval("v"+str(i+1)) and len(eval("v"+str(i+1))) > 0:
                 measure_to_watch.extend(eval("v"+str(i+1)))
-    return tbl_non_contract(df_nocontract,measure_to_watch)
+        return tbl_non_contract(df_nocontract,measure_to_watch)
+    return ""
     
 
 

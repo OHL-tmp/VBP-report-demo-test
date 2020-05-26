@@ -95,14 +95,14 @@ domain_ct = len(domain_set)
 def modal_dashboard_domain_selection(n):
     return html.Div(
                 [
-                    dbc.Button("Edit Domain", id="open-centered", className="mb-3", style={"background-color":"#38160f", "border":"none", "border-radius":"10rem", "font-family":"NotoSans-Regular", "font-size":"0.6rem"}), 
+                    dbc.Button("Edit Measures", id="open-centered", className="mb-3", style={"background-color":"#38160f", "border":"none", "border-radius":"10rem", "font-family":"NotoSans-Regular", "font-size":"0.6rem"}), 
                     dbc.Modal(
                         [
                             dbc.ModalHeader([
                                 html.Div(
                                     [
                                         dbc.Row([
-                                             dbc.Col(html.H2("Select Domain", style={"font-size":"2rem","color":"#fff"}), width=7),
+                                             dbc.Col(html.H2("Select Measures", style={"font-size":"2rem","color":"#fff"}), width=7),
                                              dbc.Col(
                                                 dbc.Card(
                                                     dbc.CardBody(

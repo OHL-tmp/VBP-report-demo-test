@@ -13,8 +13,11 @@ import numpy as np
 from dash.dependencies import Input, Output, State
 
 from utils import *
+from figure import *
 
 from app import app
+
+df_measure_library = pd.read_csv("data/measure_library.csv")
 
 def create_layout(app):
 	return html.Div(
@@ -24,7 +27,7 @@ def create_layout(app):
                     html.Div(
                     	[
                     		html.Div(html.H1("Measures Library")),
-                    		html.Div(),
+                    		html.Div(children=measure_lib(df_measure_library)),
                     	]
                     )
                     
@@ -45,4 +48,4 @@ def div_report_content(app):
 layout = create_layout(app)
 
 if __name__ == "__main__":
-    app.run_server(host="127.0.0.1",debug=True,port=8052)
+    app.run_server(host="127.0.0.1",debug=True,port=8049)

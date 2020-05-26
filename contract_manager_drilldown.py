@@ -21,7 +21,8 @@ from figure import *
 from modal_drilldown_tableview import *
 
 from app import app
-
+#app = dash.Dash(__name__)
+#server = app.server
 
 df_drilldown=pd.read_csv("data/drilldown_sample_6.csv")
 #dimensions=df_drilldown.columns[0:12]
@@ -131,90 +132,42 @@ def col_content_drilldown(app):
 	return html.Div(
 			[
                 html.Div([html.Div([col_menu_drilldown()], style={"border-radius":"5rem","background-color":"none"})], style={"padding-bottom":"3rem"}),
-				html.Div(div_main_content_CRACP(app)),
+				dbc.Row(
+					[
+						dbc.Col(card_overview_drilldown(0.012),width=8),
+						dbc.Col(card_key_driver_drilldown(app),width=4),
+					]
+				),
+				card_confounding_factors(app),
+                html.Div(
+                    [
+                        dbc.Row(
+                            [
+                                dbc.Col(html.Div(
+                                        [
+                                            html.H2("Performance Drilldown", style={"font-size":"3rem"}),
+                                            html.H3("check table view for more details...", style={"font-size":"1rem"}),
+                                        ],
+                                        style={"padding-left":"2rem"}
+                                    ), width=8),
+                                dbc.Col(modal_drilldown_tableview(), width=4)
+                            ]
+                        )
+                    ],
+                    style={"padding-bottom":"1rem", "padding-top":"2rem"}
+                ),
+                html.Div(
+                    dbc.Tabs(
+                        [
+                            dbc.Tab(tab_patient_analysis(app), label="Patient Analysis", style={"background-color":"#fff"}, tab_style={"font-family":"NotoSans-Condensed"}),
+                            dbc.Tab(tab_physician_analysis(app), label="Physician Analysis", style={"background-color":"#fff"}, tab_style={"font-family":"NotoSans-Condensed"}),
+                        ], 
+                        # id = 'tab_container'
+                    ),
+                )
 				
 			]
 		)
-
-
-def div_main_content_CRACP(app):
-    return html.Div(
-            [
-                dbc.Row(
-                    [
-                        dbc.Col(card_overview_drilldown(0.01),width=8),
-                        dbc.Col(card_key_driver_drilldown(app),width=4),
-                    ]
-                ),
-                card_confounding_factors(app),
-                html.Div(
-                    [
-                        dbc.Row(
-                            [
-                                dbc.Col(html.Div(
-                                        [
-                                            html.H2("Performance Drilldown", style={"font-size":"3rem"}),
-                                            html.H3("check table view for more details...", style={"font-size":"1rem"}),
-                                        ],
-                                        style={"padding-left":"2rem"}
-                                    ), width=8),
-                                dbc.Col(modal_drilldown_tableview(), width=4)
-                            ]
-                        )
-                    ],
-                    style={"padding-bottom":"1rem", "padding-top":"2rem"}
-                ),
-                html.Div(
-                    dbc.Tabs(
-                        [
-                            dbc.Tab(tab_patient_analysis(app,2), label="Patient Analysis", style={"background-color":"#fff"}, tab_style={"font-family":"NotoSans-Condensed"}),
-                            dbc.Tab(tab_physician_analysis(app,2), label="Physician Analysis", style={"background-color":"#fff"}, tab_style={"font-family":"NotoSans-Condensed"}),
-                        ], 
-                        # id = 'tab_container'
-                    ),
-                )
-            ]
-        )
-
-
-def div_main_content_CRHR(app):
-    return html.Div(
-            [
-                dbc.Row(
-                    [
-                        dbc.Col(card_overview_drilldown(0.01),width=8),
-                        dbc.Col(card_key_driver_drilldown(app),width=4),
-                    ]
-                ),
-                card_confounding_factors(app),
-                html.Div(
-                    [
-                        dbc.Row(
-                            [
-                                dbc.Col(html.Div(
-                                        [
-                                            html.H2("Performance Drilldown", style={"font-size":"3rem"}),
-                                            html.H3("check table view for more details...", style={"font-size":"1rem"}),
-                                        ],
-                                        style={"padding-left":"2rem"}
-                                    ), width=8),
-                                dbc.Col(modal_drilldown_tableview(), width=4)
-                            ]
-                        )
-                    ],
-                    style={"padding-bottom":"1rem", "padding-top":"2rem"}
-                ),
-                html.Div(
-                    dbc.Tabs(
-                        [
-                            dbc.Tab(tab_patient_analysis(app,1), label="Patient Analysis", style={"background-color":"#fff"}, tab_style={"font-family":"NotoSans-Condensed"}),
-                            dbc.Tab(tab_physician_analysis(app,1), label="Physician Analysis", style={"background-color":"#fff"}, tab_style={"font-family":"NotoSans-Condensed"}),
-                        ], 
-                        # id = 'tab_container'
-                    ),
-                )
-            ]
-        )
 
 
 def card_overview_drilldown(percentage):
@@ -310,19 +263,19 @@ def card_key_driver_drilldown(app):
                                 dbc.Col(
                                     [
                                         html.Div([gaugegraph(df_driver,0)], style={"padding-top":"1.5rem"}),
-                                        html.Div(html.H4("{:.1f} %".format(df_driver['%'][0]*100),style={"color":"#ff4d17"}), style={"margin-top":"-1.5rem","text-align":"center","font-size":"1rem","color":"#ffeb78"}),
+                                        html.Div(html.H4("{:.1f} %".format(abs(df_driver['%'][0]*100)),style={"color":"#ff4d17"}), style={"margin-top":"-1.5rem","text-align":"center","font-size":"1rem","color":"#ffeb78"}),
                                     ],
                                     width=6),
                                 dbc.Col(
                                     [
                                         html.Div([gaugegraph(df_driver,1)], style={"padding-top":"1.5rem"}),
-                                        html.Div(html.H4("{:.1f} %".format(df_driver['%'][1]*100),style={"color":"#ffeb78"}), style={"margin-top":"-1.5rem","text-align":"center","font-size":"1rem","color":"#aeff78"}),
+                                        html.Div(html.H4("{:.1f} %".format(abs(df_driver['%'][1]*100)),style={"color":"#ff4d17"}), style={"margin-top":"-1.5rem","text-align":"center","font-size":"1rem","color":"#aeff78"}),
                                     ],
                                     width=6),
                                 dbc.Col(
                                     [
                                         html.Div([gaugegraph(df_driver,2)], style={"padding-top":"1.5rem"}),
-                                        html.Div(html.H4("{:.1f} %".format(df_driver['%'][2]*100),style={"color":"#ffeb78"}), style={"margin-top":"-1.5rem","text-align":"center","font-size":"1rem","color":"#39db44"}),
+                                        html.Div(html.H4("{:.1f} %".format(abs(df_driver['%'][2]*100)),style={"color":"#18cc75"}), style={"margin-top":"-1.5rem","text-align":"center","font-size":"1rem","color":"#39db44"}),
                                     ],
                                     width=6),
                                 
@@ -365,53 +318,40 @@ def card_confounding_factors(app):
 
 def element_confounding_factors(percentage, factor):
     if percentage > 0:
-        color = "danger"
+        color = "success"
     elif percentage == 0:
         color = "secondary"
     else:
-        color = "success"
+        color = "danger"
 
     return dbc.Row(
             [
-                dbc.Col(dbc.Badge(str(percentage*100)+"%", color=color, className="mr-1"), width=3, style={"font-family":"NotoSans-SemiBold"}),
+                dbc.Col(dbc.Badge(str(abs(percentage*100))+"%", color=color, className="mr-1"), width=3, style={"font-family":"NotoSans-SemiBold"}),
                 dbc.Col(html.H6(factor, style = {"font-size":"1rem", "padding-top":"0.1rem"}), width=9),
             ],
             style={"padding":"1rem"}
         )
 
 
-def tab_patient_analysis(app, n):
-    if n == 2:
-        body = [
-                    card_graph1_performance_drilldown(app),
-
-                    html.Hr(),
-
-                    card_table1_performance_drilldown(app),
-
-                    html.Hr(),
-
-                    card_table2_performance_drilldown(app),
-                    
-                ]
-    elif n == 1:
-        body = [
-                    card_graph1_performance_drilldown(app),
-
-                    html.Hr(),
-
-                    card_table1_performance_drilldown(app)
-                ]
-    else:
-        body = [
-                    card_graph1_performance_drilldown(app),
-                  
-                ]
+def tab_patient_analysis(app):
     return html.Div(
                 [
                     dbc.Card(
                         dbc.CardBody(
-                            body
+                            [
+                                card_graph1_patient_performance_drilldown(app),
+                                
+                                
+
+                    html.Hr(),
+
+                                card_table1_patient_performance_drilldown(app),
+
+                    html.Hr(),
+
+                                card_table2_patient_performance_drilldown(app),
+                                
+                            ]
                         ),
                         className="mb-3",
                         style={"border":"none", "border-radius":"0.5rem"}
@@ -422,38 +362,25 @@ def tab_patient_analysis(app, n):
             )
 
 
-def tab_physician_analysis(app,n):
-    if n == 2:
-        body = [
-                    card_graph2_performance_drilldown(app),
-
-                    html.Hr(),
-
-                    card_table1_performance_drilldown(app),
-
-                    html.Hr(),
-
-                    card_table2_performance_drilldown(app),
-                    
-                ]
-    elif n == 1:
-        body = [
-                    card_graph2_performance_drilldown(app),
-
-                    html.Hr(),
-
-                    card_table1_performance_drilldown(app)
-                ]
-    else:
-        body = [
-                    card_graph2_performance_drilldown(app),
-                  
-                ]
+def tab_physician_analysis(app):
     return html.Div(
                 [
                     dbc.Card(
                         dbc.CardBody(
-                            body
+                            [
+                                card_graph2_physician_performance_drilldown(app),
+                                
+                                
+
+                    html.Hr(),
+
+                                card_table1_physician_performance_drilldown(app),
+
+                    html.Hr(),
+
+                                card_table2_physician_performance_drilldown(app),
+                                
+                            ]
                         ),
                         className="mb-3",
                         style={"border":"none", "border-radius":"0.5rem"}
@@ -461,42 +388,6 @@ def tab_physician_analysis(app,n):
 
                     
                 ]
-            )
-
-
-def card_graph1_performance_drilldown(app):
-	return dbc.Card(
-                dbc.CardBody(
-                    [
-                        dbc.Row(
-                            [
-                                dbc.Col(html.Img(src=app.get_asset_url("bullet-round-blue.png"), width="10px"), width="auto", align="start", style={"margin-top":"-4px"}),
-                                dbc.Col(html.H4("Performance Drilldown by Patient Cohort", style={"font-size":"1rem", "margin-left":"10px"}), width=8),
-                            ],
-                            no_gutters=True,
-                        ),
-                        
-                        html.Div(
-                            [
-                                html.Div(
-                                    [
-                                        dbc.Row(
-                                            [
-                                                dbc.Col(html.H1("By Comorbidity Type",id='dimname_on_lv1', style={"color":"#f0a800", "font-size":"1.5rem","padding-top":"0.8rem"}), width=9),
-                                                dbc.Col(mod_criteria_button(), style={"padding-top":"0.8rem"}),
-                                            ]
-                                        )
-                                    ],
-                                    style={"padding-left":"2rem","padding-right":"1rem","border-radius":"5rem","background-color":"#f7f7f7","margin-top":"2rem"}
-                                ), 
-                                html.Div(drillgraph_lv1(drilldata_process(df_drilldown,'Patient Health Risk Level'),'dashtable_lv1','Patient Health Risk Level'),id="drill_lv1",style={"padding-top":"2rem","padding-bottom":"2rem"}), 
-                            ], 
-                            style={"max-height":"80rem"}
-                        ),
-                    ]
-                ),
-                className="mb-3",
-                style={"box-shadow":"0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05)", "border":"none", "border-radius":"0.5rem"}
             )
 
 def mod_criteria_button():
@@ -515,7 +406,7 @@ def mod_criteria_button():
                                                 dbc.RadioItems(
                                                     options = [{'label':c , 'value':c,'disabled' : False} if c not in disable_list else {'label':c , 'value':c,'disabled' : True} for c in dimensions
                                                               ],
-                                                    value = "Patient Health Risk Level",
+                                                    value = "Medication Adherence",
                                                     labelCheckedStyle={"color": "#057aff"},
                                                     id = "list-dim-lv1",
                                                     style={"font-family":"NotoSans-Condensed", "font-size":"0.8rem", "padding":"1rem"},
@@ -536,44 +427,35 @@ def mod_criteria_button():
                                 ),
                                 
                             ]
-    
 
-    
-def card_graph2_performance_drilldown(app):
+
+def card_graph1_patient_performance_drilldown(app):
 	return dbc.Card(
                 dbc.CardBody(
                     [
                         dbc.Row(
                             [
                                 dbc.Col(html.Img(src=app.get_asset_url("bullet-round-blue.png"), width="10px"), width="auto", align="start", style={"margin-top":"-4px"}),
-                                dbc.Col(html.H4("Performance Drilldown by Managing physician Group", style={"font-size":"1rem", "margin-left":"10px"}), width=8),
+                                dbc.Col(html.H4("Performance Drilldown by Patient Cohort", style={"font-size":"1rem", "margin-left":"10px"}), width=8),
                             ],
                             no_gutters=True,
                         ),
-
+                        
                         html.Div(
                             [
                                 html.Div(
                                     [
                                         dbc.Row(
                                             [
-                                                dbc.Col(html.H1("By Physician Group", style={"color":"#f0a800", "font-size":"1.5rem","padding-top":"1.2rem"}), width=6),
-                                                dbc.Col(
-                                                    html.Div(
-                                                        [
-                                                            html.Div(html.H4("Risk Score Band"),id="filter1_2_name", style={"font-size":"0.8rem"}),
-                                                            html.Div(filter_template("Risk Score Band","filter1_2_value",default_val='All')),
-                                                        ]
-                                                    ), 
-                                                    style={"padding":"0.8rem"},
-                                                    width=5,
-                                                ),
+                                                dbc.Col(html.H1("By Medication Adherence",id='dimname_on_patient_lv1', style={"color":"#f0a800", "font-size":"1.5rem","padding-top":"0.8rem"}), width=9),
+                                                dbc.Col(mod_criteria_button(), style={"padding-top":"0.8rem"}),
                                             ]
                                         )
                                     ],
                                     style={"padding-left":"2rem","padding-right":"1rem","border-radius":"5rem","background-color":"#f7f7f7","margin-top":"2rem"}
                                 ), 
-                                html.Div(drillgraph_lv1(drilldata_process(df_drilldown,'Managing Physician (Group)'),'dashtable_lv2','Managing Physician (Group)'),id="drill_lv2",style={"padding-top":"2rem","padding-bottom":"2rem"}), 
+                                
+                                html.Div(drillgraph_lv1(drilldata_process(df_drilldown,'Medication Adherence'),'dashtable_patient_lv1','Medication Adherence'),id="drill_patient_lv1",style={"padding-top":"2rem","padding-bottom":"2rem"}), 
                             ], 
                             style={"max-height":"80rem"}
                         ),
@@ -583,6 +465,8 @@ def card_graph2_performance_drilldown(app):
                 style={"box-shadow":"0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05)", "border":"none", "border-radius":"0.5rem"}
             )
 
+
+
 def filter_template(dim,idname,default_val='All'):
     return(dcc.Dropdown(
                                 id=idname,
@@ -591,14 +475,14 @@ def filter_template(dim,idname,default_val='All'):
                                 clearable=False,
                             ))
 
-def card_table1_performance_drilldown(app):
-	return dbc.Card(
+def card_table1_patient_performance_drilldown(app):
+    return dbc.Card(
                 dbc.CardBody(
                     [
                         dbc.Row(
                             [
                                 dbc.Col(html.Img(src=app.get_asset_url("bullet-round-blue.png"), width="10px"), width="auto", align="start", style={"margin-top":"-4px"}),
-                                dbc.Col(html.H4("Performance Drilldown by Service Categories", style={"font-size":"1rem", "margin-left":"10px"}), width=8),
+                                dbc.Col(html.H4("Performance Drilldown by Service Category", style={"font-size":"1rem", "margin-left":"10px"}), width=8),
                             ],
                             no_gutters=True,
                         ),
@@ -609,19 +493,148 @@ def card_table1_performance_drilldown(app):
                                     [
                                         dbc.Row(
                                             [
-                                                dbc.Col(html.H1("By Service Categories", style={"color":"#f0a800", "font-size":"1.5rem","padding-top":"1.2rem"}), width=5),
+                                                dbc.Col(html.H1("By Service Category", style={"color":"#f0a800", "font-size":"1.5rem","padding-top":"1.2rem"}), width=5),
                                                 dbc.Col( 
                                                     [
-                                                        html.Div("Risk Score Band",id="filter1_3_name", style={"font-size":"0.8rem"}),
-                                                        html.Div(filter_template("Risk Score Band","filter1_3_value",default_val='All')),
+                                                        html.Div("Medication Adherence",id="filter_patient_1_2_name", style={"font-size":"0.8rem"}),
+                                                        html.Div(filter_template("Medication Adherence","filter_patient_1_2_value",default_val='All')),
                                                     ], 
                                                     style={"padding":"0.8rem"},
                                                     width=3,
                                                 ),
+                                            ]
+                                        )
+                                    ],
+                                    style={"padding-left":"2rem","padding-right":"1rem","border-radius":"5rem","background-color":"#f7f7f7","margin-top":"2rem"}
+                                ),
+                                html.H4("* Default sorting: by Contribution to Overall Performance Difference", style={"font-size":"0.8rem","color":"#919191","padding-top":"1rem","margin-bottom":"-1rem"}), 
+                                html.Div([dashtable_lv3(data_lv3,'Service Category','dashtable_patient_lv2',1)],id="drill_patient_lv2",style={"padding":"1rem"}),
+                            ], 
+                            style={"max-height":"80rem"}
+                        ),
+                    ]
+                ),
+                className="mb-3",
+                style={"box-shadow":"0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05)", "border":"none", "border-radius":"0.5rem"}
+            )
+
+
+
+def card_table2_patient_performance_drilldown(app):
+    return dbc.Card(
+                dbc.CardBody(
+                    [
+                        dbc.Row(
+                            [
+                                dbc.Col(html.Img(src=app.get_asset_url("bullet-round-blue.png"), width="10px"), width="auto", align="start", style={"margin-top":"-4px"}),
+                                dbc.Col(html.H4("Service Category Drilldown by Sub Category", style={"font-size":"1rem", "margin-left":"10px"}), width=8),
+                            ],
+                            no_gutters=True,
+                        ),
+
+                        html.Div(
+                            [
+                                html.Div(
+                                    [
+                                        dbc.Row(
+                                            [
+                                                dbc.Col(html.H1("By Sub Category", style={"color":"#f0a800", "font-size":"1.5rem","padding-top":"1.2rem"}), width=5),
+                                                
+                                                dbc.Col(
+                                                    [
+                                                        html.Div("Medication Adherence",id="filter_patient_1_3_name", style={"font-size":"0.6rem"}),
+                                                        html.Div(filter_template("Medication Adherence","filter_patient_1_3_value",default_val='All')),
+                                                    ], 
+                                                    style={"padding":"0.8rem"},
+                                                    width=2,
+                                                ),
+                                                dbc.Col(
+                                                    [
+                                                        html.Div("Service Category",id="filter_patient_2_3_name", style={"font-size":"0.6rem"}),
+                                                        html.Div(filter_template("Service Category","filter_patient_2_3_value",default_val='All')),
+                                                    ], 
+                                                    style={"padding":"0.8rem"},
+                                                    width=2,
+                                                ),
+                                    
+                                            ]
+                                        )
+                                    ],
+                                    style={"padding-left":"2rem","padding-right":"1rem","border-radius":"5rem","background-color":"#f7f7f7","margin-top":"2rem"}
+                                ), 
+                                html.H4("* Default sorting: by Contribution to Overall Performance Difference", style={"font-size":"0.8rem","color":"#919191","padding-top":"1rem","margin-bottom":"-1rem"}), 
+                                html.Div([dashtable_lv3(data_lv4,'Sub Category','dashtable_patient_lv3',0)],id="drill_patient_lv3",style={"padding":"1rem"})
+                            ], 
+                            style={"max-height":"120rem"}
+                        ),
+                        
+
+                    ]
+                ),
+                className="mb-3",
+                style={"box-shadow":"0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05)", "border":"none", "border-radius":"0.5rem"}
+            )
+
+def card_graph2_physician_performance_drilldown(app):
+    return dbc.Card(
+                dbc.CardBody(
+                    [
+                        dbc.Row(
+                            [
+                                dbc.Col(html.Img(src=app.get_asset_url("bullet-round-blue.png"), width="10px"), width="auto", align="start", style={"margin-top":"-4px"}),
+                                dbc.Col(html.H4("Performance Drilldown by Managing Physician (Group)", style={"font-size":"1rem", "margin-left":"10px"}), width=8),
+                            ],
+                            no_gutters=True,
+                        ),
+
+                        html.Div(
+                            [
+                                html.Div(
+                                    [
+                                        dbc.Row(
+                                            [
+                                                dbc.Col(html.H1("By Managing Physician (Group)", style={"color":"#f0a800", "font-size":"1.5rem","padding-top":"1.2rem"}), width=6),
+                                                
+                                            ]
+                                        )
+                                    ],
+                                    style={"padding-left":"2rem","padding-right":"1rem","border-radius":"5rem","background-color":"#f7f7f7","margin-top":"2rem"}
+                                ), 
+                                html.Div(drillgraph_lv1(drilldata_process(df_drilldown,'Managing Physician (Group)'),'dashtable_physician_lv1','Managing Physician (Group)'),id="drill_physician_lv1",style={"padding-top":"2rem","padding-bottom":"2rem"}), 
+                            ], 
+                            style={"max-height":"80rem"}
+                        ),
+                    ]
+                ),
+                className="mb-3",
+                style={"box-shadow":"0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05)", "border":"none", "border-radius":"0.5rem"}
+            )
+
+
+def card_table1_physician_performance_drilldown(app):
+	return dbc.Card(
+                dbc.CardBody(
+                    [
+                        dbc.Row(
+                            [
+                                dbc.Col(html.Img(src=app.get_asset_url("bullet-round-blue.png"), width="10px"), width="auto", align="start", style={"margin-top":"-4px"}),
+                                dbc.Col(html.H4("Performance Drilldown by Service Category", style={"font-size":"1rem", "margin-left":"10px"}), width=8),
+                            ],
+                            no_gutters=True,
+                        ),
+
+                        html.Div(
+                            [
+                                html.Div(
+                                    [
+                                        dbc.Row(
+                                            [
+                                                dbc.Col(html.H1("By Service Category", style={"color":"#f0a800", "font-size":"1.5rem","padding-top":"1.2rem"}), width=5),
+                                                
                                                 dbc.Col( 
                                                     [
-                                                        html.Div("Managing Physician (Group)",id="filter2_3_name", style={"font-size":"0.8rem"}),
-                                                        html.Div(filter_template("Managing Physician (Group)","filter2_3_value",default_val='All')),
+                                                        html.Div("Managing Physician (Group)",id="filter_physician_1_2_name", style={"font-size":"0.8rem"}),
+                                                        html.Div(filter_template("Managing Physician (Group)","filter_physician_1_2_value",default_val='All')),
                                                     ], 
                                                     style={"padding":"0.8rem"},
                                                     width=3,
@@ -632,7 +645,7 @@ def card_table1_performance_drilldown(app):
                                     style={"padding-left":"2rem","padding-right":"1rem","border-radius":"5rem","background-color":"#f7f7f7","margin-top":"2rem"}
                                 ),
                                 html.H4("* Default sorting: by Contribution to Overall Performance Difference", style={"font-size":"0.8rem","color":"#919191","padding-top":"1rem","margin-bottom":"-1rem"}), 
-                                html.Div([dashtable_lv3(data_lv3,'Service Category','dashtable_lv3',1)],id="drill_lv3",style={"padding":"1rem"}),
+                                html.Div([dashtable_lv3(data_lv3,'Service Category','dashtable_physician_lv2',1)],id="drill_physician_lv2",style={"padding":"1rem"}),
                             ], 
                             style={"max-height":"80rem"}
                         ),
@@ -644,7 +657,7 @@ def card_table1_performance_drilldown(app):
 
 
 
-def card_table2_performance_drilldown(app):
+def card_table2_physician_performance_drilldown(app):
 	return dbc.Card(
                 dbc.CardBody(
                     [
@@ -666,24 +679,16 @@ def card_table2_performance_drilldown(app):
                                                 
                                                 dbc.Col(
                                                     [
-                                                        html.Div("Risk Score Band",id="filter1_4_name", style={"font-size":"0.6rem"}),
-                                                        html.Div(filter_template("Risk Score Band","filter1_4_value",default_val='All')),
+                                                        html.Div("Managing Physician (Group)",id="filter_physician_1_3_name", style={"font-size":"0.6rem"}),
+                                                        html.Div(filter_template("Managing Physician (Group)","filter_physician_1_3_value",default_val='All')),
                                                     ], 
                                                     style={"padding":"0.8rem"},
                                                     width=2,
                                                 ),
                                                 dbc.Col(
                                                     [
-                                                        html.Div("Managing Physician (Group)",id="filter2_4_name", style={"font-size":"0.6rem"}),
-                                                        html.Div(filter_template("Managing Physician (Group)","filter2_4_value",default_val='All')),
-                                                    ], 
-                                                    style={"padding":"0.8rem"},
-                                                    width=2,
-                                                ),
-                                                dbc.Col(
-                                                    [
-                                                        html.Div("Service Category",id="filter3_4_name", style={"font-size":"0.6rem"}),
-                                                        html.Div(filter_template("Service Category","filter3_4_value",default_val='All')),
+                                                        html.Div("Service Category",id="filter_physician_2_3_name", style={"font-size":"0.6rem"}),
+                                                        html.Div(filter_template("Service Category","filter_physician_2_3_value",default_val='All')),
                                                     ], 
                                                     style={"padding":"0.8rem"},
                                                     width=2,
@@ -695,7 +700,7 @@ def card_table2_performance_drilldown(app):
                                     style={"padding-left":"2rem","padding-right":"1rem","border-radius":"5rem","background-color":"#f7f7f7","margin-top":"2rem"}
                                 ), 
                                 html.H4("* Default sorting: by Contribution to Overall Performance Difference", style={"font-size":"0.8rem","color":"#919191","padding-top":"1rem","margin-bottom":"-1rem"}), 
-                                html.Div([dashtable_lv3(data_lv4,'Sub Category','dashtable_lv4',0)],id="drill_lv4",style={"padding":"1rem"})
+                                html.Div([dashtable_lv3(data_lv4,'Sub Category','dashtable_physician_lv3',0)],id="drill_physician_lv3",style={"padding":"1rem"})
                             ], 
                             style={"max-height":"120rem"}
                         ),
@@ -708,6 +713,7 @@ def card_table2_performance_drilldown(app):
             )
 
 layout = create_layout(app)
+#app.layout = create_layout(app)
 
 @app.callback(
     Output("modal-all-driver","is_open"),
@@ -734,16 +740,14 @@ def toggle_popover_mod_criteria(n1, is_open):
         return not is_open
     return is_open
 
-#update lv1 table and filter1 on following page based on criteria button
+#update patient lv1 table and filter1 on following page based on criteria button
 @app.callback(
-   [ Output("drill_lv1","children"),
-     Output("filter1_2_name","children"),
-     Output("filter1_2_value","options"),
-     Output("filter1_3_name","children"),
-     Output("filter1_3_value","options"),
-     Output("filter1_4_name","children"),
-     Output("filter1_4_value","options"), 
-     Output("dimname_on_lv1","children"),
+   [ Output("drill_patient_lv1","children"),
+     Output("filter_patient_1_2_name","children"),
+     Output("filter_patient_1_2_value","options"),
+     Output("filter_patient_1_3_name","children"),
+     Output("filter_patient_1_3_value","options"),
+     Output("dimname_on_patient_lv1","children"),
    ],
    [Input("list-dim-lv1","value")] 
 )
@@ -751,85 +755,53 @@ def update_table_dimension(dim):
     f1_name=dim
     filter1_value_list=[{'label': i, 'value': i} for i in all_dimension[all_dimension['dimension']==dim].loc[:,'value']]
     
-    return drillgraph_lv1(drilldata_process(df_drilldown,dim),'dashtable_lv1',dim),f1_name,filter1_value_list,f1_name,filter1_value_list,f1_name,filter1_value_list,'By '+f1_name
+    return drillgraph_lv1(drilldata_process(df_drilldown,dim),'dashtable_patient_lv1',dim),f1_name,filter1_value_list,f1_name,filter1_value_list,'By '+f1_name
 
-#update filter1 on following page based on selected columns
-
-@app.callback(
-   [ Output("filter1_2_value","value"),   
-     Output("filter1_3_value","value"),  
-     Output("filter1_4_value","value"),  
-   ],
-   [ Input("dashtable_lv1","selected_columns"),
-   ] 
-)
-def update_filter1value(col):
-    if col==[]:
-        col_1='All'
-    else:col_1=col[0]        
-    
-    return col_1,col_1,col_1
-
-#update filter2 on following page based on selected columns
+#update patient filter1 on following page based on selected rows
 
 @app.callback(
-   [ Output("filter2_3_value","value"),   
-     Output("filter2_4_value","value"),  
-   ],
-   [ Input("dashtable_lv2","selected_columns"),
+   [ Output("filter_patient_1_2_value","value"),   
+     Output("filter_patient_1_3_value","value"),    ],
+   [ Input("dashtable_patient_lv1","selected_row_ids"),
    ] 
 )
-def update_filter2value(col):
-    if col==[]:
-        col_1='All'
-    else:col_1=col[0]        
-    
-    return col_1,col_1
+def update_filter1value_patient(row):
 
-#update filter3 on following page based on selected rows
-
-@app.callback(
-   Output("filter3_4_value","value"),   
-   [Input("dashtable_lv3","selected_row_ids"),
-    Input("dashtable_lv3","data"),
-   ] 
-)
-def update_filter3value(row,data):
-    
     if row is None or row==[]:
         row_1='All'
-    else:
-        row_1=row[0]  
+    else:row_1=row[0]        
+    
+    return row_1,row_1
+
+#update patient filter2 on following page based on selected rows
+
+@app.callback(
+    Output("filter_patient_2_3_value","value"),   
+   [ Input("dashtable_patient_lv2","selected_row_ids"),
+   ] 
+)
+def update_filter2value(row):
+    if row is None or row==[]:
+        row_1='All'
+    else:row_1=row[0]        
+    
     return row_1
-    
-#update lv2 on filter1
+
+
+
+#update patient lv2 on filter1
 
 @app.callback(
-    Output("drill_lv2","children"),    
-   [ Input("filter1_2_name","children"),
-     Input("filter1_2_value","value"),
+   Output("dashtable_patient_lv2","data"), 
+   [ Input("filter_patient_1_2_name","children"),
+     Input("filter_patient_1_2_value","value"),
+     Input('dashtable_patient_lv2', 'sort_by'),
    ] 
 )
-def update_table2(dim,val):       
-    
-    return drillgraph_lv1(drilldata_process(df_drilldown,'Managing Physician (Group)',dim1=dim,f1=val),'dashtable_lv2','Managing Physician (Group)')
-
-
-#update lv3 on filter1,filter2
-
-@app.callback(
-   Output("dashtable_lv3","data"), 
-   [ Input("filter1_3_name","children"),
-     Input("filter1_3_value","value"),
-     Input("filter2_3_name","children"),
-     Input("filter2_3_value","value"),
-     Input('dashtable_lv3', 'sort_by'),
-   ] 
-)
-def update_table3(dim1,val1,dim2,val2,sort_dim):
+def update_table3(dim1,val1,sort_dim):
     #global data_lv3
     
-    data_lv3=drilldata_process(df_drilldown,'Service Category',dim1,val1,dim2,val2)       
+    data_lv3=drilldata_process(df_drilldown,'Service Category',dim1,val1)       
     #data_lv3.to_csv('data/overall_performance.csv')
     if sort_dim==[]:
         sort_dim=[{"column_id":"Contribution to Overall Performance Difference","direction":"desc"}]
@@ -842,23 +814,21 @@ def update_table3(dim1,val1,dim2,val2,sort_dim):
 
 
 
-#update lv4 on filter1,filter2,filter3
+#update patient lv3 on filter1,filter2
 
 @app.callback(
-    Output("dashtable_lv4","data"),    
-   [ Input("filter1_4_name","children"),
-     Input("filter1_4_value","value"),
-     Input("filter2_4_name","children"),
-     Input("filter2_4_value","value"),
-     Input("filter3_4_name","children"),
-     Input("filter3_4_value","value"),
-     Input('dashtable_lv4', 'sort_by'),
+    Output("dashtable_patient_lv3","data"),    
+   [ Input("filter_patient_1_3_name","children"),
+     Input("filter_patient_1_3_value","value"),
+     Input("filter_patient_2_3_name","children"),
+     Input("filter_patient_2_3_value","value"),
+     Input('dashtable_patient_lv3', 'sort_by'),
    ] 
 )
-def update_table4(dim1,val1,dim2,val2,dim3,val3,sort_dim):
+def update_table4(dim1,val1,dim2,val2,sort_dim):
     
     #global data_lv4
-    data_lv4=drilldata_process(df_drilldown,'Sub Category',dim1,val1,dim2,val2,dim3,val3)   
+    data_lv4=drilldata_process(df_drilldown,'Sub Category',dim1,val1,dim2,val2)   
     
     if sort_dim==[]:
         sort_dim=[{"column_id":"Contribution to Overall Performance Difference","direction":"desc"}]
@@ -867,6 +837,90 @@ def update_table4(dim1,val1,dim2,val2,dim3,val3,sort_dim):
     df1=pd.concat([df1,data_lv4[len(data_lv4)-2:len(data_lv4)]])
     
     return df1.to_dict('records')
+
+
+
+
+#update physician filter1 on following page based on selected rows
+
+@app.callback(
+   [ Output("filter_physician_1_2_value","value"),   
+     Output("filter_physician_1_3_value","value"),    ],
+   [ Input("dashtable_physician_lv1","selected_row_ids"),
+   ] 
+)
+def update_filter1value(row):
+
+    if row is None or row==[]:
+        row_1='All'
+    else:row_1=row[0]        
+    
+    return row_1,row_1
+
+#update physician filter2 on following page based on selected columns
+
+@app.callback(
+    Output("filter_physician_2_3_value","value"),   
+   [ Input("dashtable_physician_lv2","selected_row_ids"),
+   ] 
+)
+def update_filter2value(row):
+    if row is None or row==[]:
+        row_1='All'
+    else:row_1=row[0]        
+    
+    return row_1
+
+
+
+#update physician lv2 on filter1
+
+@app.callback(
+   Output("dashtable_physician_lv2","data"), 
+   [ Input("filter_physician_1_2_name","children"),
+     Input("filter_physician_1_2_value","value"),
+     Input('dashtable_physician_lv2', 'sort_by'),
+   ] 
+)
+def update_table3(dim1,val1,sort_dim):
+    #global data_lv3
+    
+    data_lv3=drilldata_process(df_drilldown,'Service Category',dim1,val1)       
+    #data_lv3.to_csv('data/overall_performance.csv')
+    if sort_dim==[]:
+        sort_dim=[{"column_id":"Contribution to Overall Performance Difference","direction":"desc"}]
+  
+    df1=data_lv3[0:len(data_lv3)-1].sort_values(by=sort_dim[0]['column_id'],ascending= sort_dim[0]['direction']=='asc')
+    df1=pd.concat([df1,data_lv3[len(data_lv3)-1:len(data_lv3)]])
+    df1['id']=df1[df1.columns[0]]
+    df1.set_index('id', inplace=True, drop=False)
+    return df1.to_dict('records')
+
+
+
+#update physician lv3 on filter1,filter2
+
+@app.callback(
+    Output("dashtable_physician_lv3","data"),    
+   [ Input("filter_physician_1_3_name","children"),
+     Input("filter_physician_1_3_value","value"),
+     Input("filter_physician_2_3_name","children"),
+     Input("filter_physician_2_3_value","value"),
+     Input('dashtable_physician_lv3', 'sort_by'),
+   ] 
+)
+def update_table4(dim1,val1,dim2,val2,sort_dim):
+    
+    #global data_lv4
+    data_lv4=drilldata_process(df_drilldown,'Sub Category',dim1,val1,dim2,val2)   
+    
+    if sort_dim==[]:
+        sort_dim=[{"column_id":"Contribution to Overall Performance Difference","direction":"desc"}]
+  
+    df1=data_lv4[0:len(data_lv4)-2].sort_values(by=sort_dim[0]['column_id'],ascending= sort_dim[0]['direction']=='asc')
+    df1=pd.concat([df1,data_lv4[len(data_lv4)-2:len(data_lv4)]])
+    
+    return df1.to_dict('records')    
 
 
 #sort lv3 on selected dimension
@@ -1001,6 +1055,7 @@ def filter_menu_2(v, f):
         dropdown_option = [{"label": k, "value": k, 'disabled' : False} for k in list(dimension.keys()) if len(dimension[k]) != 0 and k != v] + [{"label": 'Service Category', "value": 'Service Category'}, {"label": 'Sub Category', "value": 'Sub Category', 'disabled' : True}] + [{"label": k, "value": k, 'disabled' : True} for k in list(dimension.keys()) if len(dimension[k]) == 0 or k ==v]
         return dropdown_option, False
 
+
 @app.callback(
     [Output('datatable-tableview', "columns"),
     Output('datatable-tableview', "data")],
@@ -1050,6 +1105,10 @@ def datatable_data_selection(v1, v2, v3, d1, d2, f1, f2, m):
         df_drilldown_filtered = df_drilldown
         cate_cnt = cate_mix_cnt
 
+    df_drilldown_filtered['YTD IP Utilization'] = df_drilldown_filtered.apply(lambda x: x['YTD Utilization'] if x['Service Category'] == 'Inpatient' else 0, axis = 1)
+    df_drilldown_filtered['Annualized IP Utilization'] = df_drilldown_filtered.apply(lambda x: x['Annualized Utilization'] if x['Service Category'] == 'Inpatient' else 0, axis = 1)
+    df_drilldown_filtered['Benchmark IP Utilization'] = df_drilldown_filtered.apply(lambda x: x['Benchmark Utilization'] if x['Service Category'] == 'Inpatient' else 0, axis = 1)
+
     table_column = []
     selected_dimension = []
     if v1 is not None:
@@ -1061,14 +1120,14 @@ def datatable_data_selection(v1, v2, v3, d1, d2, f1, f2, m):
 
     table_column.extend(list(set(selected_dimension + ['Service Category', 'Sub Category'])))
     table_column.append("Pt Count")
-    percent_list = ['Diff % from Benchmark Utilization', 'Diff % from Benchmark Total Cost', 'Diff % from Benchmark Unit Cost', 'Patient %']
+    percent_list = ['Diff % from Benchmark Utilization', 'Diff % from Benchmark Total Cost', 'Diff % from Benchmark Unit Cost', 'Patient %', 'Diff % from Benchmark Hospitalization Rate per Patient']
     dollar_list = ['YTD Total Cost', 'Annualized Total Cost', 'Benchmark Total Cost', 'YTD Unit Cost', 'Annualized Unit Cost', 'Benchmark Unit Cost']
     if len(selected_dimension) > 0:
 #        ptct_dimension = set(selected_dimension + ['Service Category', 'Sub Category'])
         table_column.extend(measure_ori) 
         df_agg_pre = df_drilldown_filtered[table_column].groupby(by = list(set(selected_dimension + ['Service Category', 'Sub Category']))).sum().reset_index()
         df_agg = df_agg_pre[table_column].groupby(by = selected_dimension).agg({'Pt Count':'mean', 'YTD Utilization':'sum', 'Annualized Utilization':'sum', 'Benchmark Utilization':'sum', 
-            'YTD Total Cost':'sum', 'Annualized Total Cost':'sum', 'Benchmark Total Cost':'sum'}).reset_index()
+            'YTD Total Cost':'sum', 'Annualized Total Cost':'sum', 'Benchmark Total Cost':'sum', 'YTD IP Utilization':'sum', 'Annualized IP Utilization':'sum', 'Benchmark IP Utilization':'sum'}).reset_index()
 #        df_agg['Pt Count'] = df_agg['Pt Count']/cate_cnt
         df_agg['Patient %'] = df_agg['Pt Count']/995000
         df_agg['YTD Utilization'] = df_agg['YTD Utilization']/df_agg['Pt Count']
@@ -1083,6 +1142,10 @@ def datatable_data_selection(v1, v2, v3, d1, d2, f1, f2, m):
         df_agg['Annualized Unit Cost'] = df_agg['Annualized Total Cost']/df_agg['Annualized Utilization']
         df_agg['Benchmark Unit Cost'] = df_agg['Benchmark Total Cost']/df_agg['Benchmark Utilization']
         df_agg['Diff % from Benchmark Unit Cost'] = (df_agg['Annualized Unit Cost'] - df_agg['Benchmark Unit Cost'])/df_agg['Benchmark Unit Cost']
+        df_agg['YTD Hospitalization Rate per Patient'] = df_agg['YTD IP Utilization']/df_agg['Pt Count']
+        df_agg['Annualized Hospitalization Rate per Patient'] = df_agg['Annualized IP Utilization']/df_agg['Pt Count']
+        df_agg['Benchmark Hospitalization Rate per Patient'] = df_agg['Benchmark IP Utilization']/df_agg['Pt Count']
+        df_agg['Diff % from Benchmark Hospitalization Rate per Patient'] = (df_agg['Annualized IP Utilization'] - df_agg['Benchmark IP Utilization'])/df_agg['Benchmark IP Utilization']
 #        df_agg.style.format({'Diff % from Target Utilization' : "{:.2%}", 'Diff % from Target Total Cost': "{:.2%}", 'Diff % from Target Unit Cost' : "{:.2%}"})
 #        df_agg.reset_index(inplace = True)
         show_column = selected_dimension + ['Patient %'] + m 
@@ -1096,7 +1159,6 @@ def datatable_data_selection(v1, v2, v3, d1, d2, f1, f2, m):
     
     
     return [{"name": i, "id": i, "selectable":True,"type":"numeric", "format": FormatTemplate.percentage(1)} if i in percent_list else {"name": i, "id": i, "selectable":True, "type":"numeric","format": FormatTemplate.money(0)} if i in dollar_list else {"name": i, "id": i, "selectable":True, "type":"numeric","format": Format(precision=1, scheme = Scheme.fixed)} for i in show_column], df_agg.to_dict('records')
-
 
 
 
