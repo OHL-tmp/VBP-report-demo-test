@@ -20,9 +20,9 @@ from figure import *
 
 from modal_drilldown_tableview import *
 
-#from app import app
-app = dash.Dash(__name__)
-server = app.server
+from app import app
+#app = dash.Dash(__name__)
+#server = app.server
 
 df_drilldown=pd.read_csv("data/drilldown_sample_6.csv")
 #dimensions=df_drilldown.columns[0:12]
@@ -712,8 +712,8 @@ def card_table2_physician_performance_drilldown(app):
                 style={"box-shadow":"0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05)", "border":"none", "border-radius":"0.5rem"}
             )
 
-#layout = create_layout(app)
-app.layout = create_layout(app)
+layout = create_layout(app)
+#app.layout = create_layout(app)
 
 @app.callback(
     Output("modal-all-driver","is_open"),
@@ -1122,7 +1122,7 @@ def datatable_data_selection(v1, v2, v3, d1, d2, f1, f2, m):
 
     table_column.extend(list(set(selected_dimension + ['Service Category', 'Sub Category'])))
     table_column.append("Pt Count")
-    percent_list = ['Diff % from Benchmark Utilization', 'Diff % from Benchmark Total Cost', 'Diff % from Benchmark Unit Cost', 'Patient %', 'Diff % from Hospitalization Rate per Patient']
+    percent_list = ['Diff % from Benchmark Utilization', 'Diff % from Benchmark Total Cost', 'Diff % from Benchmark Unit Cost', 'Patient %', 'Diff % from Benchmark Hospitalization Rate per Patient']
     dollar_list = ['YTD Total Cost', 'Annualized Total Cost', 'Benchmark Total Cost', 'YTD Unit Cost', 'Annualized Unit Cost', 'Benchmark Unit Cost']
     if len(selected_dimension) > 0:
 #        ptct_dimension = set(selected_dimension + ['Service Category', 'Sub Category'])

@@ -34,7 +34,7 @@ dimension = {'Age Band' : ['<65', '65-74', '75-85', '>=85'], 'Gender' : ['F', 'M
 measure = ['YTD Utilization', 'Annualized Utilization', 'Benchmark Utilization', 'Diff % from Benchmark Utilization',
 		'YTD Total Cost', 'Annualized Total Cost', 'Benchmark Total Cost', 'Diff % from Benchmark Total Cost',
 		'YTD Unit Cost', 'Annualized Unit Cost', 'Benchmark Unit Cost', 'Diff % from Benchmark Unit Cost',
-		'YTD Hospitalization Rate per Patient', 'Annualized Hospitalization Rate per Patient', 'Benchmark Hospitalization Rate per Patient', 'Diff % from Hospitalization Rate per Patient']
+		'YTD Hospitalization Rate per Patient', 'Annualized Hospitalization Rate per Patient', 'Benchmark Hospitalization Rate per Patient', 'Diff % from Benchmark Hospitalization Rate per Patient']
 measure_ori = ['YTD Utilization', 'Annualized Utilization', 'Benchmark Utilization', 
 		'YTD Total Cost', 'Annualized Total Cost', 'Benchmark Total Cost',
 		'YTD IP Utilization', 'Annualized IP Utilization', 'Benchmark IP Utilization']
