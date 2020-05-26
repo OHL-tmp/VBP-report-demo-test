@@ -766,8 +766,7 @@ def update_table_dimension(dim):
    ] 
 )
 def update_filter1value_patient(row):
-    print('patient')
-    print(row)
+
     if row is None or row==[]:
         row_1='All'
     else:row_1=row[0]        
@@ -851,8 +850,7 @@ def update_table4(dim1,val1,dim2,val2,sort_dim):
    ] 
 )
 def update_filter1value(row):
-    print('physician')
-    print(row)
+
     if row is None or row==[]:
         row_1='All'
     else:row_1=row[0]        

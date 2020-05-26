@@ -1481,11 +1481,11 @@ def drilldata_process_ip(df_drilldown,dimension,dim1='All',f1='All',dim2='All',f
     df['% Cost Diff from Benchmark']=(df['Annualized Avg Episode Cost']-df['Target Avg Episode Cost'])/df['Target Avg Episode Cost']
     df['Contribution to Overall Performance Difference']=(df['Annualized_Total_cost']-df['Target_Total_cost'])/allvalue[3]
 
-    df['YTD Avg Utilization Rate']=df['YTD_Utilization']/df['Pt_Count']
-    df['Target Avg Utilization Rate']=df['Target_Utilization']/df['Pt_Count']
-    df['Annualized Avg Utilization Rate']=df['Annualized_Utilization']/df['Pt_Count']
+    df['YTD Hospitalization Rate']=df['YTD_Utilization']/df['Pt_Count']
+    df['Target Hospitalization Rate']=df['Target_Utilization']/df['Pt_Count']
+    df['Annualized Hospitalization Rate']=df['Annualized_Utilization']/df['Pt_Count']
 
-    df['% Util Diff from Target']=(df['Annualized Avg Utilization Rate']-df['Target Avg Utilization Rate'])/df['Target Avg Utilization Rate']
+#    df['% Util Diff from Target']=(df['Annualized Avg Utilization Rate']-df['Target Avg Utilization Rate'])/df['Target Avg Utilization Rate']
 
     df['YTD Avg Cost per Unit']=df['YTD_Total_cost']/df['YTD_Utilization']
     df['Target Avg Cost per Unit']=df['Target_Total_cost']/df['Target_Utilization']
@@ -1494,13 +1494,10 @@ def drilldata_process_ip(df_drilldown,dimension,dim1='All',f1='All',dim2='All',f
     df['% Unit Cost Diff from Target']=(df['Annualized Avg Cost per Unit']-df['Target Avg Cost per Unit'])/df['Target Avg Cost per Unit']
 
 
-    df['YTD Hospitalization Rate']=df['YTD_Utilization_ip']/df['Pt_Count']
-    df['Target Hospitalization Rate']=df['Target_Utilization_ip']/df['Pt_Count']
-    df['Annualized Hospitalization Rate']=df['Annualized_Utilization_ip']/df['Pt_Count']
-
     df['% Hospitalization Rate Diff from Benchmark']=(df['Annualized Hospitalization Rate']-df['Target Hospitalization Rate'])/df['Target Hospitalization Rate']
     df['Contribution to Overall Hospitalization Rate Difference']=(df['Annualized Hospitalization Rate']-df['Target Hospitalization Rate'])/(df.tail(1)['Target Hospitalization Rate'].values[0])
     
+#    df.to_csv(dimension+'.csv')
     return df
 
 def drill_waterfall(df):
@@ -2219,3 +2216,5 @@ def measure_lib(df):
     )
 
     return table
+#df_drilldown=pd.read_csv("data/drilldown_sample_6.csv")
+#a=drilldata_process_ip(df_drilldown,'Managing Physician (Group)',dim1='Sub Category',f1='Heart Failure')
