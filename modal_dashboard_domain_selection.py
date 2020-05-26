@@ -76,7 +76,7 @@ Domain_options ={
     "Patient Satisfaction" : []
 }}
 
-default_measure = ["CHF Related Average Cost per Patient", "CHF Related Hospitalization Rate", "NT-proBNP Improvement %", "LVEF Improvement %"]
+default_measure = ["CHF Related Average Cost per Patient", "CHF Related Hospitalization Rate", "NT-proBNP Change %", "LVEF LS Mean Change %"]
 
 domain_focus = list(Domain_options.keys())
 
