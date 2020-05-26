@@ -1336,7 +1336,7 @@ def collapse_confounding_factors(app):
 
 
 
-app.layout = create_layout(app)
+layout = create_layout(app)
 
 
 
