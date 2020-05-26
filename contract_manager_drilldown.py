@@ -155,10 +155,16 @@ def col_content_drilldown(app):
                     ],
                     style={"padding-bottom":"1rem", "padding-top":"2rem"}
                 ),
-				card_graph1_performance_drilldown(app),
-				card_graph2_performance_drilldown(app),
-				card_table1_performance_drilldown(app),
-				card_table2_performance_drilldown(app),
+                html.Div(
+                    dbc.Tabs(
+                        [
+                            dbc.Tab(tab_patient_analysis(app), label="Patient Analysis", style={"background-color":"#fff"}, tab_style={"font-family":"NotoSans-Condensed"}),
+                            dbc.Tab(tab_physician_analysis(app), label="Physician Analysis", style={"background-color":"#fff"}, tab_style={"font-family":"NotoSans-Condensed"}),
+                        ], 
+                        # id = 'tab_container'
+                    ),
+                )
+				
 			]
 		)
 
@@ -324,6 +330,64 @@ def element_confounding_factors(percentage, factor):
             ],
             style={"padding":"1rem"}
         )
+
+
+def tab_patient_analysis(app):
+    return html.Div(
+                [
+                    dbc.Card(
+                        dbc.CardBody(
+                            [
+                                card_graph1_performance_drilldown(app),
+                                
+                                
+
+                                html.Hr(),
+
+                                card_table1_performance_drilldown(app),
+
+                                html.Hr(),
+
+                                card_table2_performance_drilldown(app),
+                                
+                            ]
+                        ),
+                        className="mb-3",
+                        style={"border":"none", "border-radius":"0.5rem"}
+                    ),
+
+                    
+                ]
+            )
+
+
+def tab_physician_analysis(app):
+    return html.Div(
+                [
+                    dbc.Card(
+                        dbc.CardBody(
+                            [
+                                card_graph2_performance_drilldown(app),
+                                
+                                
+
+                                html.Hr(),
+
+                                card_table1_performance_drilldown(app),
+
+                                html.Hr(),
+
+                                card_table2_performance_drilldown(app),
+                                
+                            ]
+                        ),
+                        className="mb-3",
+                        style={"border":"none", "border-radius":"0.5rem"}
+                    ),
+
+                    
+                ]
+            )
 
 
 def card_graph1_performance_drilldown(app):
