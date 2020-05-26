@@ -1093,8 +1093,12 @@ def drillgraph_lv1(df_table,tableid,dim):
 #def drillgraph_table(df_table,tableid,dim):
 #    df1=df_table[0:len(df_table)-1].sort_values(by='Contribution to Overall Performance Difference',ascending= 'desc')
  #   df_table=pd.concat([df1,df_table.tail(1)])
+    df_table['id']=df_table[dim]
+    df_table.set_index('id', inplace=True, drop=False)
 
     col_max=max(df_table['Contribution to Overall Performance Difference'].max(),df_table['% Cost Diff from Benchmark'].max())
+
+    n=len(df_table)-1
 
     tbl=dash_table.DataTable(
         id=tableid,
@@ -1108,7 +1112,7 @@ def drillgraph_lv1(df_table,tableid,dim):
         {'id': 'Contribution to Overall Performance Difference', 'name': 'Contribution to Overall Performance Difference','type': 'numeric',"format":FormatTemplate.percentage(1)} ,
          ],
         row_selectable="single",
-        selected_rows=[len(df_table)-1],
+        selected_rows=[n],
         sort_action="custom",
         sort_mode='single',
 #        sort_by=[{"column_id":"Contribution to Overall Performance Difference","direction":"desc"},],
@@ -1167,6 +1171,8 @@ def dashtable_lv3(df,dimension,tableid,row_select):#row_select: numeric 0 or 1
         row_sel=False
     else:
         row_sel='single'
+
+    n=len(df)-1
         
     table_lv3=dash_table.DataTable(
         data=df.to_dict('records'),
@@ -1186,7 +1192,7 @@ def dashtable_lv3(df,dimension,tableid,row_select):#row_select: numeric 0 or 1
         sort_mode='single',
         sort_by=[{"column_id":"Contribution to Overall Performance Difference","direction":"desc"},],
         row_selectable=row_sel,
-        selected_rows=[],
+        selected_rows=[n],
         style_data={
             'whiteSpace': 'normal',
             'height': 'auto'
@@ -1234,6 +1240,9 @@ def drillgraph_lv1_ip(df_table,tableid,dim):
 #    df1=df_table[0:len(df_table)-1].sort_values(by='Contribution to Overall Performance Difference',ascending= 'desc')
  #   df_table=pd.concat([df1,df_table.tail(1)])
 
+    df_table['id']=df_table[dim]
+
+    df_table.set_index('id', inplace=True, drop=False)
 
     col_max=max(df_table['Contribution to Overall Performance Difference'].max(),df_table['% Cost Diff from Benchmark'].max())
 
