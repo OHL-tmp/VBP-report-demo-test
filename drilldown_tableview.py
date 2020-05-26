@@ -33,10 +33,11 @@ dimension = {'Age Band' : ['<65', '65-74', '75-85', '>=85'], 'Gender' : ['F', 'M
        'Weight Band' : [], 'Comorbidity Type' : [], 'Comorbidity Score' : [], 'Ejection Fraction' : [], 'Years Since HF Diagnosis' : [], 'Prior Use of ACE/ARB' : []}
 measure = ['YTD Utilization', 'Annualized Utilization', 'Benchmark Utilization', 'Diff % from Benchmark Utilization',
 		'YTD Total Cost', 'Annualized Total Cost', 'Benchmark Total Cost', 'Diff % from Benchmark Total Cost',
-		'YTD Unit Cost', 'Annualized Unit Cost', 'Benchmark Unit Cost', 'Diff % from Benchmark Unit Cost']
-measure_ori = ['YTD Utilization',
-       'Annualized Utilization', 'Benchmark Utilization', 'YTD Total Cost',
-       'Annualized Total Cost', 'Benchmark Total Cost']
+		'YTD Unit Cost', 'Annualized Unit Cost', 'Benchmark Unit Cost', 'Diff % from Benchmark Unit Cost',
+		'YTD Hospitalization Rate per Patient', 'Annualized Hospitalization Rate per Patient', 'Benchmark Hospitalization Rate per Patient', 'Diff % from Hospitalization Rate per Patient']
+measure_ori = ['YTD Utilization', 'Annualized Utilization', 'Benchmark Utilization', 
+		'YTD Total Cost', 'Annualized Total Cost', 'Benchmark Total Cost',
+		'YTD IP Utilization', 'Annualized IP Utilization', 'Benchmark IP Utilization']
 filter_list = {
        'Inpatient' : ['Acute myocardial infarction', 'CABG', 'Cardiac Arrhythmia', 'Cardiac arrest and ventricular fibrillation', 'Heart Failure', 'Hypertension', 'ICD', 'Others', 'PCI', 'Pacemaker Implant', 'Pleural effusion', 'Renal Failure'],
  		'Outpatient ER' : ['AMI', 'Aftercare following surgery', 'COPD', 'Cardiac dysrhythmias', 'Diabetes', 'Heart Failure', 'Hypertension', 'Others', 'Respiratory system and chest symptoms'], 
