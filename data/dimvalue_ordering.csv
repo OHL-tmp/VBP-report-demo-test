@@ -1,42 +1,42 @@
 ﻿dimension,value,ordering
-Age Band,All,1
+Age Band,All,100
 Age Band,<65,2
 Age Band,65-74,3
 Age Band,75-85,4
 Age Band,>=85,5
-Gender,All,1
+Gender,All,100
 Gender,M,2
 Gender,F,3
-Patient Health Risk Level,All,1
+Patient Health Risk Level,All,100
 Patient Health Risk Level,Low,2
 Patient Health Risk Level,Mid,3
 Patient Health Risk Level,High,4
-NYHA Class,All,1
+NYHA Class,All,100
 NYHA Class,I,2
 NYHA Class,II,3
 NYHA Class,III,4
 NYHA Class,IV,5
-Medication Adherence,All,1
+Medication Adherence,All,100
 Medication Adherence,Compliant,2
 Medication Adherence,Non-compliant,3
-Managing Physician (Group),All,1
+Managing Physician (Group),All,100
 Managing Physician (Group),Group A,2
 Managing Physician (Group),Group B,3
 Managing Physician (Group),Group C,4
 Managing Physician (Group),Group D,5
-Weight Band,All,1
-Comorbidity Type,All,1
+Weight Band,All,100
+Comorbidity Type,All,100
 Comorbidity Type,Coronary heart disease ,2
 Comorbidity Type,Chronic pulmonary disease,3
 Comorbidity Type,Renal disease,4
 Comorbidity Type,Atrial fibrillation,5
 Comorbidity Type,Cerebrovascular disease,6
 Comorbidity Type,Diabetes,7
-Comorbidity Score,All,1
-Ejection Fraction,All,1
-Years Since HF Diagnosis,All,1
-Prior Use of ACE/ARB,All,1
-Service Category,All,1
+Comorbidity Score,All,100
+Ejection Fraction,All,100
+Years Since HF Diagnosis,All,100
+Prior Use of ACE/ARB,All,100
+Service Category,All,100
 Service Category,IP,2
 Service Category,OP ER,3
 Service Category,OP Others,4
@@ -46,7 +46,7 @@ Service Category,Drug Entresto,7
 Service Category,Home Health,8
 Service Category,SNF,9
 Service Category,Hospice,10
-Sub Category,All,1
+Sub Category,All,100
 Sub Category,Heart Failure,2
 Sub Category,Renal Failure,3
 Sub Category,Pleural effusion,4

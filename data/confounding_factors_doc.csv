@@ -1,5 +1,6 @@
 ﻿Confounding Factor,Impact to VBC Contract
 Patient Health Status,Disease related cost and utilization will change when patient's health status changes
+Medication Adherence,"Non compliant patients will cause disease related cost ,utilization and clinical outcome to be worse than target"
 Benefit Change,"Benefit change will affect medical behavior and change disease related cost, utilization and clinical outcome"
 Provider Contracting Change,Provider payment rate change wil affect disease related cost 
 Change in Covered Services,Expansion in in covered services will increase disease related cost and utilization; clinical outcome might improves

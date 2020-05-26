@@ -1,20 +1,22 @@
 ﻿Domain,Measure,YTD Level,Annualized Level ,Target(Risk Adj) ,Performance Diff from Target
-Cost & Utilization Reduction,All Causes Average Cost per Patient,NA,NA,NA,NA
-Cost & Utilization Reduction,CHF Related Average Cost per Patient,"$12,952 ","$28,494 ","$28,232 ",-0.01
-Cost & Utilization Reduction,All Causes Average IP Cost per Patient,NA,NA,NA,NA
-Cost & Utilization Reduction,CHF Related Average IP Cost per Patient,NA,NA,NA,NA
-Cost & Utilization Reduction,All Causes Hospitalization Rate,NA,NA,NA,NA
-Cost & Utilization Reduction,CHF Related Hospitalization Rate,20%,45%,42%,-0.03
-Cost & Utilization Reduction,All Causes ER Rate,NA,NA,NA,NA
+Cost & Utilization Reduction,CHF Related Average Cost per Patient,"$11,481 ","$26,174 ","$25,095 ",-0.042999943
+Cost & Utilization Reduction,CHF Related Hospitalization Rate,39.71%,90.86%,88.25%,-0.029561544
+Cost & Utilization Reduction,CHF Related Average IP Cost per Patient ,NA,NA,NA,NA
 Cost & Utilization Reduction,CHF Related ER Rate,NA,NA,NA,NA
-Improving Disease Outcome,NT-proBNP Improvement %,-25%,-30%,-28%,0.02
-Improving Disease Outcome,LVEF Improvement %,3.50%,4.00%,3.00%,0.01
-Improving Disease Outcome,LAVi Improvement %,-5.00%,-7.00%,-6.00%,0.01
-Improving Disease Outcome,LVEDVi Improvement %,-8.00%,-12.00%,-10.00%,0.02
-Improving Disease Outcome,LVESVi and E/e’ Improvement %,-12.00%,-15.00%,-12.00%,0.03
-Improving Disease Outcome,Change in Self-Care Score,-2.20%,-3.00%,-2.50%,0.005
-Improving Disease Outcome,Change in Mobility Score ,NA,NA,NA,NA
-Improving Disease Outcome,CV Mortality Rate,5%,15%,15%,0
+Cost & Utilization Reduction,All Causes Average Cost per Patient,NA,NA,NA,NA
+Cost & Utilization Reduction,All Causes Average IP Cost per Patient,NA,NA,NA,NA
+Cost & Utilization Reduction,All Causes Hospitalization Rate,NA,NA,NA,NA
+Cost & Utilization Reduction,All Causes ER Rate,NA,NA,NA,NA
+Improving Disease Outcome,NT-proBNP Change %,-25.00%,-28.00%,-29.00%,-0.01
+Improving Disease Outcome,LVEF LS Mean Change %,2.70%,4.00%,4.50%,-0.005
+Improving Disease Outcome,LAVi LS Mean Change,-5,-6.5,-6,0.083333333
+Improving Disease Outcome,LVEDVi LS Mean Change,-8,-10.5,-10,0.05
+Improving Disease Outcome,LVESVi LS Mean Change,-10,-12.5,-12,0.041666667
+Improving Disease Outcome,E/e’ LS Mean Change,-0.8,-1.1,-1,0.1
+Improving Disease Outcome,Change in Self-Care Score,-2.2,-2.7,-2.5,0.08
+Improving Disease Outcome,Change in Mobility Score,-2.2,-2.7,-2.5,0.08
+Improving Disease Outcome,CV Mortality Rate,5.00%,15.00%,15.00%,0
+Improving Disease Outcome,Rate of CHF Progression for 24 months,5.00%,17.00%,20.00%,0.03
 Increasing Patient Safety,Emergent care rate for medication side effect,NA,NA,NA,NA
 Increasing Patient Safety,Hospitalization rate for medication side effect,NA,NA,NA,NA
 Enhancing Care Quality,DOT,NA,NA,NA,NA

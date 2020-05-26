@@ -1,5 +1,7 @@
 ﻿Performance Driver,% Diff from Target,Impact to Overall Difference
-Non-compliant Patient,4.0%,1.7%
-Low Risk Patient,2.6%,0.6%
-Provider Group C,2.5%,0.5%
-Compliant Patient,-1.3%,-0.7%
+Non-compliant Patient,12.8%,4.0%
+Provider Group B,8.3%,3.4%
+High Risk Patient,5.9%,3.0%
+Mid Risk Patient,3.2%,0.8%
+Provider Group A,2.3%,0.7%
+Provider Group C,2.7%,0.5%
