@@ -262,13 +262,13 @@ def card_key_driver_drilldown(app):
                                 dbc.Col(
                                     [
                                         html.Div([gaugegraph(df_driver,1)], style={"padding-top":"1.5rem"}),
-                                        html.Div(html.H4("{:.1f} %".format(df_driver['%'][1]*100),style={"color":"#ff4d17"}), style={"margin-top":"-1.5rem","text-align":"center","font-size":"1rem","color":"#aeff78"}),
+                                        html.Div(html.H4("{:.1f} %".format(df_driver['%'][1]*100),style={"color":"#ffeb78"}), style={"margin-top":"-1.5rem","text-align":"center","font-size":"1rem","color":"#aeff78"}),
                                     ],
                                     width=6),
                                 dbc.Col(
                                     [
                                         html.Div([gaugegraph(df_driver,2)], style={"padding-top":"1.5rem"}),
-                                        html.Div(html.H4("{:.1f} %".format(df_driver['%'][2]*100),style={"color":"#18cc75"}), style={"margin-top":"-1.5rem","text-align":"center","font-size":"1rem","color":"#39db44"}),
+                                        html.Div(html.H4("{:.1f} %".format(df_driver['%'][2]*100),style={"color":"#ffeb78"}), style={"margin-top":"-1.5rem","text-align":"center","font-size":"1rem","color":"#39db44"}),
                                     ],
                                     width=6),
                                 
@@ -559,7 +559,7 @@ def card_table2_performance_drilldown(app):
                                 html.H4("* Default sorting: by Contribution to Overall Performance Difference", style={"font-size":"0.8rem","color":"#919191","padding-top":"1rem","margin-bottom":"-1rem"}), 
                                 html.Div([dashtable_lv3(data_lv4,'Sub Category','dashtable_lv4',0)],id="drill_lv4",style={"padding":"1rem"})
                             ], 
-                            style={"max-height":"80rem"}
+                            style={"max-height":"120rem"}
                         ),
                         
 
