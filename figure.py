@@ -1034,7 +1034,7 @@ def dashtable_lv3(df,dimension,tableid,row_select):#row_select: numeric 0 or 1
         {"name": ["Average CHF Related Cost Per Patient", "Contribution to Overall Performance Difference"], "id": "Contribution to Overall Performance Difference",'type': 'numeric',"format":FormatTemplate.percentage(1)},
         {"name": ["Average Utilization Rate Per Patient", "YTD Avg Utilization Rate"], "id": "YTD Avg Utilization Rate",'type': 'numeric',"format":Format( precision=1, scheme=Scheme.fixed,),},
         {"name": ["Average Utilization Rate Per Patient", "% Diff from Benchmark"], "id": "% Util Diff from Target",'type': 'numeric',"format":FormatTemplate.percentage(1)},
-        {"name": ["Average Unit Cost", "YTD Avg Cost Unit Cost"], "id": "YTD Avg Cost per Unit",'type': 'numeric',"format":FormatTemplate.money(0)},
+        {"name": ["Average Unit Cost", "YTD Avg Unit Cost"], "id": "YTD Avg Cost per Unit",'type': 'numeric',"format":FormatTemplate.money(0)},
         {"name": ["Average Unit Cost", "% Diff from Benchmark"], "id": "% Unit Cost Diff from Target",'type': 'numeric',"format":FormatTemplate.percentage(1)},
     ],
         merge_duplicate_headers=True,
