@@ -761,7 +761,7 @@ def card_contract_wo_vbc_adjustment(app):
 										dbc.ModalBody([
 											dbc.Row([
 												dbc.Col("% of market share range"),
-												dbc.Col("Rebates %"),
+												dbc.Col("Rebate %"),
 												],
 												style={"padding":"1rem"}),
 											dbc.Row([
@@ -832,7 +832,7 @@ def card_vbc_contract(app):
                                         dbc.ModalBody([
                                             dbc.Row([
                                                 dbc.Col("% of market share range"),
-                                                dbc.Col("Rebates %"),
+                                                dbc.Col("Rebate %"),
                                                 ],
                                                 style={"padding":"1rem"}),
                                             dbc.Row([

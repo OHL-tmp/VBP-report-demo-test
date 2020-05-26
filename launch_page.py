@@ -14,6 +14,7 @@ from app import app
 import contract_manager
 import contract_manager_drilldown
 import contract_optimizer
+import contract_report_generator
 
 
 
@@ -78,6 +79,8 @@ def display_page(pathname):
         return contract_manager_drilldown.layout
     elif pathname == "/vbc-demo/contract-optimizer/":
         return contract_optimizer.layout
+    elif pathname == "/vbc-demo/contract-manager/report-generator/":
+        return contract_report_generator.layout
     else:
         return launch_layout()
 
