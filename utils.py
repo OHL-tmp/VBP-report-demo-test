@@ -30,7 +30,7 @@ def get_header_mgmt(app, dashboard_active, drilldown_active, report_active, Home
                 ),
             dbc.NavItem(dbc.NavLink(
                         "Report Generator",
-                        #href="/vbc-demo/contract-manager/report-generator/",
+                        href="/vbc-demo/contract-manager/report-generator/",
                         className="nav-link",
                         active = report_active,
                         ),
@@ -87,7 +87,7 @@ def get_header_contract(app, simulation_active, library_active, contract_active,
                 ),
             dbc.NavItem(dbc.NavLink(
                         "Measures Library",
-                        #href="/vbc-demo/contract-optimizer/measures-library/",
+                        href="/vbc-demo/contract-optimizer/measures-library/",
                         className="nav-link",
                         active = library_active,
                         ),

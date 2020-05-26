@@ -14,6 +14,8 @@ from app import app
 import contract_manager
 import contract_manager_drilldown
 import contract_optimizer
+import contract_report_generator
+import contract_measures_library
 
 
 
@@ -78,6 +80,10 @@ def display_page(pathname):
         return contract_manager_drilldown.layout
     elif pathname == "/vbc-demo/contract-optimizer/":
         return contract_optimizer.layout
+    elif pathname == "/vbc-demo/contract-optimizer/measures-library/":
+        return contract_measures_library.layout
+    elif pathname == "/vbc-demo/contract-manager/report-generator/":
+        return contract_report_generator.layout
     else:
         return launch_layout()
 
@@ -85,5 +91,5 @@ def display_page(pathname):
      
 
 if __name__ == "__main__":
-    app.run_server(host="0.0.0.0", port = 8099)
+    app.run_server(port = 8052)
                         
