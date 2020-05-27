@@ -20,15 +20,15 @@ from app import app
 def modal_simulation_input():
 	return html.Div([
 		dbc.Button("Input & Edit Assumption", id = 'button-edit-assumption', style={"border-radius":"5rem"}),
-                                dbc.Modal([
-                                    dbc.ModalHeader(html.H1("Input & Edit Assumption", style={"font-family":"NotoSans-Black","font-size":"1.5rem"})),
-                                    dbc.ModalBody([
-                                    	input_session(),
-                                    	]),
-                                    dbc.ModalFooter(
-                                        dbc.Button("SAVE", id = 'close-edit-assumption')
-                                        )
-                                    ], id = 'modal-edit-assumption', size="xl", is_open = True, backdrop = 'static'),
+								dbc.Modal([
+									dbc.ModalHeader(html.H1("Input & Edit Assumption", style={"font-family":"NotoSans-Black","font-size":"1.5rem"})),
+									dbc.ModalBody([
+										input_session(),
+										]),
+									dbc.ModalFooter(
+										dbc.Button("SAVE", id = 'close-edit-assumption')
+										)
+									], id = 'modal-edit-assumption', size="xl", is_open = True, backdrop = 'static'),
 		])
 
 def input_session():
@@ -55,7 +55,34 @@ def input_session():
 							dbc.Col("Age Distribution", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
 							dbc.Col([
 								dbc.Button("\u25BC", id = 'button-collapse-age', size="sm", color='primary', style={"border-radius":"10rem"}),
-								])
+								]),
+							dbc.Col(
+								html.Div(['Fill below or ',
+										html.A('Download Template', 
+											id = 'download-age',
+											href='http://127.0.0.1:8052/downloads/test.xlsx',
+											target = "_blank")
+										]),
+								),
+							dbc.Col(
+								dcc.Upload(
+									id = 'upload-age',
+									children = html.Div([
+										'Select Related Files to Upload'
+										],style={"font-family":"NotoSans-Regular","font-size":"0.8rem","text-decoration":"underline","color":"#1357DD"}),
+									style={
+										'height': '40px',
+										'lineHeight': '40px',
+										'borderWidth': '1px',
+										'borderStyle': 'dashed',
+										'borderRadius': '5px',
+										'textAlign': 'center'
+										}
+									), width = 3
+								),
+							dbc.Col(
+								html.Div(id = 'output-age-upload', style={"text-align":"center","padding":"0.5rem","font-family":"NotoSans-Regular","font-size":"0.6rem"}),
+								)
 						], style={"padding-top":"1rem"}
 					),
 					html.Div(
@@ -79,16 +106,34 @@ def input_session():
 						)
 					),
 					dbc.Row([
-						dbc.Col("Region", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
-						dbc.Col(dbc.Input(value = "Northeast", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-						], style={"padding-top":"1rem"}),
-					dbc.Row([
-						dbc.Col("MSA (if applicable)", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
-						dbc.Col(dbc.Input(value = "New York-Newark-Jersey City, NY-NJ-PA MSA", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-						], style={"padding-top":"1rem"}),
-					dbc.Row([
-						dbc.Col("Formulary Tier for Entresto", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
-						dbc.Col(dbc.Input(value = "Preferred Brand", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
+						dbc.Col("Geography Distribution", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
+						dbc.Col(
+								html.Div([
+										html.A('Download Template', 
+											id = 'download-geo',
+											href='http://127.0.0.1:8052/downloads/test.xlsx',
+											target = "_blank")
+										]),
+								),
+						dbc.Col(
+							dcc.Upload(
+								id = 'upload-geo',
+								children = html.Div([
+									'Select Related Files to Upload'
+									],style={"font-family":"NotoSans-Regular","font-size":"0.8rem","text-decoration":"underline","color":"#1357DD"}),
+								style={
+									'height': '40px',
+									'lineHeight': '40px',
+									'borderWidth': '1px',
+									'borderStyle': 'dashed',
+									'borderRadius': '5px',
+									'textAlign': 'center'
+									}
+								), width = 3
+							),
+						dbc.Col(
+							html.Div(id = 'output-geo-upload', style={"text-align":"center","padding":"0.5rem","font-family":"NotoSans-Regular","font-size":"0.6rem"}),
+							)
 						], style={"padding-top":"1rem"}),
 					dbc.Row([
 						dbc.Col("Pharmacy Benefit Design", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
@@ -111,12 +156,43 @@ def input_session():
 			dbc.ListGroupItemHeading("Drug Information", style={"font-family":"NotoSans-SemiBold","font-size":"1.2rem"}),
 			dbc.ListGroupItemText([
 				dbc.Row([
-					dbc.Col("Entresto Pricing Information", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
-					dbc.Col(dbc.Input(value = "$9.6 / unit (tablet)", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
+					dbc.Col("Formulary Tier for Entresto", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
+					dbc.Col(dbc.Input(value = "Tier 3", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
 					], style={"padding-top":"1rem"}),
 				dbc.Row([
-					dbc.Col("Assumptions for Each Measure", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
-#					dbc.Col(html.A('Download the template file'), style={"font-family":"NotoSans-Regular","font-size":"1rem","text-decoration":"underline","color":"#1357DD"}),
+					dbc.Col("Entresto Pricing Information", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
+					dbc.Col(dbc.Input(value = "$9.6 / unit (tablet)", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
+					dbc.Col(
+							dcc.Upload(
+								id = 'upload-price',
+								children = html.Div([
+									'Select Related Files to Upload'
+									],style={"font-family":"NotoSans-Regular","font-size":"0.8rem","text-decoration":"underline","color":"#1357DD"}),
+								style={
+									'height': '40px',
+									'lineHeight': '40px',
+									'borderWidth': '1px',
+									'borderStyle': 'dashed',
+									'borderRadius': '5px',
+									'textAlign': 'center'
+									}
+								), width = 3
+							),
+					dbc.Col(
+						html.Div(id = 'output-price-upload', style={"text-align":"center","padding":"0.5rem","font-family":"NotoSans-Regular","font-size":"0.6rem"}),
+						)
+					], style={"padding-top":"1rem"}),
+				
+				]),
+			]),
+		dbc.ListGroupItem([
+			dbc.ListGroupItemHeading("Value Based Measures"),
+			dbc.ListGroupItemText([
+				dbc.Row([
+					dbc.Col("Assumptions for Value Based Measure", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
+					dbc.Col(
+						dbc.Button("Measure Library Preview", color = 'link', href = "/vbc-demo/contract-optimizer/measures-library/")
+						),
 					dbc.Col(download_template()),
 						], style={"padding-top":"1rem"}),
 				dbc.Row([
@@ -144,172 +220,44 @@ def input_session():
 			]),
 		dbc.ListGroupItem([html.H4("Modeling Assumptions")]),
 		dbc.ListGroupItem([
-			dbc.ListGroupItemHeading("CHF Prevalence Rate & Severity Assumptions", style={"font-family":"NotoSans-SemiBold","font-size":"1.2rem"}),
+			dbc.ListGroupItemHeading("CHF Prevalence Rate", style={"font-family":"NotoSans-SemiBold","font-size":"1.2rem"}),
 			dbc.ListGroupItemText([
 				dbc.Row([
 					dbc.Col("Projected CHF Patients as a % of Total Plan Members", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
 					dbc.Col(dbc.Input(value = "13.6%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
 					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("CHF Comorbidity Condition", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
-					dbc.Col(dbc.Button("\u25BC", size="sm", color='primary', style={"border-radius":"10rem"}, id = 'button-collapse-comorbidity'))
-					], style={"padding-top":"1rem"}),
-				html.Div(
-					dbc.Collapse(
-						[
-							card_collapse_comorbidity()
-						],
-						id = 'collapse-comorbidity', 
-						is_open = False,
-					)
-				),
+				
 			]),
 		]),
 		dbc.ListGroupItem([
 			dbc.ListGroupItemHeading("CHF Patient Cost and Utilization Assumptions", style={"font-family":"NotoSans-SemiBold","font-size":"1.2rem"}),
 			dbc.ListGroupItemText([
 				dbc.Row([
-					dbc.Col("CHF Patient Cost Assumptions", style={"font-family":"NotoSans-Regular","font-size":"1.2rem"}),
+					dbc.Col("CHF Related Cost PPPY (Per Patient Per Year) Before Taking Entresto", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
+					dbc.Col(dbc.Input(value = "$ 25,000", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
 					], style={"padding-top":"1rem"}),
 				dbc.Row([
-					dbc.Col("Total Cost PPPY (Per Patient Per Year) Before Taking Entresto", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
-					dbc.Col(dbc.Input(value = "$ 42,000", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("CHF Related Cost as a % of Total Cost", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
-					dbc.Col(dbc.Input(value = "60%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Total Cost PPPY by Service Category", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
-					dbc.Col(dbc.Button("\u25BC", size="sm", color='primary', style={"border-radius":"10rem"}, id = 'button-collapse-totalcost-srvc'))
-					], style={"padding-top":"1rem"}),
-				html.Div(
-					dbc.Collapse(
-						[
-							card_collapse_totalcost_srvc()
-						],
-						id = 'collapse-totalcost-srvc', 
-						is_open = False,
-					)
-				),
-				dbc.Row([
-					dbc.Col("Total Cost PPPY by Patient Cohort", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
-					dbc.Col(dbc.Button("\u25BC", size="sm", color='primary', style={"border-radius":"10rem"}, id = 'button-collapse-totalcost-patient'))
-					], style={"padding-top":"1rem"}),
-				html.Div(
-					dbc.Collapse(
-						[
-							card_collapse_totalcost_patient()
-						],
-						id = 'collapse-totalcost-patient', 
-						is_open = False,
-					)
-				),
-
-
-				dbc.Row([
-					dbc.Col("CHF Patient Cost Trend Assumptions", style={"font-family":"NotoSans-Regular","font-size":"1.2rem"}),
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Annual PPPY Cost Trend Before Taking Entresto", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
+					dbc.Col("Annual CHF Related Cost PPPY Trend Before Taking Entresto", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
 					dbc.Col(dbc.Input(value = "7%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
 					], style={"padding-top":"1rem"}),
 				dbc.Row([
-					dbc.Col("Annual PPPY Cost Trend by Service Category", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
-					dbc.Col(dbc.Button("\u25BC", size="sm", color='primary', style={"border-radius":"10rem"}, id = 'button-collapse-annucost-srvc'))
+					dbc.Col("Assumptions by Patient Cohort and Service Category Workbook", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
+					dbc.Col(
+							html.Div([
+									html.A('Download Template', 
+										id = 'download-cohort',
+										href='http://127.0.0.1:8052/downloads/test.xlsx',
+										target = "_blank")
+									]),
+							),
 					], style={"padding-top":"1rem"}),
-				html.Div(
-					dbc.Collapse(
-						[
-							card_collapse_annucost_srvc()
-						],
-						id = 'collapse-annucost-srvc', 
-						is_open = False,
-					)
-				),
-				dbc.Row([
-					dbc.Col("Annual PPPY Cost Trend by Patient Cohort", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
-					dbc.Col(dbc.Button("\u25BC", size="sm", color='primary', style={"border-radius":"10rem"}, id = 'button-collapse-annucost-patient'))
-					], style={"padding-top":"1rem"}),
-				html.Div(
-					dbc.Collapse(
-						[
-							card_collapse_annucost_patient()
-						],
-						id = 'collapse-annucost-patient', 
-						is_open = False,
-					)
-				),
-
-
-				dbc.Row([
-					dbc.Col("CHF Patient Utilization Assumptions", style={"font-family":"NotoSans-Regular","font-size":"1.2rem"}),
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Projected Inpatient Admissions PPPY Before Taking Entresto", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
-					dbc.Col(dbc.Input(value = "1.4", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("CHF Related Inpatient Admissions as a % of Total Admissions", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
-					dbc.Col(dbc.Input(value = "80%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Total Inpatient Admissions PPPY by Medical Condition", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
-					dbc.Col(dbc.Button("\u25BC", size="sm", color='primary', style={"border-radius":"10rem"}, id = 'button-collapse-ad-condition'))
-					], style={"padding-top":"1rem"}),
-				html.Div(
-					dbc.Collapse(
-						[
-							card_collapse_ad_condition()
-						],
-						id = 'collapse-ad-condition', 
-						is_open = False,
-					)
-				),
-
-				dbc.Row([
-					dbc.Col("Total Inpatient Admissions PPPY by Patient Cohort", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
-					dbc.Col(dbc.Button("\u25BC", size="sm", color='primary', style={"border-radius":"10rem"}, id = 'button-collapse-ad-patient'))
-					], style={"padding-top":"1rem"}),
-				html.Div(
-					dbc.Collapse(
-						[
-							card_collapse_ad_patient()
-						],
-						id = 'collapse-ad-patient', 
-						is_open = False,
-					)
-				),
-
-
-
-				dbc.Row([
-					dbc.Col("CHF Patient Utilization Trend Assumptions", style={"font-family":"NotoSans-Regular","font-size":"1.2rem"}),
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Annual PPPY Inpatient Utilization Trend Before Taking Entresto", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
-					dbc.Col(dbc.Input(value = "5.4%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Annual PPPY Inpatient Utilization Trend by Patient Cohort", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
-					dbc.Col(dbc.Button("\u25BC", size="sm", color='primary', style={"border-radius":"10rem"}, id = 'button-collapse-utili-patient'))
-					], style={"padding-top":"1rem"}),
-				html.Div(
-					dbc.Collapse(
-						[
-							card_collapse_utili_patient()
-						],
-						id = 'collapse-utili-patient', 
-						is_open = False,
-					)
-				),
 
 				]),
 			]),
 
 
 		dbc.ListGroupItem([
-			dbc.ListGroupItemHeading("Entresto Utilization Assumptions", style={"font-family":"NotoSans-SemiBold","font-size":"1.2rem"}),
+			dbc.ListGroupItemHeading("Entresto Market Share", style={"font-family":"NotoSans-SemiBold","font-size":"1.2rem"}),
 			dbc.ListGroupItemText([
 				dbc.Row([
 					dbc.Col("Projected Entresto Utilizer as a % of Total CHF Population", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
@@ -328,14 +276,6 @@ def input_session():
 						is_open = False,
 					)
 				),
-				dbc.Row([
-					dbc.Col("Average Entresto Script PPPY (Per Patient Per Year)", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
-					dbc.Col(dbc.Input(value = "6.9", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Average Units/ Script", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
-					dbc.Col(dbc.Input(value = "70", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
 				]),
 			]),
 		],
@@ -349,20 +289,52 @@ def card_collapse_age():
 					dbc.Col("Member %", style={"font-family":"NotoSans-Regular","font-size":"1rem"})
 					], style={"padding-top":"1rem"}),
 				dbc.Row([
-					dbc.Col("<65", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "12%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
+					dbc.Col("Newborn (0-1m)", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
+					dbc.Col(dbc.Input(value = "10%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
+					], style={"padding-top":"1rem"}),
+				dbc.Row([
+					dbc.Col("1m-2y", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
+					dbc.Col(dbc.Input(value = "10%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
+					], style={"padding-top":"1rem"}),
+				dbc.Row([
+					dbc.Col("2-12", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
+					dbc.Col(dbc.Input(value = "10%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
+					], style={"padding-top":"1rem"}),
+				dbc.Row([
+					dbc.Col("12-17", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
+					dbc.Col(dbc.Input(value = "10%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
+					], style={"padding-top":"1rem"}),
+				dbc.Row([
+					dbc.Col("18-24", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
+					dbc.Col(dbc.Input(value = "10%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
+					], style={"padding-top":"1rem"}),
+				dbc.Row([
+					dbc.Col("25-34", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
+					dbc.Col(dbc.Input(value = "10%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
+					], style={"padding-top":"1rem"}),
+				dbc.Row([
+					dbc.Col("35-44", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
+					dbc.Col(dbc.Input(value = "10%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
+					], style={"padding-top":"1rem"}),
+				dbc.Row([
+					dbc.Col("45-54", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
+					dbc.Col(dbc.Input(value = "10%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
+					], style={"padding-top":"1rem"}),
+				dbc.Row([
+					dbc.Col("55-64", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
+					dbc.Col(dbc.Input(value = "10%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
 					], style={"padding-top":"1rem"}),
 				dbc.Row([
 					dbc.Col("65-74", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "48%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
+					dbc.Col(dbc.Input(value = "10%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
 					], style={"padding-top":"1rem"}),
 				dbc.Row([
 					dbc.Col("75-84", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "27%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
+					dbc.Col(dbc.Input(value = "10%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
 					], style={"padding-top":"1rem"}),
 				dbc.Row([
 					dbc.Col(">=85", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "13%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
+					dbc.Col(dbc.Input(value = "10%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
 					], style={"padding-top":"1rem"}),
 			], style={"font-family":"NotoSans-Regular","font-size":"1rem", "padding-left":"1rem", "padding-right":"1rem"}
 		)
@@ -398,414 +370,105 @@ def card_collapse_tier():
 				),
 				dbc.Row(
 					[
-						dbc.Col("Tier 1 (Generic)", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-						dbc.Col(dbc.Input(value = "30", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
+						dbc.Col("Tier 1", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
+						dbc.Col("30",style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}),
+						dbc.Col(dbc.Input(value = "$5", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
+						dbc.Col(dbc.Input(bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
+						dbc.Col(dbc.Input(bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
+					], style={"padding-top":"1rem"}
+				),
+				dbc.Row(
+					[
+						dbc.Col("Tier 1", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
+						dbc.Col("90", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}),
 						dbc.Col(dbc.Input(value = "$10", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
-						dbc.Col(dbc.Input(disabled = True, bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
-						dbc.Col(dbc.Input(disabled = True, bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
+						dbc.Col(dbc.Input(bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
+						dbc.Col(dbc.Input(bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
 					], style={"padding-top":"1rem"}
 				),
 				dbc.Row(
 					[
-						dbc.Col("Tier 1 (Generic)", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-						dbc.Col(dbc.Input(value = "90", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
+						dbc.Col("Tier 2", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
+						dbc.Col("30", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}),
+						dbc.Col(dbc.Input(value = "$10", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
+						dbc.Col(dbc.Input(bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
+						dbc.Col(dbc.Input(bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
+					], style={"padding-top":"1rem"}
+				),
+				dbc.Row(
+					[
+						dbc.Col("Tier 2", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
+						dbc.Col("90", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}),
 						dbc.Col(dbc.Input(value = "$20", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
-						dbc.Col(dbc.Input(disabled = True, bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
-						dbc.Col(dbc.Input(disabled = True, bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
+						dbc.Col(dbc.Input(bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
+						dbc.Col(dbc.Input(bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
 					], style={"padding-top":"1rem"}
 				),
 				dbc.Row(
 					[
-						dbc.Col("Tier 2 (Preferred Brand)", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-						dbc.Col(dbc.Input(value = "30", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
-						dbc.Col(dbc.Input(value = "$40", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
-						dbc.Col(dbc.Input(disabled = True, bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
-						dbc.Col(dbc.Input(disabled = True, bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
+						dbc.Col("Tier 3", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
+						dbc.Col("30", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}),
+						dbc.Col(dbc.Input(value = "$40",bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
+						dbc.Col(dbc.Input(bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
+						dbc.Col(dbc.Input(bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
 					], style={"padding-top":"1rem"}
 				),
 				dbc.Row(
 					[
-						dbc.Col("Tier 2 (Preferred Brand)", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-						dbc.Col(dbc.Input(value = "90", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
-						dbc.Col(dbc.Input(value = "$100", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
-						dbc.Col(dbc.Input(disabled = True, bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
-						dbc.Col(dbc.Input(disabled = True, bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
+						dbc.Col("Tier 3", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
+						dbc.Col("90", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}),
+						dbc.Col(dbc.Input(value = "$100",bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
+						dbc.Col(dbc.Input(bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
+						dbc.Col(dbc.Input(bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
 					], style={"padding-top":"1rem"}
 				),
 				dbc.Row(
 					[
-						dbc.Col("Tier 3 (Non-Preferred Brand)", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-						dbc.Col(dbc.Input(value = "30", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
-						dbc.Col(dbc.Input(disabled = True, bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
-						dbc.Col(dbc.Input(value = "20%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
-						dbc.Col(dbc.Input(value = "$200", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
+						dbc.Col("Tier 4", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
+						dbc.Col("30", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}),
+						dbc.Col(dbc.Input(value = "$70",bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
+						dbc.Col(dbc.Input(bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
+						dbc.Col(dbc.Input(bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
 					], style={"padding-top":"1rem"}
 				),
 				dbc.Row(
 					[
-						dbc.Col("Tier 3 (Non-Preferred Brand)", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-						dbc.Col(dbc.Input(value = "90", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
-						dbc.Col(dbc.Input(disabled = True, bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
-						dbc.Col(dbc.Input(value = "20%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
-						dbc.Col(dbc.Input(value = "$400", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
+						dbc.Col("Tier 4", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
+						dbc.Col("90", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}),
+						dbc.Col(dbc.Input(value = "$150",bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
+						dbc.Col(dbc.Input(bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
+						dbc.Col(dbc.Input(bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
 					], style={"padding-top":"1rem"}
 				),
 				dbc.Row(
 					[
-						dbc.Col("Maximum OOP per Individual", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-						dbc.Col(dbc.Input(disabled = True, bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
+						dbc.Col("Tier 5", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
+						dbc.Col("30", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}),
+						dbc.Col(dbc.Input(bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
+						dbc.Col(dbc.Input(value = "20%",bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
+						dbc.Col(dbc.Input(value = "$200",bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
+					], style={"padding-top":"1rem"}
+				),
+				dbc.Row(
+					[
+						dbc.Col("Tier 5", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
+						dbc.Col("90", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}),
+						dbc.Col(dbc.Input(bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
+						dbc.Col(dbc.Input(value = "20%",bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
+						dbc.Col(dbc.Input(value = "$400",bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
+					], style={"padding-top":"1rem"}
+				),
+				dbc.Row(
+					[
+						dbc.Col("Maximum OOP per Individual", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
 						dbc.Col(dbc.Input(value = '$2800', bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
-						dbc.Col(dbc.Input(disabled = True, bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
-						dbc.Col(dbc.Input(disabled = True, bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"})),
 					], style={"padding-top":"1rem"}
 				),
 			],
 			style={"font-family":"NotoSans-Regular","font-size":"1rem", "padding-left":"1rem", "padding-right":"1rem"}
 		)
 
-def card_collapse_comorbidity():
-	return dbc.Card(
-			[
-				dbc.Row([
-					dbc.Col("Comorbidity Type", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
-					dbc.Col("% of CHF Patients", style={"font-family":"NotoSans-Regular","font-size":"1rem"})
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Hypertension", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "89%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Coronary heart disease", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "68%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Chronic pulmonary disease", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "64%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Renal disease", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "54%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Atrial fibrillation", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "53%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Diabetes", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "48%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Cerebrovascular disease", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "37%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-			], style={"font-family":"NotoSans-Regular","font-size":"1rem", "padding-left":"1rem", "padding-right":"1rem"}
-		)
 
-def card_collapse_totalcost_srvc():
-	return dbc.Card(
-			[
-				dbc.Row([
-					dbc.Col("Service Category", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
-					dbc.Col("% of Total Cost PPPY", style={"font-family":"NotoSans-Regular","font-size":"1rem"})
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Inpatient", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "55.4%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Outpatient Others (Non ER)", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "15.2%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Outpatient ER", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "5.2%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Professional Services", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "11.5%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Drug", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "10.2%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Skilled Nursing Facilit", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "1.4%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Home Health", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "0.6%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Hospice", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "0.4%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-			], style={"font-family":"NotoSans-Regular","font-size":"1rem", "padding-left":"1rem", "padding-right":"1rem"}
-		)
-
-def card_collapse_totalcost_patient():
-	return dbc.Card(
-			[
-				dbc.Row([
-					dbc.Col("Comorbidity Type", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
-					dbc.Col("Total Cost PPPY", style={"font-family":"NotoSans-Regular","font-size":"1rem"})
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("No-Comorbidity", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "$22680", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Hypertension", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "$25200", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Coronary heart disease", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "$27720", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Chronic pulmonary disease", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "$33264", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Renal disease", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "$39312", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Atrial fibrillation", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "$30492", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Diabetes", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "$30240", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Cerebrovascular disease", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "$33516", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-			], style={"font-family":"NotoSans-Regular","font-size":"1rem", "padding-left":"1rem", "padding-right":"1rem"}
-		)
-
-def card_collapse_annucost_srvc():
-	return dbc.Card(
-			[
-				dbc.Row([
-					dbc.Col("Service Category", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
-					dbc.Col("Trend", style={"font-family":"NotoSans-Regular","font-size":"1rem"})
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Inpatient", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "6.0%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Outpatient Others (Non ER)", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "8.0%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Outpatient ER", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "8.0%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Professional Services", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "9.0%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Drug", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "8.0%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Skilled Nursing Facilit", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "4.0%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Home Health", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "4.0%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Hospice", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "4.0%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-			], style={"font-family":"NotoSans-Regular","font-size":"1rem", "padding-left":"1rem", "padding-right":"1rem"}
-		)
-
-def card_collapse_annucost_patient():
-	return dbc.Card(
-			[
-				dbc.Row([
-					dbc.Col("Comorbidity Type", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
-					dbc.Col("Trend", style={"font-family":"NotoSans-Regular","font-size":"1rem"})
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("No-Comorbidity", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "6%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Hypertension", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "8%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Coronary heart disease", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "8%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Chronic pulmonary disease", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "4%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Renal disease", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "9%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Atrial fibrillation", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "6%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Diabetes", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "4%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Cerebrovascular disease", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "7%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-			], style={"font-family":"NotoSans-Regular","font-size":"1rem", "padding-left":"1rem", "padding-right":"1rem"}
-		)
-
-def card_collapse_ad_condition():
-	return dbc.Card(
-			[
-				dbc.Row([
-					dbc.Col("Condition", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
-					dbc.Col("Inpatient Adm PPPY", style={"font-family":"NotoSans-Regular","font-size":"1rem"})
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Heart Failure", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "0.49", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Renal Failure", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "0.08", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Pleural effusion", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "0.04", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Acute myocardial infarction", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "0.02", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Cardiac Arrhythmia", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "0.18", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Cardiac arrest and ventricular fibrillation", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "0.02", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Hypertension", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "0.07", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("CABG", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "0.10", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Pacemaker Implant", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "0.01", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("PCI", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "0.06", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("ICD", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "0.05", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-			], style={"font-family":"NotoSans-Regular","font-size":"1rem", "padding-left":"1rem", "padding-right":"1rem"}
-		)
-
-def card_collapse_ad_patient():
-	return dbc.Card(
-			[
-				dbc.Row([
-					dbc.Col("Comorbidity Type", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
-					dbc.Col("Inpatient Adm PPPY", style={"font-family":"NotoSans-Regular","font-size":"1rem"})
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("No-Comorbidity", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "0.90", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Hypertension", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "1.00", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Coronary heart disease", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "1.10", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Chronic pulmonary disease", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "1.32", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Renal disease", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "1.56", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Atrial fibrillation", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "1.21", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Diabetes", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "1.20", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Cerebrovascular disease", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "1.33", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-			], style={"font-family":"NotoSans-Regular","font-size":"1rem", "padding-left":"1rem", "padding-right":"1rem"}
-		)
-
-def card_collapse_utili_patient():
-	return dbc.Card(
-			[
-				dbc.Row([
-					dbc.Col("Comorbidity Type", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
-					dbc.Col("Trend", style={"font-family":"NotoSans-Regular","font-size":"1rem"})
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("No-Comorbidity", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "6%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Hypertension", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "8%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Coronary heart disease", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "8%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Chronic pulmonary disease", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "4%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Renal disease", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "9%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Atrial fibrillation", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "6%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Diabetes", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "4%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-				dbc.Row([
-					dbc.Col("Cerebrovascular disease", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "7%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
-					], style={"padding-top":"1rem"}),
-			], style={"font-family":"NotoSans-Regular","font-size":"1rem", "padding-left":"1rem", "padding-right":"1rem"}
-		)
 
 def card_collapse_month():
 	return dbc.Card(
@@ -867,11 +530,14 @@ def card_collapse_month():
 
 def download_template():
 	return html.A(
-                            children=dbc.Button(
-                                "Download the template file",
-                                id='download-template',
-                                color= 'link',
-                            ),
-                            href=os.path.join('data', 'setup.csv'),
-                            download="setup.csv"
-                        )
+							# children=dbc.Button(
+							#     "Download the template file",
+							#     id='download-template',
+							#     color= 'link',
+							# ),
+							"Download the template file",
+							id = 'download-link',
+							href='http://127.0.0.1:8052/downloads/test.xlsx',
+							# download="test.xlsx",
+							target = "_blank"
+						)
