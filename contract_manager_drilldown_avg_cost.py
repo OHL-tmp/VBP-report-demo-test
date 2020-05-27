@@ -53,7 +53,7 @@ def col_content_drilldown(app):
 			[
                 dbc.Row(
 					[
-						dbc.Col(card_overview_drilldown(0.012),width=8),
+						dbc.Col(card_overview_drilldown(0.043),width=8),
 						dbc.Col(card_key_driver_drilldown(app),width=4),
 					]
 				),

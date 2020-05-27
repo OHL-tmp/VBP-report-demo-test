@@ -2081,7 +2081,7 @@ def measure_lib(df):
         css=[
         {
             'selector': 'dash-table-tooltip', 
-            'rule': 'font-family:"NotoSans-CondensedLight"'}],
+            'rule': 'font-family:"NotoSans-Condensed"'}],
 
         tooltip_conditional=[
         {'if': { 'column_id':'detail',
@@ -2228,7 +2228,7 @@ def measure_lib(df):
         style_cell={
             'textAlign': 'center',
             'font-family':'NotoSans-Regular',
-            'fontSize':14,
+            'fontSize':16,
             'border':'0px',
             'height': '1.5rem',
             
@@ -2242,7 +2242,7 @@ def measure_lib(df):
             'backgroundColor': '#f1f6ff',
             'fontWeight': 'bold',
             'font-family':'NotoSans-CondensedLight',
-            'fontSize':16,
+            'fontSize':18,
             'color': '#1357DD',
             'text-align':'center',
             'border':'1px solid #bfbfbf',

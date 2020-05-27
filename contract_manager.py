@@ -15,7 +15,7 @@ import pandas as pd
 import numpy as np
 
 import pathlib
-import visdcc
+#import visdcc
 import plotly.graph_objects as go
 
 from plotly.subplots import make_subplots
@@ -106,7 +106,7 @@ def create_layout(app):
                 [ 
                     html.Div([Header_mgmt(app, True, False, False, False)], style={"height":"6rem"}, className = "sticky-top navbar-expand-lg"),
                     
-                    visdcc.Run_js("window.open('https://yahoo.com/')"),
+#                    visdcc.Run_js("window.open('https://yahoo.com/')"),
                     html.Div(
                         [
                             dbc.Row(
@@ -142,8 +142,8 @@ def div_year_to_date_metrics(app):
                     html.H2("Year to Date Metrics", style={"padding-top":"2rem", "font-weight":"lighter", "font-size":"1rem"}),
                     card_year_to_date_metrics("Entresto Utilizer", "810"),
                     card_year_to_date_metrics("Total Gross Scripts", "1,902"),
-                    card_year_to_date_metrics("Total Scripts(30-day adjusted)", "3,402"),
-                    card_year_to_date_metrics("Total Units(Tablets)", "204,120"),
+                    card_year_to_date_metrics("Total Scripts(30-day adjusted)", "2,430"),
+                    card_year_to_date_metrics("Total Units(Tablets)", "145,800"),
                 ],
                 className="mb-3",
                 style={"text-align":"center"},
@@ -176,7 +176,7 @@ def div_overall_performance(app):
                                 dbc.CardBody(
                                     [
                                         html.H3("YTD Revenue (Net of Rebate)", style={"font-size":"0.5rem", "color":"#fff"}),
-                                        html.H2("$ 1,288,299", style={"font-size":"1.5rem", "margin-top":"-5px", "color":"#fff"}),
+                                        html.H2("$ 920,214", style={"font-size":"1.5rem", "margin-top":"-5px", "color":"#fff"}),
                                     ],
                                     style={"margin-top":"-16px"}
                                 ),
