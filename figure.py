@@ -55,12 +55,14 @@ def bargraph_overall(df):  #df_overall['month'] df_overall['base'] df_overall['a
             y=y1_overall,
             text=y1_overall,
             textposition='auto',
-            texttemplate='%{y:.2s}',
+            texttemplate='%{y:$,.0f}',#'%{y:.2s}',
+            constraintext='none',
             marker=dict(
                 color=colors['blue'],
                 opacity=arange(0.34,0.34+0.06*n,0.06) 
                        ),
             hovertemplate='%{y:,.0f}',
+            hoverinfo='skip',
         ),
         row=1,col=1,secondary_y=False,
     )
@@ -72,12 +74,14 @@ def bargraph_overall(df):  #df_overall['month'] df_overall['base'] df_overall['a
             y=y2_overall,
             text=y2_overall,
             textposition='inside',
-            texttemplate='%{y:.2s}',
+            texttemplate='%{y:$,.0f}',#'%{y:.2s}',
+            constraintext='none',
             marker=dict(
                 color=colors['yellow'],
                 opacity=arange(0.34,0.34+0.06*n,0.06) 
                        ),
             hovertemplate='%{y:,.0f}',
+            hoverinfo='skip',
         ),
         row=1,col=1,secondary_y=False,
     )
@@ -153,33 +157,33 @@ def waterfall_overall(x,y1,y2): #df_waterfall['label']  df_waterfall['base'] df_
             name='',
             x=x_waterfall, 
             y=y1_waterfall,
-            text=y1_waterfall/1000,
+#            text=y1_waterfall/1000,
             textposition='auto',
             textfont=dict(color=['black','black',colors['transparent'],'black','black']),
-            texttemplate='%{text:,.0f}'+'k',
+            texttemplate='%{y:$,.0f}',#'%{text:,.0f}'+'k',
             marker=dict(
                     color=[colors['blue'],colors['blue'],colors['transparent'],colors['blue'],colors['grey']],
                     opacity=[1,0.7,0,0.5,0.7]
                     ),
             marker_line=dict( color = colors['transparent'] ),
             hovertemplate='%{y:,.0f}',
-            hoverinfo='y',
+            hoverinfo='skip',
             
         ),
         go.Bar(  
             name='',
             x=x_waterfall, 
             y=y2_waterfall,
-            text=y2_waterfall,
+#            text=y2_waterfall,
             textposition='outside',
             textfont=dict(color=[colors['transparent'],colors['transparent'],'black',colors['transparent'],'black']),
-            texttemplate='%{y:.2s}',
+            texttemplate='%{y:$,.0f}',#'%{y:.2s}',
             marker=dict(
                     color=colors['yellow'],
                     opacity=0.7
                     ),
             hovertemplate='%{y:,.0f}',
-            hoverinfo='y',
+            hoverinfo='skip',
         )
     ])
     # Change the bar mode
@@ -1228,7 +1232,7 @@ def dashtable_lv3(df,dimension,tableid,row_select):#row_select: numeric 0 or 1
     )
     return table_lv3
 
-def drillgraph_lv1_ip(df_table,tableid,dim):
+def drillgraph_lv1_crhr(df_table,tableid,dim):
 
     df_table=df_table.merge(df_dim_order[df_dim_order['dimension']==df_table.columns[0]],how='left',left_on=df_table.columns[0],right_on='value').sort_values(by='ordering')  
     
@@ -1255,7 +1259,7 @@ def drillgraph_lv1_ip(df_table,tableid,dim):
         {'id': 'Cost %', 'name': 'Cost %','type': 'numeric',"format":FormatTemplate.percentage(1)} ,
         {'id': 'YTD Hospitalization Rate', 'name': 'YTD Hospitalization Rate Per Patient','type': 'numeric',"format":Format( precision=1, scheme=Scheme.fixed,)} ,
         {'id': '% Hospitalization Rate Diff from Benchmark', 'name': '% Diff from Benchmark','type': 'numeric',"format":FormatTemplate.percentage(1)} ,
-        {'id': 'Contribution to Overall Hospitalization Rate Difference', 'name': 'Contribution to Overall Performance Difference','type': 'numeric',"format":FormatTemplate.percentage(1)} ,
+        {'id': 'Contribution to Overall Performance Difference', 'name': 'Contribution to Overall Performance Difference','type': 'numeric',"format":FormatTemplate.percentage(1)} ,
          ],
         row_selectable="single",
         selected_rows=[len(df_table)-1],
@@ -1269,12 +1273,12 @@ def drillgraph_lv1_ip(df_table,tableid,dim):
 
         style_data_conditional=(
         data_bars_diverging(df_table, '% Hospitalization Rate Diff from Benchmark',col_max) +
-        data_bars_diverging(df_table, 'Contribution to Overall Hospitalization Rate Difference',col_max)+
+        data_bars_diverging(df_table, 'Contribution to Overall Performance Difference',col_max)+
         [{'if': {'column_id':'% Hospitalization Rate Diff from Benchmark'},
              
              'width': '20rem',
             }, 
-        {'if': {'column_id': 'Contribution to Overall Hospitalization Rate Difference'},
+        {'if': {'column_id': 'Contribution to Overall Performance Difference'},
              
              'width': '20rem',
             },
@@ -1304,7 +1308,7 @@ def drillgraph_lv1_ip(df_table,tableid,dim):
     return tbl
        
    
-def dashtable_lv3_ip(df,dimension,tableid,row_select):#row_select: numeric 0 or 1
+def dashtable_lv3_crhr(df,dimension,tableid,row_select):#row_select: numeric 0 or 1
     
     #df1=df[0:len(df)-1].sort_values(by='Contribution to Overall Performance Difference',ascending=False)
     #df1.append(df[len(df)-1:len(df)])
@@ -1326,17 +1330,17 @@ def dashtable_lv3_ip(df,dimension,tableid,row_select):#row_select: numeric 0 or 
         {"name": ["Average Hospitalization Rate Per Patient", "YTD Hospitalization Rate"], "id": "YTD Hospitalization Rate",'type': 'numeric',"format":Format( precision=1, scheme=Scheme.fixed,)},
         {"name": ["Average Hospitalization Rate Per Patient", "% Diff from Benchmark"], "id": "% Hospitalization Rate Diff from Benchmark",'type': 'numeric',"format":FormatTemplate.percentage(1)},
         {"name": ["Average Hospitalization Rate Per Patient", "Contribution to Overall Performance Difference"], "id": "Contribution to Overall Hospitalization Rate Difference",'type': 'numeric',"format":FormatTemplate.percentage(1)},
-        {"name": ["Average CHF Related Cost Per Patient", "YTD Avg Cost"], "id": "YTD Avg Episode Cost",'type': 'numeric',"format":FormatTemplate.money(0),},
-        {"name": ["Average CHF Related Cost Per Patient", "% Diff from Benchmark"], "id": "% Cost Diff from Target",'type': 'numeric',"format":FormatTemplate.percentage(1)},
-        {"name": ["Average Unit Cost", "YTD Avg Unit Cost"], "id": "YTD Avg Cost per Unit",'type': 'numeric',"format":FormatTemplate.money(0)},
-        {"name": ["Average Unit Cost", "% Diff from Benchmark"], "id": "% Unit Cost Diff from Target",'type': 'numeric',"format":FormatTemplate.percentage(1)},
+        {"name": ["Average CHF Related Cost Per Patient", "YTD Avg Inpatient Cost"], "id": "YTD Avg Episode Cost",'type': 'numeric',"format":FormatTemplate.money(0),},
+#        {"name": ["Average CHF Related Cost Per Patient", "% Diff from Benchmark"], "id": "% Cost Diff from Target",'type': 'numeric',"format":FormatTemplate.percentage(1)},
+#        {"name": ["Average Unit Cost", "YTD Avg Unit Cost"], "id": "YTD Avg Cost per Unit",'type': 'numeric',"format":FormatTemplate.money(0)},
+#        {"name": ["Average Unit Cost", "% Diff from Benchmark"], "id": "% Unit Cost Diff from Target",'type': 'numeric',"format":FormatTemplate.percentage(1)},
     ],
         merge_duplicate_headers=True,
         sort_action="custom",
         sort_mode='single',
-        sort_by=[{"column_id":"Contribution to Overall Hospitalization Rate Difference","direction":"desc"},],
+        sort_by=[{"column_id":"Contribution to Overall Performance Difference","direction":"desc"},],
         row_selectable=row_sel,
-        selected_rows=[],
+        selected_rows=[(len(df)-1)],
         style_data={
             'whiteSpace': 'normal',
             'height': 'auto'
@@ -1434,7 +1438,7 @@ def drilldata_process(df_drilldown,dimension,dim1='All',f1='All',dim2='All',f2='
 
     return df
 
-def drilldata_process_ip(df_drilldown,dimension,dim1='All',f1='All',dim2='All',f2='All',dim3='All',f3='All'):#dimension='Sub Category'    
+def drilldata_process_crhr(df_drilldown,dimension,dim1='All',f1='All',dim2='All',f2='All',dim3='All',f3='All'):#dimension='Sub Category'    
     
     df_pre=df_drilldown
     
@@ -1506,6 +1510,11 @@ def drill_waterfall(df):
     y_base=df[['base']][3:4].values[0,0]
     y_adjust=df[['adjusted']][4:5].values[0,0]
 
+    if y_base<10:
+        num_format='%{y:.1f}'
+    else:
+        num_format='%{y:$,.0f}'
+
     fig_waterfall = go.Figure(data=[
         go.Bar(
             
@@ -1520,7 +1529,7 @@ def drill_waterfall(df):
                           family="NotoSans-Condensed",
                           size=14,
                           ),
-            texttemplate='%{y:$,.0f}',
+            texttemplate=num_format,
             marker=dict(
                     color=[colors['grey'],colors['transparent'],colors['grey']],
                     opacity=[0.5,0,0.7]
@@ -1534,11 +1543,12 @@ def drill_waterfall(df):
             width=0.5,
             text=[0,y_adjust,0],
             textposition='outside',
+            constraintext='none',
             textfont=dict(color=[colors['transparent'],'black',colors['transparent']],
                           family="NotoSans-Condensed",
                           size=14,
                           ),
-            texttemplate='%{y:$,.0f}',
+            texttemplate=num_format,
             marker=dict(
                     color=colors['yellow'],
                     opacity=0.7
@@ -1556,7 +1566,7 @@ def drill_waterfall(df):
                 ),
         yaxis = dict(
             showgrid = True, 
-            range=[0,y_base+y_base/5],
+            range=[0,y_base*1.4],
             gridcolor =colors['grey'],
             nticks=5,
             showticklabels=True,
@@ -1584,13 +1594,18 @@ def drill_waterfall(df):
 def drill_bar(df):
     bar1_y=df['base'][0:3].values.tolist()
 
+    if bar1_y[0]<10:
+        num_format='%{y:.1f}'
+    else:
+        num_format='%{y:$,.0f}'
+
     fig_bar = go.Figure(data=[
         go.Bar(        
             x=['YTD','Annualized','Target Adj'], 
             y=bar1_y,
             text=bar1_y,
             textposition='inside',
-            texttemplate='%{y:$,.0f}',
+            texttemplate=num_format,
             textfont=dict(family="NotoSans-Condensed",
                           size=14,),
             textangle=0,
@@ -2043,7 +2058,8 @@ def measure_lib(df):
 
 #   df['detail_fstrow']=df['Detail'].apply(lambda x: str(x)[0:str(x).find(';')])
 
-    df['detail']=df['Detail'].apply(lambda x: str(x).replace(';','  \n'))   
+    df['detail']=df['Detail'].apply(lambda x: str(x).replace(';','  \n')).replace('nan', '')
+
     
     table=dash_table.DataTable(
         data=df.to_dict('records'),
@@ -2054,10 +2070,11 @@ def measure_lib(df):
         {"name": 'Category', "id": "Category"},
         {"name": 'Metrics', "id": "Metrics"},
         {"name": 'Published VBP Agreement Counts', "id": "Published VBP Agreement Counts"},
-#       {"name": 'Detail', "id": "detail_fstrow"},
+        {"name": 'Detail', "id": "detail"},
         ],
 
-       fixed_rows={'headers': True},
+        fixed_rows={'headers': True},
+        style_table={'height': '100rem', 'overflowY': 'scroll'},
 
 #       filter_action="native",
 
@@ -2067,7 +2084,7 @@ def measure_lib(df):
             'rule': 'font-family:"NotoSans-Condensed"'}],
 
         tooltip_conditional=[
-        {'if': { 'column_id':'Published VBP Agreement Counts',
+        {'if': { 'column_id':'detail',
                 'row_index':c
                     },
         'value': df['detail'][c],
@@ -2185,19 +2202,36 @@ def measure_lib(df):
                 'backgroundColor':'white'
             }
 
-            for col,c in itertools.product(['Category','Metrics','Published VBP Agreement Counts'],range(len(df)))
+            for col,c in itertools.product(['Category','Metrics','Published VBP Agreement Counts','detail'],range(len(df)))
 
+        ]+[
+            { 'if': {
+                    'row_index':c,
+                    },
+                'border-top':'1px solid #bfbfbf',
+            } for c in[0,10,35]
+        ]+[ { 'if': {
+                    'row_index':49,
+                    },
+                'border-bottom':'1px solid #bfbfbf',
+            },
+            { 'if': {
+                    'column_id':'detail',
+                    },
+                'width':'5rem',
+                'overflow': 'hidden',
+                'textOverflow': 'ellipsis',
+                'maxWidth': 0,
+            }
         ],
-       style_table={'height': '120rem', 'overflowY': 'scroll'},
+        
         style_cell={
             'textAlign': 'center',
             'font-family':'NotoSans-Regular',
             'fontSize':16,
             'border':'0px',
             'height': '1.5rem',
-            'overflow': 'hidden',
-            'textOverflow': 'ellipsis',
-            'maxWidth': 0,
+            
         },
 
         style_header={
@@ -2218,3 +2252,13 @@ def measure_lib(df):
     return table
 #df_drilldown=pd.read_csv("data/drilldown_sample_6.csv")
 #a=drilldata_process_ip(df_drilldown,'Managing Physician (Group)',dim1='Sub Category',f1='Heart Failure')
+#lib=pd.read_csv("data/measure_library.csv")
+
+
+#app = dash.Dash(__name__, url_base_pathname='/vbc-payer-demo/contract-manager-drilldown/')
+
+#server = app.server
+#app.layout=html.Div([measure_lib(lib)])
+
+#if __name__ == "__main__":
+#   app.run_server(host="127.0.0.1",debug=True)

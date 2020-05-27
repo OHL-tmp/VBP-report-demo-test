@@ -18,17 +18,18 @@ from dash.dependencies import Input, Output, State
 from utils import *
 from figure import *
 
-from modal_drilldown_tableview import *
+from modal_drilldown_tableview_crhr import *
 
 from app import app
 
 df_drilldown=pd.read_csv("data/drilldown_sample_6.csv")
+
 #dimensions=df_drilldown.columns[0:12]
-df_drill_waterfall=pd.read_csv("data/drilldown waterfall graph.csv")
-df_driver=pd.read_csv("data/Drilldown Odometer.csv")
-df_driver_all=pd.read_csv("data/Drilldown All Drivers.csv")
-data_lv3=drilldata_process(df_drilldown,'Service Category')
-data_lv4=drilldata_process(df_drilldown,'Sub Category')
+df_drill_waterfall_crhr=pd.read_csv("data/drilldown waterfall graph ip.csv")
+df_driver_crhr=pd.read_csv("data/Drilldown Odometer ip.csv")
+df_driver_all_crhr=pd.read_csv("data/Drilldown All Drivers ip.csv")
+
+data_lv2_crhr=drilldata_process_crhr(df_drilldown,'Sub Category')
 
 all_dimension=[]
 for i in list(df_drilldown.columns[0:14]):
@@ -124,7 +125,7 @@ def card_overview_drilldown_crhr(percentage):
                             [
                                 html.Div(
                                     [
-                                        dcc.Graph(figure=drill_bar(df_drill_waterfall),config={'modeBarButtonsToRemove': button_to_rm,'displaylogo': False,}),
+                                        dcc.Graph(figure=drill_bar(df_drill_waterfall_crhr),config={'modeBarButtonsToRemove': button_to_rm,'displaylogo': False,},style={"height":"28rem"}),
                                     ]
                                 )
                             ],
@@ -136,7 +137,7 @@ def card_overview_drilldown_crhr(percentage):
                                 html.Div(
                                     [
                                         html.H3("Risk Adjustment Details", style={"font-size":"0.8rem","margin-top":"-1.8rem","color":"#919191","background-color":"#f5f5f5","width":"9rem","padding-left":"1rem","padding-right":"1rem","text-align":"center"}),
-                                        html.Div([dcc.Graph(figure=drill_waterfall(df_drill_waterfall),style={"height":"24rem","padding-bottom":"1rem"},config={'modeBarButtonsToRemove': button_to_rm,'displaylogo': False,})]),
+                                        html.Div([dcc.Graph(figure=drill_waterfall(df_drill_waterfall_crhr),style={"height":"24rem","padding-bottom":"1rem"},config={'modeBarButtonsToRemove': button_to_rm,'displaylogo': False,})]),
                                     ],
                                     style={"border-radius":"0.5rem","border":"2px solid #d2d2d2","padding":"1rem","height":"25.5rem"}
                                 )
@@ -163,7 +164,7 @@ def card_key_driver_drilldown_crhr(app):
                                                     ),
                                         dbc.Modal([
                                                 dbc.ModalHeader("All Drivers"),
-                                                dbc.ModalBody(children = html.Div([table_driver_all(df_driver_all)], style={"padding":"1rem"})),
+                                                dbc.ModalBody(children = html.Div([table_driver_all(df_driver_all_crhr)], style={"padding":"1rem"})),
                                                 dbc.ModalFooter(
                                                         dbc.Button("Close", id = 'close-all-driver-crhr',
                                                                         style={"background-color":"#38160f", "border":"none", "border-radius":"10rem", "font-family":"NotoSans-Regular", "font-size":"0.8rem"},
@@ -180,20 +181,20 @@ def card_key_driver_drilldown_crhr(app):
                             [
                                 dbc.Col(
                                     [
-                                        html.Div([gaugegraph(df_driver,0)], style={"padding-top":"1.5rem"}),
-                                        html.Div(html.H4("{:.1f} %".format(abs(df_driver['%'][0]*100)),style={"color":"#ff4d17"}), style={"margin-top":"-1.5rem","text-align":"center","font-size":"1rem","color":"#ffeb78"}),
+                                        html.Div([gaugegraph(df_driver_crhr,0)], style={"padding-top":"1.5rem"}),
+                                        html.Div(html.H4("{:.1f} %".format(abs(df_driver_crhr['%'][0]*100)),style={"color":"#ff4d17"}), style={"margin-top":"-1.5rem","text-align":"center","font-size":"1rem","color":"#ffeb78"}),
                                     ],
                                     width=6),
                                 dbc.Col(
                                     [
-                                        html.Div([gaugegraph(df_driver,1)], style={"padding-top":"1.5rem"}),
-                                        html.Div(html.H4("{:.1f} %".format(abs(df_driver['%'][1]*100)),style={"color":"#ff4d17"}), style={"margin-top":"-1.5rem","text-align":"center","font-size":"1rem","color":"#aeff78"}),
+                                        html.Div([gaugegraph(df_driver_crhr,1)], style={"padding-top":"1.5rem"}),
+                                        html.Div(html.H4("{:.1f} %".format(abs(df_driver_crhr['%'][1]*100)),style={"color":"#ff4d17"}), style={"margin-top":"-1.5rem","text-align":"center","font-size":"1rem","color":"#aeff78"}),
                                     ],
                                     width=6),
                                 dbc.Col(
                                     [
-                                        html.Div([gaugegraph(df_driver,2)], style={"padding-top":"1.5rem"}),
-                                        html.Div(html.H4("{:.1f} %".format(abs(df_driver['%'][2]*100)),style={"color":"#ff4d17"}), style={"margin-top":"-1.5rem","text-align":"center","font-size":"1rem","color":"#39db44"}),
+                                        html.Div([gaugegraph(df_driver_crhr,2)], style={"padding-top":"1.5rem"}),
+                                        html.Div(html.H4("{:.1f} %".format(abs(df_driver_crhr['%'][2]*100)),style={"color":"#ff4d17"}), style={"margin-top":"-1.5rem","text-align":"center","font-size":"1rem","color":"#39db44"}),
                                     ],
                                     width=6),
                                 
@@ -265,9 +266,6 @@ def tab_patient_analysis_crhr(app):
 
                                 card_table1_patient_performance_drilldown_crhr(app),
 
-                    html.Hr(),
-
-                                card_table2_patient_performance_drilldown_crhr(app),
                                 
                             ]
                         ),
@@ -294,9 +292,6 @@ def tab_physician_analysis_crhr(app):
 
                                 card_table1_physician_performance_drilldown_crhr(app),
 
-                    html.Hr(),
-
-                                card_table2_physician_performance_drilldown_crhr(app),
                                 
                             ]
                         ),
@@ -326,7 +321,7 @@ def mod_criteria_button_crhr():
                                                               ],
                                                     value = "Medication Adherence",
                                                     labelCheckedStyle={"color": "#057aff"},
-                                                    id = "list-dim-lv1",
+                                                    id = "list-dim-lv1-crhr",
                                                     style={"font-family":"NotoSans-Condensed", "font-size":"0.8rem", "padding":"1rem"},
                                                 ),
                                             ],
@@ -373,7 +368,7 @@ def card_graph1_patient_performance_drilldown_crhr(app):
                                     style={"padding-left":"2rem","padding-right":"1rem","border-radius":"5rem","background-color":"#f7f7f7","margin-top":"2rem"}
                                 ), 
                                 
-                                html.Div(drillgraph_lv1(drilldata_process(df_drilldown,'Medication Adherence'),'dashtable_patient_lv1_crhr','Medication Adherence'),id="drill_patient_lv1_crhr",style={"padding-top":"2rem","padding-bottom":"2rem"}), 
+                                html.Div(drillgraph_lv1_crhr(drilldata_process_crhr(df_drilldown,'Medication Adherence'),'dashtable_patient_lv1_crhr','Medication Adherence'),id="drill_patient_lv1_crhr",style={"padding-top":"2rem","padding-bottom":"2rem"}), 
                             ], 
                             style={"max-height":"80rem"}
                         ),
@@ -400,51 +395,6 @@ def card_table1_patient_performance_drilldown_crhr(app):
                         dbc.Row(
                             [
                                 dbc.Col(html.Img(src=app.get_asset_url("bullet-round-blue.png"), width="10px"), width="auto", align="start", style={"margin-top":"-4px"}),
-                                dbc.Col(html.H4("Performance Drilldown by Service Category", style={"font-size":"1rem", "margin-left":"10px"}), width=8),
-                            ],
-                            no_gutters=True,
-                        ),
-
-                        html.Div(
-                            [
-                                html.Div(
-                                    [
-                                        dbc.Row(
-                                            [
-                                                dbc.Col(html.H1("By Service Category", style={"color":"#f0a800", "font-size":"1.5rem","padding-top":"1.2rem"}), width=5),
-                                                dbc.Col( 
-                                                    [
-                                                        html.Div("Medication Adherence",id="filter_patient_1_2_name_crhr", style={"font-size":"0.8rem"}),
-                                                        html.Div(filter_template_crhr("Medication Adherence","filter_patient_1_2_value_crhr",default_val='All')),
-                                                    ], 
-                                                    style={"padding":"0.8rem"},
-                                                    width=3,
-                                                ),
-                                            ]
-                                        )
-                                    ],
-                                    style={"padding-left":"2rem","padding-right":"1rem","border-radius":"5rem","background-color":"#f7f7f7","margin-top":"2rem"}
-                                ),
-                                html.H4("* Default sorting: by Contribution to Overall Performance Difference", style={"font-size":"0.8rem","color":"#919191","padding-top":"1rem","margin-bottom":"-1rem"}), 
-                                html.Div([dashtable_lv3(data_lv3,'Service Category','dashtable_patient_lv2_crhr',1)],id="drill_patient_lv2",style={"padding":"1rem"}),
-                            ], 
-                            style={"max-height":"80rem"}
-                        ),
-                    ]
-                ),
-                className="mb-3",
-                style={"box-shadow":"0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05)", "border":"none", "border-radius":"0.5rem"}
-            )
-
-
-
-def card_table2_patient_performance_drilldown_crhr(app):
-    return dbc.Card(
-                dbc.CardBody(
-                    [
-                        dbc.Row(
-                            [
-                                dbc.Col(html.Img(src=app.get_asset_url("bullet-round-blue.png"), width="10px"), width="auto", align="start", style={"margin-top":"-4px"}),
                                 dbc.Col(html.H4("Service Category Drilldown by Sub Category", style={"font-size":"1rem", "margin-left":"10px"}), width=8),
                             ],
                             no_gutters=True,
@@ -460,28 +410,20 @@ def card_table2_patient_performance_drilldown_crhr(app):
                                                 
                                                 dbc.Col(
                                                     [
-                                                        html.Div("Medication Adherence",id="filter_patient_1_3_name_crhr", style={"font-size":"0.6rem"}),
-                                                        html.Div(filter_template_crhr("Medication Adherence","filter_patient_1_3_value_crhr",default_val='All')),
+                                                        html.Div("Medication Adherence",id="filter_patient_1_2_name_crhr", style={"font-size":"0.6rem"}),
+                                                        html.Div(filter_template_crhr("Medication Adherence","filter_patient_1_2_value_crhr",default_val='All')),
                                                     ], 
                                                     style={"padding":"0.8rem"},
                                                     width=2,
                                                 ),
-                                                dbc.Col(
-                                                    [
-                                                        html.Div("Service Category",id="filter_patient_2_3_name", style={"font-size":"0.6rem"}),
-                                                        html.Div(filter_template_crhr("Service Category","filter_patient_2_3_value_crhr",default_val='All')),
-                                                    ], 
-                                                    style={"padding":"0.8rem"},
-                                                    width=2,
-                                                ),
-                                    
+                                                                                    
                                             ]
                                         )
                                     ],
                                     style={"padding-left":"2rem","padding-right":"1rem","border-radius":"5rem","background-color":"#f7f7f7","margin-top":"2rem"}
                                 ), 
                                 html.H4("* Default sorting: by Contribution to Overall Performance Difference", style={"font-size":"0.8rem","color":"#919191","padding-top":"1rem","margin-bottom":"-1rem"}), 
-                                html.Div([dashtable_lv3(data_lv4,'Sub Category','dashtable_patient_lv3_crhr',0)],id="drill_patient_lv3",style={"padding":"1rem"})
+                                html.Div([dashtable_lv3_crhr(data_lv2_crhr,'Sub Category','dashtable_patient_lv2_crhr',0)],id="drill_patient_lv2_crhr",style={"padding":"1rem"})
                             ], 
                             style={"max-height":"120rem"}
                         ),
@@ -518,7 +460,7 @@ def card_graph2_physician_performance_drilldown_crhr(app):
                                     ],
                                     style={"padding-left":"2rem","padding-right":"1rem","border-radius":"5rem","background-color":"#f7f7f7","margin-top":"2rem"}
                                 ), 
-                                html.Div(drillgraph_lv1(drilldata_process(df_drilldown,'Managing Physician (Group)'),'dashtable_physician_lv1_crhr','Managing Physician (Group)'),id="drill_physician_lv1",style={"padding-top":"2rem","padding-bottom":"2rem"}), 
+                                html.Div(drillgraph_lv1_crhr(drilldata_process_crhr(df_drilldown,'Managing Physician (Group)'),'dashtable_physician_lv1_crhr','Managing Physician (Group)'),id="drill_physician_lv1_crhr",style={"padding-top":"2rem","padding-bottom":"2rem"}), 
                             ], 
                             style={"max-height":"80rem"}
                         ),
@@ -530,52 +472,6 @@ def card_graph2_physician_performance_drilldown_crhr(app):
 
 
 def card_table1_physician_performance_drilldown_crhr(app):
-	return dbc.Card(
-                dbc.CardBody(
-                    [
-                        dbc.Row(
-                            [
-                                dbc.Col(html.Img(src=app.get_asset_url("bullet-round-blue.png"), width="10px"), width="auto", align="start", style={"margin-top":"-4px"}),
-                                dbc.Col(html.H4("Performance Drilldown by Service Category", style={"font-size":"1rem", "margin-left":"10px"}), width=8),
-                            ],
-                            no_gutters=True,
-                        ),
-
-                        html.Div(
-                            [
-                                html.Div(
-                                    [
-                                        dbc.Row(
-                                            [
-                                                dbc.Col(html.H1("By Service Category", style={"color":"#f0a800", "font-size":"1.5rem","padding-top":"1.2rem"}), width=5),
-                                                
-                                                dbc.Col( 
-                                                    [
-                                                        html.Div("Managing Physician (Group)",id="filter_physician_1_2_name_crhr", style={"font-size":"0.8rem"}),
-                                                        html.Div(filter_template_crhr("Managing Physician (Group)","filter_physician_1_2_value_crhr",default_val='All')),
-                                                    ], 
-                                                    style={"padding":"0.8rem"},
-                                                    width=3,
-                                                )
-                                            ]
-                                        )
-                                    ],
-                                    style={"padding-left":"2rem","padding-right":"1rem","border-radius":"5rem","background-color":"#f7f7f7","margin-top":"2rem"}
-                                ),
-                                html.H4("* Default sorting: by Contribution to Overall Performance Difference", style={"font-size":"0.8rem","color":"#919191","padding-top":"1rem","margin-bottom":"-1rem"}), 
-                                html.Div([dashtable_lv3(data_lv3,'Service Category','dashtable_physician_lv2_crhr',1)],id="drill_physician_lv2",style={"padding":"1rem"}),
-                            ], 
-                            style={"max-height":"80rem"}
-                        ),
-                    ]
-                ),
-                className="mb-3",
-                style={"box-shadow":"0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05)", "border":"none", "border-radius":"0.5rem"}
-            )
-
-
-
-def card_table2_physician_performance_drilldown_crhr(app):
 	return dbc.Card(
                 dbc.CardBody(
                     [
@@ -597,28 +493,20 @@ def card_table2_physician_performance_drilldown_crhr(app):
                                                 
                                                 dbc.Col(
                                                     [
-                                                        html.Div("Managing Physician (Group)",id="filter_physician_1_3_name_crhr", style={"font-size":"0.6rem"}),
-                                                        html.Div(filter_template_crhr("Managing Physician (Group)","filter_physician_1_3_value_crhr",default_val='All')),
+                                                        html.Div("Managing Physician (Group)",id="filter_physician_1_2_name_crhr", style={"font-size":"0.6rem"}),
+                                                        html.Div(filter_template_crhr("Managing Physician (Group)","filter_physician_1_2_value_crhr",default_val='All')),
                                                     ], 
                                                     style={"padding":"0.8rem"},
                                                     width=2,
                                                 ),
-                                                dbc.Col(
-                                                    [
-                                                        html.Div("Service Category",id="filter_physician_2_3_name_crhr", style={"font-size":"0.6rem"}),
-                                                        html.Div(filter_template_crhr("Service Category","filter_physician_2_3_value_crhr",default_val='All')),
-                                                    ], 
-                                                    style={"padding":"0.8rem"},
-                                                    width=2,
-                                                ),
-                                    
+                                                    
                                             ]
                                         )
                                     ],
                                     style={"padding-left":"2rem","padding-right":"1rem","border-radius":"5rem","background-color":"#f7f7f7","margin-top":"2rem"}
                                 ), 
                                 html.H4("* Default sorting: by Contribution to Overall Performance Difference", style={"font-size":"0.8rem","color":"#919191","padding-top":"1rem","margin-bottom":"-1rem"}), 
-                                html.Div([dashtable_lv3(data_lv4,'Sub Category','dashtable_physician_lv3_crhr',0)],id="drill_physician_lv3",style={"padding":"1rem"})
+                                html.Div([dashtable_lv3_crhr(data_lv2_crhr,'Sub Category','dashtable_physician_lv2_crhr',0)],id="drill_physician_lv2_crhr",style={"padding":"1rem"})
                             ], 
                             style={"max-height":"120rem"}
                         ),
