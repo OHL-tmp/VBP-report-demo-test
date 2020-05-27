@@ -2064,7 +2064,7 @@ def measure_lib(df):
         css=[
         {
             'selector': 'dash-table-tooltip', 
-            'rule': 'font-family:"NotoSans-CondensedLight"'}],
+            'rule': 'font-family:"NotoSans-Condensed"'}],
 
         tooltip_conditional=[
         {'if': { 'column_id':'Published VBP Agreement Counts',
@@ -2188,11 +2188,11 @@ def measure_lib(df):
             for col,c in itertools.product(['Category','Metrics','Published VBP Agreement Counts'],range(len(df)))
 
         ],
-       style_table={'height': '100rem', 'overflowY': 'scroll'},
+       style_table={'height': '120rem', 'overflowY': 'scroll'},
         style_cell={
             'textAlign': 'center',
             'font-family':'NotoSans-Regular',
-            'fontSize':12,
+            'fontSize':16,
             'border':'0px',
             'height': '1.5rem',
             'overflow': 'hidden',
@@ -2208,7 +2208,7 @@ def measure_lib(df):
             'backgroundColor': '#f1f6ff',
             'fontWeight': 'bold',
             'font-family':'NotoSans-CondensedLight',
-            'fontSize':14,
+            'fontSize':18,
             'color': '#1357DD',
             'text-align':'center',
             'border':'1px solid #bfbfbf',
