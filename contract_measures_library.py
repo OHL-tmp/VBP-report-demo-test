@@ -23,25 +23,18 @@ def create_layout(app):
 	return html.Div(
                 [ 
                     html.Div([Header_contract(app, False, True, False, False)], style={"height":"6rem"}, className = "sticky-top navbar-expand-lg"),
-                    
+                    html.Div(dbc.Button('Back to Contract Optimizer', href = "/vbc-demo/contract-optimizer/",style={"text-align":"center", "font-size":"0.8rem", "border":"1px dashed #919191"}, color="light"), style={"text-align":"start", "padding":"1rem"}),
+	                
                     html.Div(
                     	[
                     		html.Div(html.H1("Measures Library")),
                     		html.Div(children=measure_lib(df_measure_library)),
-                    	]
+                    	],
+                    	style={"padding-left":"1rem","padding-right":"1rem"}
                     )
                     
                 ])
 
-def div_report_content(app):
-	return html.Div(
-			[
-				html.Div(
-					html.Embed(src=app.get_asset_url("pharma-report.pdf"), width="100%", height="1150px")
-				),
-				
-			]
-		)
 
 
 

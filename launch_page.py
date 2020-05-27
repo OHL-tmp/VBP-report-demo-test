@@ -10,6 +10,10 @@ import dash_table
 import pandas as pd
 import numpy as np
 
+import urllib.parse as url_parse
+import flask 
+from io import StringIO, BytesIO
+
 from app import app
 import contract_manager
 import contract_manager_drilldown
@@ -17,7 +21,7 @@ import contract_optimizer
 import contract_report_generator
 import contract_measures_library
 
-
+df_test=pd.read_excel("downloads/test.xlsx", index_col = 0)
 
 
 def launch_layout():
@@ -89,6 +93,16 @@ def display_page(pathname):
 
 #####################################3
      
+
+
+@app.server.route('/downloads/<filename>', methods = ['GET'])
+def serve_static(filename):
+
+    filename = 'downloads/' + filename
+    return flask.send_file(filename, as_attachment=True)
+
+
+
 
 if __name__ == "__main__":
     app.run_server(host='0.0.0.0',port = 8098)
