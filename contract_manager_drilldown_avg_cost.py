@@ -125,7 +125,7 @@ def card_overview_drilldown(percentage):
                             [
                                 html.Div(
                                     [
-                                        dcc.Graph(figure=drill_bar(df_drill_waterfall),config={'modeBarButtonsToRemove': button_to_rm,'displaylogo': False,}),
+                                        dcc.Graph(figure=drill_bar(df_drill_waterfall),config={'modeBarButtonsToRemove': button_to_rm,'displaylogo': False,},style={"height":"28rem"}),
                                     ]
                                 )
                             ],

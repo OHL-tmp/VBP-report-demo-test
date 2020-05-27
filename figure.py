@@ -1232,7 +1232,7 @@ def dashtable_lv3(df,dimension,tableid,row_select):#row_select: numeric 0 or 1
     )
     return table_lv3
 
-def drillgraph_lv1_ip(df_table,tableid,dim):
+def drillgraph_lv1_crhr(df_table,tableid,dim):
 
     df_table=df_table.merge(df_dim_order[df_dim_order['dimension']==df_table.columns[0]],how='left',left_on=df_table.columns[0],right_on='value').sort_values(by='ordering')  
     
@@ -1259,7 +1259,7 @@ def drillgraph_lv1_ip(df_table,tableid,dim):
         {'id': 'Cost %', 'name': 'Cost %','type': 'numeric',"format":FormatTemplate.percentage(1)} ,
         {'id': 'YTD Hospitalization Rate', 'name': 'YTD Hospitalization Rate Per Patient','type': 'numeric',"format":Format( precision=1, scheme=Scheme.fixed,)} ,
         {'id': '% Hospitalization Rate Diff from Benchmark', 'name': '% Diff from Benchmark','type': 'numeric',"format":FormatTemplate.percentage(1)} ,
-        {'id': 'Contribution to Overall Hospitalization Rate Difference', 'name': 'Contribution to Overall Performance Difference','type': 'numeric',"format":FormatTemplate.percentage(1)} ,
+        {'id': 'Contribution to Overall Performance Difference', 'name': 'Contribution to Overall Performance Difference','type': 'numeric',"format":FormatTemplate.percentage(1)} ,
          ],
         row_selectable="single",
         selected_rows=[len(df_table)-1],
@@ -1273,12 +1273,12 @@ def drillgraph_lv1_ip(df_table,tableid,dim):
 
         style_data_conditional=(
         data_bars_diverging(df_table, '% Hospitalization Rate Diff from Benchmark',col_max) +
-        data_bars_diverging(df_table, 'Contribution to Overall Hospitalization Rate Difference',col_max)+
+        data_bars_diverging(df_table, 'Contribution to Overall Performance Difference',col_max)+
         [{'if': {'column_id':'% Hospitalization Rate Diff from Benchmark'},
              
              'width': '20rem',
             }, 
-        {'if': {'column_id': 'Contribution to Overall Hospitalization Rate Difference'},
+        {'if': {'column_id': 'Contribution to Overall Performance Difference'},
              
              'width': '20rem',
             },
@@ -1308,7 +1308,7 @@ def drillgraph_lv1_ip(df_table,tableid,dim):
     return tbl
        
    
-def dashtable_lv3_ip(df,dimension,tableid,row_select):#row_select: numeric 0 or 1
+def dashtable_lv3_crhr(df,dimension,tableid,row_select):#row_select: numeric 0 or 1
     
     #df1=df[0:len(df)-1].sort_values(by='Contribution to Overall Performance Difference',ascending=False)
     #df1.append(df[len(df)-1:len(df)])
@@ -1338,9 +1338,9 @@ def dashtable_lv3_ip(df,dimension,tableid,row_select):#row_select: numeric 0 or 
         merge_duplicate_headers=True,
         sort_action="custom",
         sort_mode='single',
-        sort_by=[{"column_id":"Contribution to Overall Hospitalization Rate Difference","direction":"desc"},],
+        sort_by=[{"column_id":"Contribution to Overall Performance Difference","direction":"desc"},],
         row_selectable=row_sel,
-        selected_rows=[],
+        selected_rows=[(len(df)-1)],
         style_data={
             'whiteSpace': 'normal',
             'height': 'auto'
@@ -1438,7 +1438,7 @@ def drilldata_process(df_drilldown,dimension,dim1='All',f1='All',dim2='All',f2='
 
     return df
 
-def drilldata_process_ip(df_drilldown,dimension,dim1='All',f1='All',dim2='All',f2='All',dim3='All',f3='All'):#dimension='Sub Category'    
+def drilldata_process_crhr(df_drilldown,dimension,dim1='All',f1='All',dim2='All',f2='All',dim3='All',f3='All'):#dimension='Sub Category'    
     
     df_pre=df_drilldown
     
@@ -1566,7 +1566,7 @@ def drill_waterfall(df):
                 ),
         yaxis = dict(
             showgrid = True, 
-            range=[0,y_base*1.2],
+            range=[0,y_base*1.4],
             gridcolor =colors['grey'],
             nticks=5,
             showticklabels=True,
