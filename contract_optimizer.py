@@ -23,7 +23,7 @@ from modal_simulation_measure_selection import *
 from contract_calculation import *
 from modal_simulation_input import *
 
-#from app import app
+from app import app
 
 df_sim_rev=pd.read_csv("data/Output_Pharma_Net_Revenue.csv")
 df_sim_rebate=pd.read_csv("data/Output_Rebate.csv")
@@ -1336,7 +1336,7 @@ def collapse_confounding_factors(app):
 
 
 
-app.layout = create_layout(app)
+layout = create_layout(app)
 
 
 
