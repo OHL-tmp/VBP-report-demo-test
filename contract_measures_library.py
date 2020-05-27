@@ -23,7 +23,7 @@ def create_layout(app):
 	return html.Div(
                 [ 
                     html.Div([Header_contract(app, False, True, False, False)], style={"height":"6rem"}, className = "sticky-top navbar-expand-lg"),
-                    html.Div(dbc.Button('Back to Contract Optimizer', style={"text-align":"center", "font-size":"0.8rem", "border":"1px dashed #919191"}, color="light"), style={"text-align":"start", "padding":"1rem"}),
+                    html.Div(dbc.Button('Back to Contract Optimizer', href = "/vbc-demo/contract-optimizer/",style={"text-align":"center", "font-size":"0.8rem", "border":"1px dashed #919191"}, color="light"), style={"text-align":"start", "padding":"1rem"}),
 	                
                     html.Div(
                     	[

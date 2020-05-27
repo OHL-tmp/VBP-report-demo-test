@@ -161,16 +161,19 @@ def select_drilldown(*args):
     if not ctx.triggered:
         state_avg_cost = False
         button_id = "avg_cost"
+        label = "CHF Related Average Cost per Patient"
     else:
         button_id = ctx.triggered[0]["prop_id"].split(".")[0]
 
         if button_id == "crhr":
             state_crhr = False
+            label = "CHF Related Hospitalization Rate"
         elif button_id == "avg_cost":
             state_avg_cost = False
+            label = "CHF Related Average Cost per Patient"
 
 
-    return button_id, state_avg_cost, state_crhr
+    return label, state_avg_cost, state_crhr
 
 
 

@@ -52,17 +52,20 @@ def input_session():
 					),
 					dbc.Row(
 						[
-							dbc.Col("Age Distribution", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
+							dbc.Col("Age Distribution", style={"font-family":"NotoSans-Regular","font-size":"1rem"}, width=3),
 							dbc.Col([
 								dbc.Button("\u25BC", id = 'button-collapse-age', size="sm", color='primary', style={"border-radius":"10rem"}),
-								]),
+								],
+								width=1),
 							dbc.Col(
 								html.Div(['Fill below or ',
+										html.Br(),
 										html.A('Download Template', 
 											id = 'download-age',
 											href='http://127.0.0.1:8052/downloads/test.xlsx',
 											target = "_blank")
-										]),
+										], style={"font-size":"0.8rem"}),
+								width=2
 								),
 							dbc.Col(
 								dcc.Upload(
@@ -78,10 +81,11 @@ def input_session():
 										'borderRadius': '5px',
 										'textAlign': 'center'
 										}
-									), width = 3
+									), width=3
 								),
 							dbc.Col(
 								html.Div(id = 'output-age-upload', style={"text-align":"center","padding":"0.5rem","font-family":"NotoSans-Regular","font-size":"0.6rem"}),
+								width=3,
 								)
 						], style={"padding-top":"1rem"}
 					),
@@ -90,11 +94,12 @@ def input_session():
 							[
 								card_collapse_age()
 							],
-							id = 'collapse-age', is_open = False
-						)
+							id = 'collapse-age', is_open = False,
+							style={"padding":"1rem","border-radius":"0.5rem","background-color":"#f5f5f5"}
+						), style={"padding":"0.5rem"}
 					),
 					dbc.Row([
-						dbc.Col("Gender Distribution", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
+						dbc.Col("Gender Distribution", style={"font-family":"NotoSans-Regular","font-size":"1rem"}, width=3),
 						dbc.Col(dbc.Button("\u25BC", size="sm", color='primary', style={"border-radius":"10rem"}, id = 'button-collapse-gender'))
 						], style={"padding-top":"1rem"}),
 					html.Div(
@@ -102,8 +107,9 @@ def input_session():
 							[
 								card_collapse_gender()
 								
-							],id = 'collapse-gender', is_open = False
-						)
+							],id = 'collapse-gender', is_open = False,
+							style={"padding":"1rem","border-radius":"0.5rem","background-color":"#f5f5f5"}
+						), style={"padding":"0.5rem"}
 					),
 					dbc.Row([
 						dbc.Col("Geography Distribution", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
@@ -136,7 +142,7 @@ def input_session():
 							)
 						], style={"padding-top":"1rem"}),
 					dbc.Row([
-						dbc.Col("Pharmacy Benefit Design", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
+						dbc.Col("Pharmacy Benefit Design", style={"font-family":"NotoSans-Regular","font-size":"1rem"}, width=3),
 						dbc.Col(dbc.Button("\u25BC", size="sm", color='primary', style={"border-radius":"10rem"}, id = 'button-collapse-benefit'))
 						], style={"padding-top":"1rem"}),
 					html.Div(
@@ -146,7 +152,8 @@ def input_session():
 							],
 							id = 'collapse-benefit', 
 							is_open = False,
-						)
+							style={"padding":"1rem","border-radius":"0.5rem","background-color":"#f5f5f5"}
+						), style={"padding":"0.5rem"}
 					),
 				]
 			),
@@ -274,7 +281,8 @@ def input_session():
 						],
 						id = 'collapse-month', 
 						is_open = False,
-					)
+						style={"padding":"1rem","border-radius":"0.5rem","background-color":"#f5f5f5"}
+					), style={"padding":"0.5rem"}
 				),
 				]),
 			]),
@@ -336,7 +344,7 @@ def card_collapse_age():
 					dbc.Col(">=85", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
 					dbc.Col(dbc.Input(value = "10%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
 					], style={"padding-top":"1rem"}),
-			], style={"font-family":"NotoSans-Regular","font-size":"1rem", "padding-left":"1rem", "padding-right":"1rem"}
+			], style={"font-family":"NotoSans-Regular","font-size":"1rem", "padding":"1rem"}
 		)
 
 def card_collapse_gender():
@@ -353,7 +361,7 @@ def card_collapse_gender():
 					dbc.Col("Male", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
 					dbc.Col(dbc.Input(value = "47%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
 					], style={"padding-top":"1rem"}),
-				], style={"font-family":"NotoSans-Regular","font-size":"1rem", "padding-left":"1rem", "padding-right":"1rem"})
+				], style={"font-family":"NotoSans-Regular","font-size":"1rem", "padding":"1rem"})
 
 
 def card_collapse_tier():
@@ -465,7 +473,7 @@ def card_collapse_tier():
 					], style={"padding-top":"1rem"}
 				),
 			],
-			style={"font-family":"NotoSans-Regular","font-size":"1rem", "padding-left":"1rem", "padding-right":"1rem"}
+			style={"font-family":"NotoSans-Regular","font-size":"1rem", "padding":"1rem"}
 		)
 
 
@@ -525,7 +533,7 @@ def card_collapse_month():
 					dbc.Col("Month 12", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
 					dbc.Col(dbc.Input(value = "100%", bs_size="sm", style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
 					], style={"padding-top":"1rem"}),
-			], style={"font-family":"NotoSans-Regular","font-size":"1rem", "padding-left":"1rem", "padding-right":"1rem"}
+			], style={"font-family":"NotoSans-Regular","font-size":"1rem", "padding":"1rem"}
 		)
 
 def download_template():
