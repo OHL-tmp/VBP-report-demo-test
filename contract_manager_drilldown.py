@@ -137,7 +137,7 @@ def card_selected_measures():
 
 
 layout = create_layout(app)
-
+#app.layout = create_layout(app)
 
 ##### select drilldown #####
 
@@ -385,6 +385,7 @@ def update_table4(dim1,val1,dim2,val2,sort_dim):
     return df1.to_dict('records')    
 
 
+
 #### callback ####
 
 ## modal
@@ -606,9 +607,7 @@ def datatable_data_selection(v1, v2, v3, d1, d2, f1, f2, m):
     return [{"name": i, "id": i, "selectable":True,"type":"numeric", "format": FormatTemplate.percentage(1)} if i in percent_list else {"name": i, "id": i, "selectable":True, "type":"numeric","format": FormatTemplate.money(0)} if i in dollar_list else {"name": i, "id": i, "selectable":True, "type":"numeric","format": Format(precision=1, scheme = Scheme.fixed)} for i in show_column], df_agg.to_dict('records')
 
 
-##### hosp callbacks #####
-
-
+##### hosp_rate callbacks #####
 
 @app.callback(
     Output("modal-all-driver-crhr","is_open"),
@@ -640,23 +639,20 @@ def toggle_popover_mod_criteria(n1, is_open):
    [ Output("drill_patient_lv1_crhr","children"),
      Output("filter_patient_1_2_name_crhr","children"),
      Output("filter_patient_1_2_value_crhr","options"),
-     Output("filter_patient_1_3_name_crhr","children"),
-     Output("filter_patient_1_3_value_crhr","options"),
      Output("dimname_on_patient_lv1_crhr","children"),
    ],
-   [Input("list-dim-lv1","value")] 
+   [Input("list-dim-lv1-crhr","value")] 
 )
 def update_table_dimension(dim):
     f1_name=dim
     filter1_value_list=[{'label': i, 'value': i} for i in all_dimension[all_dimension['dimension']==dim].loc[:,'value']]
     
-    return drillgraph_lv1(drilldata_process(df_drilldown,dim),'dashtable_patient_lv1_crhr',dim),f1_name,filter1_value_list,f1_name,filter1_value_list,'By '+f1_name
+    return drillgraph_lv1_crhr(drilldata_process_crhr(df_drilldown,dim),'dashtable_patient_lv1_crhr',dim),f1_name,filter1_value_list,'By '+f1_name
 
 #update patient filter1 on following page based on selected rows
 
 @app.callback(
-   [ Output("filter_patient_1_2_value_crhr","value"),   
-     Output("filter_patient_1_3_value_crhr","value"),    ],
+    Output("filter_patient_1_2_value_crhr","value"),   
    [ Input("dashtable_patient_lv1_crhr","selected_row_ids"),
    ] 
 )
@@ -666,22 +662,7 @@ def update_filter1value_patient(row):
         row_1='All'
     else:row_1=row[0]        
     
-    return row_1,row_1
-
-#update patient filter2 on following page based on selected rows
-
-@app.callback(
-    Output("filter_patient_2_3_value_crhr","value"),   
-   [ Input("dashtable_patient_lv2_crhr","selected_row_ids"),
-   ] 
-)
-def update_filter2value(row):
-    if row is None or row==[]:
-        row_1='All'
-    else:row_1=row[0]        
-    
     return row_1
-
 
 
 #update patient lv2 on filter1
@@ -696,51 +677,22 @@ def update_filter2value(row):
 def update_table3(dim1,val1,sort_dim):
     #global data_lv3
     
-    data_lv3=drilldata_process(df_drilldown,'Service Category',dim1,val1)       
+    data_lv3=drilldata_process_crhr(df_drilldown,'Sub Category',dim1,val1)       
     #data_lv3.to_csv('data/overall_performance.csv')
     if sort_dim==[]:
         sort_dim=[{"column_id":"Contribution to Overall Performance Difference","direction":"desc"}]
   
-    df1=data_lv3[0:len(data_lv3)-1].sort_values(by=sort_dim[0]['column_id'],ascending= sort_dim[0]['direction']=='asc')
-    df1=pd.concat([df1,data_lv3[len(data_lv3)-1:len(data_lv3)]])
-    df1['id']=df1[df1.columns[0]]
-    df1.set_index('id', inplace=True, drop=False)
+    df1=data_lv3[0:len(data_lv3)-2].sort_values(by=sort_dim[0]['column_id'],ascending= sort_dim[0]['direction']=='asc')
+    df1=pd.concat([df1,data_lv3[len(data_lv3)-2:len(data_lv3)]])
+
     return df1.to_dict('records')
-
-
-
-#update patient lv3 on filter1,filter2
-
-@app.callback(
-    Output("dashtable_patient_lv3_crhr","data"),    
-   [ Input("filter_patient_1_3_name_crhr","children"),
-     Input("filter_patient_1_3_value_crhr","value"),
-     Input("filter_patient_2_3_name","children"),
-     Input("filter_patient_2_3_value_crhr","value"),
-     Input('dashtable_patient_lv3_crhr', 'sort_by'),
-   ] 
-)
-def update_table4(dim1,val1,dim2,val2,sort_dim):
-    
-    #global data_lv4
-    data_lv4=drilldata_process(df_drilldown,'Sub Category',dim1,val1,dim2,val2)   
-    
-    if sort_dim==[]:
-        sort_dim=[{"column_id":"Contribution to Overall Performance Difference","direction":"desc"}]
-  
-    df1=data_lv4[0:len(data_lv4)-2].sort_values(by=sort_dim[0]['column_id'],ascending= sort_dim[0]['direction']=='asc')
-    df1=pd.concat([df1,data_lv4[len(data_lv4)-2:len(data_lv4)]])
-    
-    return df1.to_dict('records')
-
 
 
 
 #update physician filter1 on following page based on selected rows
 
 @app.callback(
-   [ Output("filter_physician_1_2_value_crhr","value"),   
-     Output("filter_physician_1_3_value_crhr","value"),    ],
+    Output("filter_physician_1_2_value_crhr","value"),   
    [ Input("dashtable_physician_lv1_crhr","selected_row_ids"),
    ] 
 )
@@ -750,22 +702,7 @@ def update_filter1value(row):
         row_1='All'
     else:row_1=row[0]        
     
-    return row_1,row_1
-
-#update physician filter2 on following page based on selected columns
-
-@app.callback(
-    Output("filter_physician_2_3_value_crhr","value"),   
-   [ Input("dashtable_physician_lv2_crhr","selected_row_ids"),
-   ] 
-)
-def update_filter2value(row):
-    if row is None or row==[]:
-        row_1='All'
-    else:row_1=row[0]        
-    
     return row_1
-
 
 
 #update physician lv2 on filter1
@@ -778,45 +715,16 @@ def update_filter2value(row):
    ] 
 )
 def update_table3(dim1,val1,sort_dim):
-    #global data_lv3
+
     
-    data_lv3=drilldata_process(df_drilldown,'Service Category',dim1,val1)       
-    #data_lv3.to_csv('data/overall_performance.csv')
+    data_lv3=drilldata_process_crhr(df_drilldown,'Sub Category',dim1,val1)     
     if sort_dim==[]:
         sort_dim=[{"column_id":"Contribution to Overall Performance Difference","direction":"desc"}]
   
-    df1=data_lv3[0:len(data_lv3)-1].sort_values(by=sort_dim[0]['column_id'],ascending= sort_dim[0]['direction']=='asc')
-    df1=pd.concat([df1,data_lv3[len(data_lv3)-1:len(data_lv3)]])
-    df1['id']=df1[df1.columns[0]]
-    df1.set_index('id', inplace=True, drop=False)
-    return df1.to_dict('records')
+    df1=data_lv3[0:len(data_lv3)-2].sort_values(by=sort_dim[0]['column_id'],ascending= sort_dim[0]['direction']=='asc')
+    df1=pd.concat([df1,data_lv3[len(data_lv3)-2:len(data_lv3)]])
 
-
-
-#update physician lv3 on filter1,filter2
-
-@app.callback(
-    Output("dashtable_physician_lv3_crhr","data"),    
-   [ Input("filter_physician_1_3_name_crhr","children"),
-     Input("filter_physician_1_3_value_crhr","value"),
-     Input("filter_physician_2_3_name_crhr","children"),
-     Input("filter_physician_2_3_value_crhr","value"),
-     Input('dashtable_physician_lv3_crhr', 'sort_by'),
-   ] 
-)
-def update_table4(dim1,val1,dim2,val2,sort_dim):
-    
-    #global data_lv4
-    data_lv4=drilldata_process(df_drilldown,'Sub Category',dim1,val1,dim2,val2)   
-    
-    if sort_dim==[]:
-        sort_dim=[{"column_id":"Contribution to Overall Performance Difference","direction":"desc"}]
-  
-    df1=data_lv4[0:len(data_lv4)-2].sort_values(by=sort_dim[0]['column_id'],ascending= sort_dim[0]['direction']=='asc')
-    df1=pd.concat([df1,data_lv4[len(data_lv4)-2:len(data_lv4)]])
-    
-    return df1.to_dict('records')    
-
+    return df1.to_dict('records')  
 
 
 #### callback ####
