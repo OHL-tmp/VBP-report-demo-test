@@ -207,18 +207,19 @@ def toggle_popover_mod_criteria(n1, is_open):
 @app.callback(
    [ Output("drill_patient_lv1","children"),
      Output("filter_patient_1_2_name","children"),
-     Output("filter_patient_1_2_value","options"),
+     Output("filter_patient_1_2_contain","children"),
      Output("filter_patient_1_3_name","children"),
-     Output("filter_patient_1_3_value","options"),
+     Output("filter_patient_1_3_contain","children"),
      Output("dimname_on_patient_lv1","children"),
    ],
    [Input("list-dim-lv1","value")] 
 )
 def update_table_dimension(dim):
     f1_name=dim
-    filter1_value_list=[{'label': i, 'value': i} for i in all_dimension[all_dimension['dimension']==dim].loc[:,'value']]
+#    filter1_value_list=[{'label': i, 'value': i} for i in all_dimension[all_dimension['dimension']==dim].loc[:,'value']]
+#    filter1=filter_template(dim,"filter_patient_1_2_value")
     
-    return drillgraph_lv1(drilldata_process(df_drilldown,dim),'dashtable_patient_lv1',dim),f1_name,filter1_value_list,f1_name,filter1_value_list,'By '+f1_name
+    return drillgraph_lv1(drilldata_process(df_drilldown,dim),'dashtable_patient_lv1',dim),f1_name,filter_template(dim,"filter_patient_1_2_value"),f1_name,filter_template(dim,"filter_patient_1_3_value"),'By '+f1_name
 
 #update patient filter1 on following page based on selected rows
 
@@ -638,16 +639,17 @@ def toggle_popover_mod_criteria(n1, is_open):
 @app.callback(
    [ Output("drill_patient_lv1_crhr","children"),
      Output("filter_patient_1_2_name_crhr","children"),
-     Output("filter_patient_1_2_value_crhr","options"),
+     Output("filter_patient_1_2_contain_crhr","children"),
      Output("dimname_on_patient_lv1_crhr","children"),
    ],
    [Input("list-dim-lv1-crhr","value")] 
 )
 def update_table_dimension(dim):
     f1_name=dim
-    filter1_value_list=[{'label': i, 'value': i} for i in all_dimension[all_dimension['dimension']==dim].loc[:,'value']]
+#    filter1_value_list=[{'label': i, 'value': i} for i in all_dimension[all_dimension['dimension']==dim].loc[:,'value']]
     
-    return drillgraph_lv1_crhr(drilldata_process_crhr(df_drilldown,dim),'dashtable_patient_lv1_crhr',dim),f1_name,filter1_value_list,'By '+f1_name
+    
+    return drillgraph_lv1_crhr(drilldata_process_crhr(df_drilldown,dim),'dashtable_patient_lv1_crhr',dim),f1_name,filter_template_crhr(dim,"filter_patient_1_2_value_crhr"),'By '+f1_name
 
 #update patient filter1 on following page based on selected rows
 

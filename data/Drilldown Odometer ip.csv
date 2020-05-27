@@ -1,4 +1,5 @@
 ﻿Name,%
-Non-compliant Patient,0.02
-Low Risk Patient,0.007
-Compliant Patient,-0.007
+Non-compliant Patient,0.047688117
+High Risk Patient,0.034094037
+Provider Group B,0.017848507
+Compliant Patient,-0.018126573

@@ -194,7 +194,7 @@ def card_key_driver_drilldown(app):
                                 dbc.Col(
                                     [
                                         html.Div([gaugegraph(df_driver,2)], style={"padding-top":"1.5rem"}),
-                                        html.Div(html.H4("{:.1f} %".format(abs(df_driver['%'][2]*100)),style={"color":"#18cc75"}), style={"margin-top":"-1.5rem","text-align":"center","font-size":"1rem","color":"#39db44"}),
+                                        html.Div(html.H4("{:.1f} %".format(abs(df_driver['%'][2]*100)),style={"color":"#ff4d17"}), style={"margin-top":"-1.5rem","text-align":"center","font-size":"1rem","color":"#39db44"}),
                                     ],
                                     width=6),
                                 
@@ -416,7 +416,7 @@ def card_table1_patient_performance_drilldown(app):
                                                 dbc.Col( 
                                                     [
                                                         html.Div("Medication Adherence",id="filter_patient_1_2_name", style={"font-size":"0.8rem"}),
-                                                        html.Div(filter_template("Medication Adherence","filter_patient_1_2_value",default_val='All')),
+                                                        html.Div(filter_template("Medication Adherence","filter_patient_1_2_value",default_val='All'),id='filter_patient_1_2_contain'),
                                                     ], 
                                                     style={"padding":"0.8rem"},
                                                     width=3,
@@ -462,7 +462,7 @@ def card_table2_patient_performance_drilldown(app):
                                                 dbc.Col(
                                                     [
                                                         html.Div("Medication Adherence",id="filter_patient_1_3_name", style={"font-size":"0.6rem"}),
-                                                        html.Div(filter_template("Medication Adherence","filter_patient_1_3_value",default_val='All')),
+                                                        html.Div(filter_template("Medication Adherence","filter_patient_1_3_value",default_val='All'),id="filter_patient_1_3_contain"),
                                                     ], 
                                                     style={"padding":"0.8rem"},
                                                     width=2,
@@ -470,7 +470,7 @@ def card_table2_patient_performance_drilldown(app):
                                                 dbc.Col(
                                                     [
                                                         html.Div("Service Category",id="filter_patient_2_3_name", style={"font-size":"0.6rem"}),
-                                                        html.Div(filter_template("Service Category","filter_patient_2_3_value",default_val='All')),
+                                                        html.Div(filter_template("Service Category","filter_patient_2_3_value",default_val='All'),id="filter_patient_2_3_contain"),
                                                     ], 
                                                     style={"padding":"0.8rem"},
                                                     width=2,
@@ -553,7 +553,7 @@ def card_table1_physician_performance_drilldown(app):
                                                 dbc.Col( 
                                                     [
                                                         html.Div("Managing Physician (Group)",id="filter_physician_1_2_name", style={"font-size":"0.8rem"}),
-                                                        html.Div(filter_template("Managing Physician (Group)","filter_physician_1_2_value",default_val='All')),
+                                                        html.Div(filter_template("Managing Physician (Group)","filter_physician_1_2_value",default_val='All'),id="filter_physician_1_2_contain"),
                                                     ], 
                                                     style={"padding":"0.8rem"},
                                                     width=3,
@@ -599,7 +599,7 @@ def card_table2_physician_performance_drilldown(app):
                                                 dbc.Col(
                                                     [
                                                         html.Div("Managing Physician (Group)",id="filter_physician_1_3_name", style={"font-size":"0.6rem"}),
-                                                        html.Div(filter_template("Managing Physician (Group)","filter_physician_1_3_value",default_val='All')),
+                                                        html.Div(filter_template("Managing Physician (Group)","filter_physician_1_3_value",default_val='All'),id="filter_physician_1_3_contain"),
                                                     ], 
                                                     style={"padding":"0.8rem"},
                                                     width=2,
@@ -607,7 +607,7 @@ def card_table2_physician_performance_drilldown(app):
                                                 dbc.Col(
                                                     [
                                                         html.Div("Service Category",id="filter_physician_2_3_name", style={"font-size":"0.6rem"}),
-                                                        html.Div(filter_template("Service Category","filter_physician_2_3_value",default_val='All')),
+                                                        html.Div(filter_template("Service Category","filter_physician_2_3_value",default_val='All'),id="filter_physician_2_3_contain"),
                                                     ], 
                                                     style={"padding":"0.8rem"},
                                                     width=2,

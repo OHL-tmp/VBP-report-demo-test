@@ -194,7 +194,13 @@ def card_key_driver_drilldown_crhr(app):
                                 dbc.Col(
                                     [
                                         html.Div([gaugegraph(df_driver_crhr,2)], style={"padding-top":"1.5rem"}),
-                                        html.Div(html.H4("{:.1f} %".format(abs(df_driver_crhr['%'][2]*100)),style={"color":"#18cc75"}), style={"margin-top":"-1.5rem","text-align":"center","font-size":"1rem","color":"#39db44"}),
+                                        html.Div(html.H4("{:.1f} %".format(abs(df_driver_crhr['%'][2]*100)),style={"color":"#ff4d17"}), style={"margin-top":"-1.5rem","text-align":"center","font-size":"1rem","color":"#39db44"}),
+                                    ],
+                                    width=6),
+                                dbc.Col(
+                                    [
+                                        html.Div([gaugegraph(df_driver_crhr,3)], style={"padding-top":"1.5rem"}),
+                                        html.Div(html.H4("{:.1f} %".format(abs(df_driver_crhr['%'][3]*100)),style={"color":"#18cc75"}), style={"margin-top":"-1.5rem","text-align":"center","font-size":"1rem","color":"#39db44"}),
                                     ],
                                     width=6),
                                 
@@ -395,7 +401,7 @@ def card_table1_patient_performance_drilldown_crhr(app):
                         dbc.Row(
                             [
                                 dbc.Col(html.Img(src=app.get_asset_url("bullet-round-blue.png"), width="10px"), width="auto", align="start", style={"margin-top":"-4px"}),
-                                dbc.Col(html.H4("Service Category Drilldown by Sub Category", style={"font-size":"1rem", "margin-left":"10px"}), width=8),
+                                dbc.Col(html.H4("Hospitalization Rate by Medical Condition", style={"font-size":"1rem", "margin-left":"10px"}), width=8),
                             ],
                             no_gutters=True,
                         ),
@@ -406,12 +412,12 @@ def card_table1_patient_performance_drilldown_crhr(app):
                                     [
                                         dbc.Row(
                                             [
-                                                dbc.Col(html.H1("By Sub Category", style={"color":"#f0a800", "font-size":"1.5rem","padding-top":"1.2rem"}), width=5),
+                                                dbc.Col(html.H1("By Medical Condition", style={"color":"#f0a800", "font-size":"1.5rem","padding-top":"1.2rem"}), width=5),
                                                 
                                                 dbc.Col(
                                                     [
                                                         html.Div("Medication Adherence",id="filter_patient_1_2_name_crhr", style={"font-size":"0.6rem"}),
-                                                        html.Div(filter_template_crhr("Medication Adherence","filter_patient_1_2_value_crhr",default_val='All')),
+                                                        html.Div(filter_template_crhr("Medication Adherence","filter_patient_1_2_value_crhr",default_val='All'),id="filter_patient_1_2_contain_crhr"),
                                                     ], 
                                                     style={"padding":"0.8rem"},
                                                     width=2,
@@ -478,7 +484,7 @@ def card_table1_physician_performance_drilldown_crhr(app):
                         dbc.Row(
                             [
                                 dbc.Col(html.Img(src=app.get_asset_url("bullet-round-blue.png"), width="10px"), width="auto", align="start", style={"margin-top":"-4px"}),
-                                dbc.Col(html.H4("Service Category Drilldown by Sub Category", style={"font-size":"1rem", "margin-left":"10px"}), width=8),
+                                dbc.Col(html.H4("Hospitalization Rate by Medical Condition", style={"font-size":"1rem", "margin-left":"10px"}), width=8),
                             ],
                             no_gutters=True,
                         ),
@@ -489,12 +495,12 @@ def card_table1_physician_performance_drilldown_crhr(app):
                                     [
                                         dbc.Row(
                                             [
-                                                dbc.Col(html.H1("By Sub Category", style={"color":"#f0a800", "font-size":"1.5rem","padding-top":"1.2rem"}), width=5),
+                                                dbc.Col(html.H1("By Medical Condition", style={"color":"#f0a800", "font-size":"1.5rem","padding-top":"1.2rem"}), width=5),
                                                 
                                                 dbc.Col(
                                                     [
                                                         html.Div("Managing Physician (Group)",id="filter_physician_1_2_name_crhr", style={"font-size":"0.6rem"}),
-                                                        html.Div(filter_template_crhr("Managing Physician (Group)","filter_physician_1_2_value_crhr",default_val='All')),
+                                                        html.Div(filter_template_crhr("Managing Physician (Group)","filter_physician_1_2_value_crhr",default_val='All'),id='filter_physician_1_2_contain_crhr'),
                                                     ], 
                                                     style={"padding":"0.8rem"},
                                                     width=2,
