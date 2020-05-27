@@ -25,6 +25,10 @@ from modal_simulation_input import *
 
 #from app import app
 
+#app = dash.Dash(__name__, url_base_pathname='/vbc-demo/launch/')
+
+#server = app.server
+
 df_sim_rev=pd.read_csv("data/Output_Pharma_Net_Revenue.csv")
 df_sim_rebate=pd.read_csv("data/Output_Rebate.csv")
 df_sim_cost=pd.read_csv("data/Total_Cost.csv")
@@ -1336,7 +1340,7 @@ def collapse_confounding_factors(app):
 
 
 
-app.layout = create_layout(app)
+layout = create_layout(app)
 
 
 
@@ -1553,8 +1557,8 @@ for d in range(len(list(Domain_options.keys()))):
 
 ## Domain 1
 @app.callback(
-	[Output("optimizer-card-domain-selection-1", "color"),
-	Output("optimizer-card-domain-selection-1", "outline"),
+	[Output("optimizer-collapse-card-domain-selection-1", "color"),
+	Output("optimizer-collapse-card-domain-selection-1", "outline"),
 	Output("optimizer-card-selected-domain-1", "children")],
 	[Input("optimizer-checklist-domain-measures-lv2-1-1", "value"),
 	Input("optimizer-checklist-domain-measures-lv2-1-2", "value"),
@@ -1585,8 +1589,8 @@ def toggle_collapse_domain_selection_measures_1(v1, v2, v3, v4):
 
 ## Domain 2
 @app.callback(
-	[Output("optimizer-card-domain-selection-2", "color"),
-	Output("optimizer-card-domain-selection-2", "outline"),
+	[Output("optimizer-collapse-card-domain-selection-2", "color"),
+	Output("optimizer-collapse-card-domain-selection-2", "outline"),
 	Output("optimizer-card-selected-domain-2", "children")],
 	[Input("optimizer-checklist-domain-measures-lv2-2-1", "value"),
 	Input("optimizer-checklist-domain-measures-lv2-2-2", "value"),
@@ -1612,8 +1616,8 @@ def toggle_collapse_domain_selection_measures_2(v1, v2, v3):
 
 ## Domain 4
 @app.callback(
-	[Output("optimizer-card-domain-selection-4", "color"),
-	Output("optimizer-card-domain-selection-4", "outline"),
+	[Output("optimizer-collapse-card-domain-selection-4", "color"),
+	Output("optimizer-collapse-card-domain-selection-4", "outline"),
 	Output("optimizer-card-selected-domain-4", "children")],
 	[Input("optimizer-checklist-domain-measures-lv2-4-1", "value")],
 )
@@ -1628,8 +1632,8 @@ def toggle_collapse_domain_selection_measures_4(v1):
 
 ## Domain 5
 @app.callback(
-	[Output("optimizer-card-domain-selection-5", "color"),
-	Output("optimizer-card-domain-selection-5", "outline"),
+	[Output("optimizer-collapse-card-domain-selection-5", "color"),
+	Output("optimizer-collapse-card-domain-selection-5", "outline"),
 	Output("optimizer-card-selected-domain-5", "children")],
 	[Input("optimizer-checklist-domain-measures-lv2-5-1", "value")],
 )
@@ -1644,8 +1648,8 @@ def toggle_collapse_domain_selection_measures_5(v1):
 
 ## Domain 6
 @app.callback(
-	[Output("optimizer-card-domain-selection-6", "color"),
-	Output("optimizer-card-domain-selection-6", "outline"),
+	[Output("optimizer-collapse-card-domain-selection-6", "color"),
+	Output("optimizer-collapse-card-domain-selection-6", "outline"),
 	Output("optimizer-card-selected-domain-6", "children")],
 	[Input("optimizer-checklist-domain-measures-lv2-6-1", "value")],
 )
@@ -1725,6 +1729,45 @@ def upload_output(list_of_contents, list_of_names, list_of_dates):
 		]
 		return children
 
+@app.callback(
+	Output('output-age-upload', 'children'),
+	[Input('upload-age', 'contents')],
+	[State('upload-age', 'filename'),
+	State('upload-age','last_modified')]
+	)
+def upload_output(list_of_contents, list_of_names, list_of_dates):
+	if list_of_contents is not None:
+		children = [
+			parse_contents(list_of_contents, list_of_names, list_of_dates)
+		]
+		return children
+
+@app.callback(
+	Output('output-geo-upload', 'children'),
+	[Input('upload-geo', 'contents')],
+	[State('upload-geo', 'filename'),
+	State('upload-geo','last_modified')]
+	)
+def upload_output(list_of_contents, list_of_names, list_of_dates):
+	if list_of_contents is not None:
+		children = [
+			parse_contents(list_of_contents, list_of_names, list_of_dates)
+		]
+		return children
+
+@app.callback(
+	Output('output-price-upload', 'children'),
+	[Input('upload-price', 'contents')],
+	[State('upload-price', 'filename'),
+	State('upload-price','last_modified')]
+	)
+def upload_output(list_of_contents, list_of_names, list_of_dates):
+	if list_of_contents is not None:
+		children = [
+			parse_contents(list_of_contents, list_of_names, list_of_dates)
+		]
+		return children
+
 
 @app.callback(
 	[Output('collapse-age', 'is_open'),Output('button-collapse-age','children')],
@@ -1747,79 +1790,6 @@ def toggle_collapse(n):
 @app.callback(
 	[Output('collapse-benefit', 'is_open'),Output('button-collapse-benefit','children')],
 	[Input('button-collapse-benefit', 'n_clicks')]
-	)
-def toggle_collapse(n):
-	if n and n%2 == 1:
-		return True, '\u25B2'
-	return False, '\u25BC'
-
-@app.callback(
-	[Output('collapse-comorbidity', 'is_open'),Output('button-collapse-comorbidity','children')],
-	[Input('button-collapse-comorbidity', 'n_clicks')]
-	)
-def toggle_collapse(n):
-	if n and n%2 == 1:
-		return True, '\u25B2'
-	return False, '\u25BC'
-
-@app.callback(
-	[Output('collapse-totalcost-srvc', 'is_open'),Output('button-collapse-totalcost-srvc','children')],
-	[Input('button-collapse-totalcost-srvc', 'n_clicks')]
-	)
-def toggle_collapse(n):
-	if n and n%2 == 1:
-		return True, '\u25B2'
-	return False, '\u25BC'
-
-@app.callback(
-	[Output('collapse-totalcost-patient', 'is_open'),Output('button-collapse-totalcost-patient','children')],
-	[Input('button-collapse-totalcost-patient', 'n_clicks')]
-	)
-def toggle_collapse(n):
-	if n and n%2 == 1:
-		return True, '\u25B2'
-	return False, '\u25BC'
-
-@app.callback(
-	[Output('collapse-annucost-srvc', 'is_open'),Output('button-collapse-annucost-srvc','children')],
-	[Input('button-collapse-annucost-srvc', 'n_clicks')]
-	)
-def toggle_collapse(n):
-	if n and n%2 == 1:
-		return True, '\u25B2'
-	return False, '\u25BC'
-
-@app.callback(
-	[Output('collapse-annucost-patient', 'is_open'),Output('button-collapse-annucost-patient','children')],
-	[Input('button-collapse-annucost-patient', 'n_clicks')]
-	)
-def toggle_collapse(n):
-	if n and n%2 == 1:
-		return True, '\u25B2'
-	return False, '\u25BC'
-
-@app.callback(
-	[Output('collapse-ad-condition', 'is_open'),Output('button-collapse-ad-condition','children')],
-	[Input('button-collapse-ad-condition', 'n_clicks')]
-	)
-def toggle_collapse(n):
-	if n and n%2 == 1:
-		return True, '\u25B2'
-	return False, '\u25BC'
-
-@app.callback(
-	[Output('collapse-ad-patient', 'is_open'),Output('button-collapse-ad-patient','children')],
-	[Input('button-collapse-ad-patient', 'n_clicks')]
-	)
-def toggle_collapse(n):
-	if n and n%2 == 1:
-		return True, '\u25B2'
-	return False, '\u25BC'
-
-
-@app.callback(
-	[Output('collapse-utili-patient', 'is_open'),Output('button-collapse-utili-patient','children')],
-	[Input('button-collapse-utili-patient', 'n_clicks')]
 	)
 def toggle_collapse(n):
 	if n and n%2 == 1:
@@ -2093,6 +2063,9 @@ def simulation(submit_button, re_pos_perf, re_neg_perf, re_pos_adj, re_neg_adj, 
 
 		return 'tab-1',sim_result_box(t1),table_sim_result(t1),sim_result_box(t2),table_sim_result(t2),sim_result_box(t3),table_sim_result(t3)
 	return 'tab-0',{},[],{},[],{},[]
+
+
+
 
 if __name__ == "__main__":
 	app.run_server(host="127.0.0.1",debug=True, port = 8052)
