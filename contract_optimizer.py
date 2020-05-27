@@ -304,6 +304,8 @@ def table_setup(df,cohort_change):#,rows
 			'border':'0px solid grey',
 			'text-decoration':'none'
 		},
+		persistence = True,
+		persistence_type = 'session',
 				
 	)
 	return table 
@@ -409,6 +411,8 @@ def card_target_patient(app):
 												options = [{'label':'CHF+AF (Recommended)', 'value':'CHF+AF (Recommended)'},
 															{'label':'All CHF Patients', 'value':'All CHF Patients'}],
 												value = 'CHF+AF (Recommended)',
+												persistence = True,
+												persistence_type = 'session',
 												style={"font-family":"NotoSans-Regular"}
 											)
 										]),

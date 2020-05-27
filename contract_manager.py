@@ -15,7 +15,7 @@ import pandas as pd
 import numpy as np
 
 import pathlib
-import visdcc
+#import visdcc
 import plotly.graph_objects as go
 
 from plotly.subplots import make_subplots
@@ -106,7 +106,7 @@ def create_layout(app):
                 [ 
                     html.Div([Header_mgmt(app, True, False, False, False)], style={"height":"6rem"}, className = "sticky-top navbar-expand-lg"),
                     
-                    visdcc.Run_js("window.open('https://yahoo.com/')"),
+#                    visdcc.Run_js("window.open('https://yahoo.com/')"),
                     html.Div(
                         [
                             dbc.Row(
