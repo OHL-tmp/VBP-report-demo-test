@@ -1,12 +1,12 @@
 ﻿Domain,Measure,YTD Level,Annualized Level ,Target(Risk Adj) ,Performance Diff from Target
 Cost & Utilization Reduction,CHF Related Average Cost per Patient,"$12,529 ","$28,583 ","$28,231 ",-0.012331965
-Cost & Utilization Reduction,CHF Related Hospitalization Rate,20.1%,42.8%,42.0%,-0.008
+Cost & Utilization Reduction,CHF Related Hospitalization Rate, 397 , 909 , 882 ,-0.029561544
 Cost & Utilization Reduction,CHF Related Average IP Cost per Patient ,"$6,763 ","$15,440 ","$15,193 ",-0.015982979
-Cost & Utilization Reduction,CHF Related ER Rate,10.2%,16.5%,15.0%,-0.015
+Cost & Utilization Reduction,CHF Related ER Rate, 119 , 282 , 265 ,-0.063880262
 Cost & Utilization Reduction,All Causes Average Cost per Patient,"$20,882 ","$47,638 ","$47,052 ",-0.012315012
 Cost & Utilization Reduction,All Causes Average IP Cost per Patient,"$11,272 ","$23,753 ","$22,676 ",-0.045356621
-Cost & Utilization Reduction,All Causes Hospitalization Rate,30.2%,64.2%,63.0%,-0.012
-Cost & Utilization Reduction,All Causes ER Rate,15.3%,24.8%,22.5%,-0.0225
+Cost & Utilization Reduction,All Causes Hospitalization Rate, 477 ," 1,090 "," 1,059 ",-0.029561544
+Cost & Utilization Reduction,All Causes ER Rate, 191 , 458 , 424 ,-0.081039621
 Improving Disease Outcome,NT-proBNP Change %,-25.00%,-31.50%,-28.00%,0.035
 Improving Disease Outcome,LVEF LS Mean Change %,2.80%,4.50%,3.00%,0.015
 Improving Disease Outcome,LAVi LS Mean Change,-5,-6.5,-6,0.083333333
@@ -16,11 +16,11 @@ Improving Disease Outcome,E/e’ LS Mean Change,-0.8,-1.1,-1,0.1
 Improving Disease Outcome,Change in Self-Care Score,-2.2,-2.7,-2.5,0.08
 Improving Disease Outcome,Change in Mobility Score ,-2.2,-2.7,-2.5,0.08
 Improving Disease Outcome,CV Mortality Rate,5%,15%,15%,0
-Increasing Patient Safety,Emergent care rate for medication side effect,2.3%,4.5%,5.0%,0.005
-Increasing Patient Safety,Hospitalization rate for medication side effect,1.2%,2.1%,3.0%,0.009
+Increasing Patient Safety,Emergent care rate for medication side effect,2.30%,4.50%,5.00%,0.005
+Increasing Patient Safety,Hospitalization rate for medication side effect,1.20%,2.10%,3.00%,0.009
 Enhancing Care Quality,DOT,102,203,220,-0.077272727
-Enhancing Care Quality,PDC,71.0%,78.0%,80.0%,-0.02
-Enhancing Care Quality,MPR,76.0%,83.0%,85.0%,-0.02
-Better Patient Experience,Patient Reported SOB changes,5.0%,8.0%,10.0%,-0.02
-Better Patient Experience,Patient Reported Fatigue and Tiredness Changes,3.0%,5.0%,6.0%,-0.01
-Better Patient Experience,Patient Reported Peripheral Oedema Changes,3.0%,5.0%,5.0%,0
+Enhancing Care Quality,PDC,71.00%,78.00%,80.00%,-0.02
+Enhancing Care Quality,MPR,76.00%,83.00%,85.00%,-0.02
+Better Patient Experience,Patient Reported SOB changes,5.00%,8.00%,10.00%,-0.02
+Better Patient Experience,Patient Reported Fatigue and Tiredness Changes,3.00%,5.00%,6.00%,-0.01
+Better Patient Experience,Patient Reported Peripheral Oedema Changes,3.00%,5.00%,5.00%,0
