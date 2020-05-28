@@ -54,15 +54,19 @@ def bargraph_overall(df):  #df_overall['month'] df_overall['base'] df_overall['a
             x=x_overall, 
             y=y1_overall,
             text=y1_overall,
-            textposition='auto',
+            textposition='inside',
             texttemplate='%{y:$,.0f}',#'%{y:.2s}',
             constraintext='none',
             marker=dict(
                 color=colors['blue'],
                 opacity=arange(0.34,0.34+0.06*n,0.06) 
                        ),
+            textfont=dict(
+                size=[1,10]+[12]*(n-2)
+
+                ),
             hovertemplate='%{y:,.0f}',
-            hoverinfo='skip',
+            hoverinfo='y',
         ),
         row=1,col=1,secondary_y=False,
     )
@@ -73,7 +77,7 @@ def bargraph_overall(df):  #df_overall['month'] df_overall['base'] df_overall['a
             x=x_overall, 
             y=y2_overall,
             text=y2_overall,
-            textposition='inside',
+            textposition=['outside']+['inside']*(n-1),
             texttemplate='%{y:$,.0f}',#'%{y:.2s}',
             constraintext='none',
             marker=dict(
@@ -81,7 +85,7 @@ def bargraph_overall(df):  #df_overall['month'] df_overall['base'] df_overall['a
                 opacity=arange(0.34,0.34+0.06*n,0.06) 
                        ),
             hovertemplate='%{y:,.0f}',
-            hoverinfo='skip',
+            hoverinfo='y',
         ),
         row=1,col=1,secondary_y=False,
     )
@@ -158,16 +162,18 @@ def waterfall_overall(x,y1,y2): #df_waterfall['label']  df_waterfall['base'] df_
             x=x_waterfall, 
             y=y1_waterfall,
 #            text=y1_waterfall/1000,
-            textposition='auto',
+            textposition='outside',
             textfont=dict(color=['black','black',colors['transparent'],'black','black']),
             texttemplate='%{y:$,.0f}',#'%{text:,.0f}'+'k',
+            textangle=0,
+            constraintext='none',
             marker=dict(
                     color=[colors['blue'],colors['blue'],colors['transparent'],colors['blue'],colors['grey']],
                     opacity=[1,0.7,0,0.5,0.7]
                     ),
             marker_line=dict( color = colors['transparent'] ),
             hovertemplate='%{y:,.0f}',
-            hoverinfo='skip',
+            hoverinfo='y',
             
         ),
         go.Bar(  
@@ -178,12 +184,14 @@ def waterfall_overall(x,y1,y2): #df_waterfall['label']  df_waterfall['base'] df_
             textposition='outside',
             textfont=dict(color=[colors['transparent'],colors['transparent'],'black',colors['transparent'],'black']),
             texttemplate='%{y:$,.0f}',#'%{y:.2s}',
+            textangle=0,
+            constraintext='none',
             marker=dict(
                     color=colors['yellow'],
                     opacity=0.7
                     ),
             hovertemplate='%{y:,.0f}',
-            hoverinfo='skip',
+            hoverinfo='y',
         )
     ])
     # Change the bar mode
@@ -265,6 +273,7 @@ def piechart_utilizer(label,value): #df_util_split['Class']  df_util_split['%']
                     ),
             textinfo='label+percent',
             textposition='auto',
+            texttemplate='%{label}<br> %{percent:.1%}',
             hoverinfo='skip',
         )
     ])
@@ -283,6 +292,10 @@ def piechart_utilizer(label,value): #df_util_split['Class']  df_util_split['%']
 def bargraph_h(x,y):#df_script_per_util['avg script']  df_script_per_util['label']
     x_script_per_util=x
     y_script_per_util=y
+    if x[0]<10:
+        num_format='%{x:,.1f}'
+    else:
+        num_format='%{x:,.0f}'
     fig_script_per_util = go.Figure(data=[
         go.Bar(
             name='',
@@ -290,7 +303,7 @@ def bargraph_h(x,y):#df_script_per_util['avg script']  df_script_per_util['label
             y=y_script_per_util,
             text="",
             textposition='inside', 
-            texttemplate='%{x:.2s}',
+            texttemplate=num_format,#'%{x:.2s}',
             width=0.5,
             textangle=0,
             marker=dict(
@@ -329,12 +342,13 @@ def bargraph_stack3(x,y1,y2,y3) : #   df_tot_script_split['dosage'] df_tot_scrip
             text=y1_tot_script_split,
             textposition='auto',
             textangle=0,
-            texttemplate='%{y:.2s}',
+            texttemplate='%{y:,.0f}',#'%{y:.2s}',%{y:,.0f}
             marker=dict(
                     color='#1357DD',
                     opacity=1
                     ),
             hovertemplate='%{y:,.0f}',
+#            hoverinfo='skip'
         ),
         go.Bar(
             name='Annualized', 
@@ -343,12 +357,13 @@ def bargraph_stack3(x,y1,y2,y3) : #   df_tot_script_split['dosage'] df_tot_scrip
             text=y2_tot_script_split,
             textposition='inside',
             textangle=0,
-            texttemplate='%{y:.2s}',
+            texttemplate='%{y:,.0f}',#'%{y:.2s}',
             marker=dict(
                     color='#1357DD',
                     opacity=0.7
                     ),
             hovertemplate='%{y:,.0f}',
+#            hoverinfo='skip'
         ),
         go.Bar(
             name='Plan Target', 
@@ -357,12 +372,13 @@ def bargraph_stack3(x,y1,y2,y3) : #   df_tot_script_split['dosage'] df_tot_scrip
             text=y3_tot_script_split,
             textposition='inside',
             textangle=0,
-            texttemplate='%{y:.2s}',
+            texttemplate='%{y:,.0f}',
             marker=dict(
                     color=colors['grey'],
                     opacity=0.7
                     ),
             hovertemplate='%{y:,.0f}',
+#            hoverinfo='skip'
         )
     ])
     # Change the bar mode
@@ -665,12 +681,13 @@ def bargraph_perform(df_measure_perform,d): #df_measure_perform, 0 or 1 or 2....
         xaxis=dict(
             tickformat='%',
             zeroline=True,
-            zerolinecolor='black'
+            zerolinecolor='black',
+            range=[-0.05,0]
         ),
         modebar=dict(
                 bgcolor=colors['transparent']
                 ),
-        margin=dict(l=0,r=0,b=30,t=50,pad=0),
+        margin=dict(l=200,r=0,b=30,t=50,pad=0,autoexpand=False),
         font=dict(
             family="NotoSans-Condensed",
             size=12,
@@ -793,7 +810,7 @@ def tbl_non_contract(df,measures):
         style_cell_conditional=[
             {'if': {'column_id': df.columns[0]},
              'maxWidth': '6rem',
-             'font-family':'NotoSans-CondensedLight',
+#             'font-family':'NotoSans-CondensedLight',
             },            
         ],
         style_table={
@@ -2070,7 +2087,7 @@ def measure_lib(df):
         {"name": 'Category', "id": "Category"},
         {"name": 'Metrics', "id": "Metrics"},
         {"name": 'Published VBP Agreement Counts', "id": "Published VBP Agreement Counts"},
-        {"name": 'Detail', "id": "detail"},
+        {"name": 'Published VBP Agreement Detail', "id": "Detail"},
         ],
 
         fixed_rows={'headers': True},
@@ -2084,7 +2101,7 @@ def measure_lib(df):
             'rule': 'font-family:"NotoSans-Condensed"'}],
 
         tooltip_conditional=[
-        {'if': { 'column_id':'detail',
+        {'if': { 'column_id':'Detail',
                 'row_index':c
                     },
         'value': df['detail'][c],
@@ -2101,7 +2118,7 @@ def measure_lib(df):
                 'font-family': 'NotoSans-CondensedLight',
                 'width':'4rem',
                 'minWidth': '4rem',
-                'maxWidth':'14rem',
+                'maxWidth':'15rem',
                 #'border':'1px solid grey',
                 'border-left': '1px solid #bfbfbf',
                 'border-right': '1px solid #bfbfbf',
@@ -2202,7 +2219,7 @@ def measure_lib(df):
                 'backgroundColor':'white'
             }
 
-            for col,c in itertools.product(['Category','Metrics','Published VBP Agreement Counts','detail'],range(len(df)))
+            for col,c in itertools.product(['Category','Metrics','Published VBP Agreement Counts','Detail'],range(len(df)))
 
         ]+[
             { 'if': {
@@ -2216,12 +2233,12 @@ def measure_lib(df):
                 'border-bottom':'1px solid #bfbfbf',
             },
             { 'if': {
-                    'column_id':'detail',
+                    'column_id':'Detail',
                     },
-                'width':'5rem',
+                'width':'10rem',
                 'overflow': 'hidden',
                 'textOverflow': 'ellipsis',
-                'maxWidth': 0,
+#                'maxWidth': '10rem',
             }
         ],
         
@@ -2236,8 +2253,8 @@ def measure_lib(df):
 
         style_header={
             'height': '2.5rem',
-            'minWidth': '3rem',
-            'maxWidth':'3rem',
+#            'minWidth': '3rem',
+#            'maxWidth':'3rem',
             'whiteSpace': 'normal',
             'backgroundColor': '#f1f6ff',
             'fontWeight': 'bold',
