@@ -36,7 +36,7 @@ def launch_layout():
                     ),
                     html.Div(
                         [
-                            html.P("© 2020 Sinolation. ")
+                            html.P("PHARMA   © 2020 Sinolation. ")
                         ],
                         style={"text-align":"center", "font-size":"0.6rem"}
                     ),
@@ -58,7 +58,7 @@ def launch_layout():
                                 )
 
                             ],
-                            style={"background-color":"transparent", "border":"none"}
+                            style={"background-color":"transparent", "border":"none", "width":"1400px", "margin":"auto"}
                             ),
                         ],
                         style={"margin-top":"-30rem","background-color":"transparent","text-align":"center"}
@@ -105,5 +105,5 @@ def serve_static(filename):
 
 
 if __name__ == "__main__":
-    app.run_server(host="127.0.0.1", port = 8052)
+    app.run_server(host="0.0.0.0", port = 8098)
                         
