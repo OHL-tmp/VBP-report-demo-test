@@ -72,7 +72,7 @@ def create_layout(app):
 	return html.Div(
 				[ 
 					html.Div([Header_contract(app, True, False, False, False)], style={"height":"6rem"}, className = "sticky-top navbar-expand-lg"),
-					
+					html.A(id="top"),
 					html.Div(
 						[
 							dbc.Tabs(
@@ -357,7 +357,13 @@ def tab_setup(app):
 						]
 					),
 					html.Div([
-						dbc.Button("Submit for Simulation", color="primary",id = 'button-simulation-submit', style={"border-radius":"10rem","box-shadow":"0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05)"})
+						dbc.Button(
+							"Submit for Simulation", 
+							color="primary",
+							id = 'button-simulation-submit', 
+							href='#top',
+							style={"border-radius":"10rem","box-shadow":"0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05)"}
+						)
 						],
 						style={"text-align":"center", "padding-bottom":"2rem"}),
 
