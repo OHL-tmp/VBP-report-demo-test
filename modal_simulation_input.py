@@ -298,51 +298,51 @@ def card_collapse_age():
 					], style={"padding-top":"1rem"}),
 				dbc.Row([
 					dbc.Col("Newborn (0-1m)", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "10%", bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
+					dbc.Col(dbc.Input(value = "0.0%", bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
 					], style={"padding-top":"1rem"}),
 				dbc.Row([
 					dbc.Col("1m-2y", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "10%", bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
+					dbc.Col(dbc.Input(value = "0.0%", bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
 					], style={"padding-top":"1rem"}),
 				dbc.Row([
 					dbc.Col("2-12", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "10%", bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
+					dbc.Col(dbc.Input(value = "0.0%", bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
 					], style={"padding-top":"1rem"}),
 				dbc.Row([
 					dbc.Col("12-17", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "10%", bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
+					dbc.Col(dbc.Input(value = "0.0%", bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
 					], style={"padding-top":"1rem"}),
 				dbc.Row([
 					dbc.Col("18-24", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "10%", bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
+					dbc.Col(dbc.Input(value = "0.2%", bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
 					], style={"padding-top":"1rem"}),
 				dbc.Row([
 					dbc.Col("25-34", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "10%", bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
+					dbc.Col(dbc.Input(value = "0.4%", bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
 					], style={"padding-top":"1rem"}),
 				dbc.Row([
 					dbc.Col("35-44", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "10%", bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
+					dbc.Col(dbc.Input(value = "1.0%", bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
 					], style={"padding-top":"1rem"}),
 				dbc.Row([
 					dbc.Col("45-54", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "10%", bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
+					dbc.Col(dbc.Input(value = "1.6%", bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
 					], style={"padding-top":"1rem"}),
 				dbc.Row([
 					dbc.Col("55-64", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "10%", bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
+					dbc.Col(dbc.Input(value = "1.8%", bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
 					], style={"padding-top":"1rem"}),
 				dbc.Row([
 					dbc.Col("65-74", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "10%", bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
+					dbc.Col(dbc.Input(value = "18%", bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
 					], style={"padding-top":"1rem"}),
 				dbc.Row([
 					dbc.Col("75-84", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "10%", bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
+					dbc.Col(dbc.Input(value = "44%", bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
 					], style={"padding-top":"1rem"}),
 				dbc.Row([
 					dbc.Col(">=85", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
-					dbc.Col(dbc.Input(value = "10%", bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
+					dbc.Col(dbc.Input(value = "33%", bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
 					], style={"padding-top":"1rem"}),
 			], style={"font-family":"NotoSans-Regular","font-size":"1rem", "padding":"1rem"}
 		)

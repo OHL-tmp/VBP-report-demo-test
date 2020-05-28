@@ -104,7 +104,7 @@ def card_overview_drilldown_crhr(percentage):
 			[
 				dbc.Row(
                         [
-                            dbc.Col(html.H1("CHF Related Hospitalization Rate", style={"font-size":"1.6rem"}), width="auto"),
+                            dbc.Col(html.H1("CHF Related Hospitalization Rate (per 1,000)", style={"font-size":"1.6rem"}), width="auto"),
                             dbc.Card(
                                 dbc.CardBody(
                                     [
@@ -250,8 +250,8 @@ def element_confounding_factors_crhr(percentage, factor):
 
     return dbc.Row(
             [
-                dbc.Col(dbc.Badge(str(abs(percentage*100))+"%", color=color, className="mr-1"), width=3, style={"font-family":"NotoSans-SemiBold"}),
-                dbc.Col(html.H6(factor, style = {"font-size":"1rem", "padding-top":"0.1rem"}), width=9),
+                dbc.Col(dbc.Badge(str(abs(percentage*100))+"%", color=color, className="mr-1"), width="auto", style={"font-family":"NotoSans-SemiBold"}),
+                dbc.Col(html.H6(factor, style = {"font-size":"1rem", "padding-top":"0.1rem"})),
             ],
             style={"padding":"1rem"}
         )
