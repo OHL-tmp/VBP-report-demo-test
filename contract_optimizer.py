@@ -316,7 +316,7 @@ def tab_setup(app):
 								modal_simulation_input()
 								], 
 								width=3,
-								style={"padding-top":"1rem"}),
+								style={"padtop":"1rem"}),
 						],
 						style={"padding-top":"2rem"}
 					),
@@ -966,9 +966,7 @@ def card_vbc_contract(app):
 											html.Div("VBC Adjustment Method", style={"font-family":"NotoSans-Condensed","font-size":"1rem","text-align":"start"}),
 											dcc.Dropdown(
 												options = [
-																{'label':'Rebate adjustment', 'value':'Rebate adjustment'},
-																{'label':'Shared savings/losses', 'value':'Shared savings/losses'},
-																{'label':'Outcome guarantee', 'value':'Outcome guarantee'}
+																{'label':'Rebate adjustment', 'value':'Rebate adjustment'}
 															],
 												value = 'Rebate adjustment',
 												style={"font-family":"NotoSans-Regular","font-size":"0.8rem","width":"11rem"}

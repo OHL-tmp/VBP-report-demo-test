@@ -55,6 +55,7 @@ def modal_drilldown_tableview():
                         id="drilldown-modal-centered-crhr",
                         size='xl',
                         scrollable=False,
+                        backdrop = 'static',
                     ),
                 ]
             )
