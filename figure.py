@@ -811,6 +811,10 @@ def tbl_non_contract(df,measures):
             {'if': {'column_id': df.columns[0]},
              'maxWidth': '6rem',
 #             'font-family':'NotoSans-CondensedLight',
+            }, 
+            {'if': {'column_id': df.columns[1]},
+             'maxWidth': '6rem',
+#             'font-family':'NotoSans-CondensedLight',
             },            
         ],
         style_table={
@@ -1273,7 +1277,7 @@ def drillgraph_lv1_crhr(df_table,tableid,dim):
         columns=[ 
         {'id': dim, 'name': dim} ,
         {'id': 'Patient %', 'name': 'Patient %','type': 'numeric',"format":FormatTemplate.percentage(1)} ,
-        {'id': 'Cost %', 'name': 'Cost %','type': 'numeric',"format":FormatTemplate.percentage(1)} ,
+        {'id': 'Cost %', 'name': 'Inpatient Cost %','type': 'numeric',"format":FormatTemplate.percentage(1)} ,
         {'id': 'YTD Hospitalization Rate', 'name': 'YTD Hospitalization Rate Per 1000','type': 'numeric',"format":Format( precision=0,group=',', scheme=Scheme.fixed,)} ,
         {'id': '% Hospitalization Rate Diff from Benchmark', 'name': '% Diff from Benchmark','type': 'numeric',"format":FormatTemplate.percentage(1)} ,
         {'id': 'Contribution to Overall Performance Difference', 'name': 'Contribution to Overall Performance Difference','type': 'numeric',"format":FormatTemplate.percentage(1)} ,
@@ -2087,7 +2091,7 @@ def measure_lib(df):
         {"name": 'Category', "id": "Category"},
         {"name": 'Metrics', "id": "Metrics"},
         {"name": 'Published VBP Agreement Counts', "id": "Published VBP Agreement Counts"},
-        {"name": 'Published VBP Agreement Detail', "id": "Detail"},
+        {"name": 'Published VBP Agreement Drug Category', "id": "Detail"},
         ],
 
         fixed_rows={'headers': True},
