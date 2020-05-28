@@ -1203,8 +1203,8 @@ def dashtable_lv3(df,dimension,tableid,row_select):#row_select: numeric 0 or 1
         {"name": ["Average CHF Related Cost Per Patient", "YTD Avg Cost"], "id": "YTD Avg Episode Cost",'type': 'numeric',"format":FormatTemplate.money(0)},
         {"name": ["Average CHF Related Cost Per Patient", "% Diff from Benchmark"], "id": "% Cost Diff from Benchmark",'type': 'numeric',"format":FormatTemplate.percentage(1)},
         {"name": ["Average CHF Related Cost Per Patient", "Contribution to Overall Performance Difference"], "id": "Contribution to Overall Performance Difference",'type': 'numeric',"format":FormatTemplate.percentage(1)},
-        {"name": ["Average Utilization Rate Per Patient", "YTD Avg Utilization Rate"], "id": "YTD Avg Utilization Rate",'type': 'numeric',"format":Format( precision=1, scheme=Scheme.fixed,),},
-        {"name": ["Average Utilization Rate Per Patient", "% Diff from Benchmark"], "id": "% Util Diff from Target",'type': 'numeric',"format":FormatTemplate.percentage(1)},
+        {"name": ["Average Utilization Rate", "YTD Avg Utilization Rate per 1000"], "id": "YTD Avg Utilization Rate",'type': 'numeric',"format":Format( precision=0,group=',', scheme=Scheme.fixed,),},
+        {"name": ["Average Utilization Rate", "% Diff from Benchmark"], "id": "% Util Diff from Target",'type': 'numeric',"format":FormatTemplate.percentage(1)},
         {"name": ["Average Unit Cost", "YTD Avg Unit Cost"], "id": "YTD Avg Cost per Unit",'type': 'numeric',"format":FormatTemplate.money(0)},
         {"name": ["Average Unit Cost", "% Diff from Benchmark"], "id": "% Unit Cost Diff from Target",'type': 'numeric',"format":FormatTemplate.percentage(1)},
     ],
@@ -1274,7 +1274,7 @@ def drillgraph_lv1_crhr(df_table,tableid,dim):
         {'id': dim, 'name': dim} ,
         {'id': 'Patient %', 'name': 'Patient %','type': 'numeric',"format":FormatTemplate.percentage(1)} ,
         {'id': 'Cost %', 'name': 'Cost %','type': 'numeric',"format":FormatTemplate.percentage(1)} ,
-        {'id': 'YTD Hospitalization Rate', 'name': 'YTD Hospitalization Rate Per Patient','type': 'numeric',"format":Format( precision=2, scheme=Scheme.fixed,)} ,
+        {'id': 'YTD Hospitalization Rate', 'name': 'YTD Hospitalization Rate Per 1000','type': 'numeric',"format":Format( precision=0,group=',', scheme=Scheme.fixed,)} ,
         {'id': '% Hospitalization Rate Diff from Benchmark', 'name': '% Diff from Benchmark','type': 'numeric',"format":FormatTemplate.percentage(1)} ,
         {'id': 'Contribution to Overall Performance Difference', 'name': 'Contribution to Overall Performance Difference','type': 'numeric',"format":FormatTemplate.percentage(1)} ,
          ],
@@ -1344,9 +1344,9 @@ def dashtable_lv3_crhr(df,dimension,tableid,row_select):#row_select: numeric 0 o
         id=tableid,
         columns=[
         {"name": ["", dimension], "id": dimension},
-        {"name": ["Average Hospitalization Rate Per Patient", "YTD Hospitalization Rate"], "id": "YTD Hospitalization Rate",'type': 'numeric',"format":Format( precision=2, scheme=Scheme.fixed,)},
-        {"name": ["Average Hospitalization Rate Per Patient", "% Diff from Benchmark"], "id": "% Hospitalization Rate Diff from Benchmark",'type': 'numeric',"format":FormatTemplate.percentage(1)},
-        {"name": ["Average Hospitalization Rate Per Patient", "Contribution to Overall Performance Difference"], "id": "Contribution to Overall Performance Difference",'type': 'numeric',"format":FormatTemplate.percentage(1)},
+        {"name": ["Average Hospitalization Rate", "YTD Hospitalization Rate per 1000"], "id": "YTD Hospitalization Rate",'type': 'numeric',"format":Format( precision=0,group=',', scheme=Scheme.fixed,)},
+        {"name": ["Average Hospitalization Rate", "% Diff from Benchmark"], "id": "% Hospitalization Rate Diff from Benchmark",'type': 'numeric',"format":FormatTemplate.percentage(1)},
+        {"name": ["Average Hospitalization Rate", "Contribution to Overall Performance Difference"], "id": "Contribution to Overall Performance Difference",'type': 'numeric',"format":FormatTemplate.percentage(1)},
         {"name": ["Average CHF Related Cost Per Patient", "YTD Avg Inpatient Cost"], "id": "YTD Avg Episode Cost",'type': 'numeric',"format":FormatTemplate.money(0),},
 #        {"name": ["Average CHF Related Cost Per Patient", "% Diff from Benchmark"], "id": "% Cost Diff from Target",'type': 'numeric',"format":FormatTemplate.percentage(1)},
 #        {"name": ["Average Unit Cost", "YTD Avg Unit Cost"], "id": "YTD Avg Cost per Unit",'type': 'numeric',"format":FormatTemplate.money(0)},
@@ -1441,9 +1441,9 @@ def drilldata_process(df_drilldown,dimension,dim1='All',f1='All',dim2='All',f2='
     df['% Cost Diff from Benchmark']=(df['Annualized Avg Episode Cost']-df['Target Avg Episode Cost'])/df['Target Avg Episode Cost']
     df['Contribution to Overall Performance Difference']=(df['Annualized_Total_cost']-df['Target_Total_cost'])/allvalue[3]
 
-    df['YTD Avg Utilization Rate']=df['YTD_Utilization']/df['Pt_Count']
-    df['Target Avg Utilization Rate']=df['Target_Utilization']/df['Pt_Count']
-    df['Annualized Avg Utilization Rate']=df['Annualized_Utilization']/df['Pt_Count']
+    df['YTD Avg Utilization Rate']=df['YTD_Utilization']/df['Pt_Count']*1000
+    df['Target Avg Utilization Rate']=df['Target_Utilization']/df['Pt_Count']*1000
+    df['Annualized Avg Utilization Rate']=df['Annualized_Utilization']/df['Pt_Count']*1000
 
     df['% Util Diff from Target']=(df['Annualized Avg Utilization Rate']-df['Target Avg Utilization Rate'])/df['Target Avg Utilization Rate']
 
@@ -1502,9 +1502,9 @@ def drilldata_process_crhr(df_drilldown,dimension,dim1='All',f1='All',dim2='All'
     df['% Cost Diff from Benchmark']=(df['Annualized Avg Episode Cost']-df['Target Avg Episode Cost'])/df['Target Avg Episode Cost']
 #    df['Contribution to Overall Performance Difference']=(df['Annualized_Total_cost']-df['Target_Total_cost'])/allvalue[3]
 
-    df['YTD Hospitalization Rate']=df['YTD_Utilization']/df['Pt_Count']
-    df['Target Hospitalization Rate']=df['Target_Utilization']/df['Pt_Count']
-    df['Annualized Hospitalization Rate']=df['Annualized_Utilization']/df['Pt_Count']
+    df['YTD Hospitalization Rate']=df['YTD_Utilization']/df['Pt_Count']*1000
+    df['Target Hospitalization Rate']=df['Target_Utilization']/df['Pt_Count']*1000
+    df['Annualized Hospitalization Rate']=df['Annualized_Utilization']/df['Pt_Count']*1000
 
 #    df['% Util Diff from Target']=(df['Annualized Avg Utilization Rate']-df['Target Avg Utilization Rate'])/df['Target Avg Utilization Rate']
 
@@ -1527,8 +1527,8 @@ def drill_waterfall(df):
     y_base=df[['base']][3:4].values[0,0]
     y_adjust=df[['adjusted']][4:5].values[0,0]
 
-    if y_base<10:
-        num_format='%{y:.2f}'
+    if y_base<1500:
+        num_format='%{y:.0f}'
     else:
         num_format='%{y:$,.0f}'
 
@@ -1611,8 +1611,8 @@ def drill_waterfall(df):
 def drill_bar(df):
     bar1_y=df['base'][0:3].values.tolist()
 
-    if bar1_y[0]<10:
-        num_format='%{y:.2f}'
+    if bar1_y[0]<1500:
+        num_format='%{y:.0f}'
     else:
         num_format='%{y:$,.0f}'
 
