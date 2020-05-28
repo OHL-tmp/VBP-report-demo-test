@@ -429,7 +429,8 @@ def card_overview_value_based_measures(app):
                         ),
                         
                         dcc.Graph(style={"height":"22rem"}, id = "bubble_graph_domain",
-                            figure = bubblegraph(df_domain_perform,[0,1],'Domain'),config={'modeBarButtonsToRemove': button_to_rm,'displaylogo': False,})
+                            figure = bubblegraph(df_domain_perform,[0,1],'Domain'),config={'modeBarButtonsToRemove': button_to_rm,'displaylogo': False,}),
+                        html.Div(html.H6("\u29bf Bubble size represents the impact of each domain to the overall performance"),style={"padding":'0.5rem'})
                     ]
                 ),
                 className="mb-3",
