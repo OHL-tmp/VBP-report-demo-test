@@ -23,7 +23,7 @@ from modal_simulation_measure_selection import *
 from contract_calculation import *
 from modal_simulation_input import *
 
-#from app import app
+from app import app
 
 #app = dash.Dash(__name__, url_base_pathname='/vbc-demo/launch/')
 
@@ -1352,7 +1352,7 @@ def collapse_confounding_factors(app):
 
 layout = create_layout(app)
 
-
+#app.layout = create_layout(app)
 
 
 
@@ -1981,8 +1981,8 @@ def update_columns(timestamp, data):
 				row['probuser']='Low'
 	   
 		if row['measures'] not in ['CHF Related Average Cost per Patient','CHF Related Average IP Cost per Patient','All Causes Average Cost per Patient','All Causes Average IP Cost per Patient']:
-			
-			row['taruser_value']='{}%'.format(row['taruser_value'])
+			if row['measures'] != 'CHF Related Hospitalization Rate':
+				row['taruser_value']='{}%'.format(row['taruser_value'])
 		else:
 			row['taruser_value']='${:,}'.format(int(row['taruser_value'])) 
 	
@@ -2071,6 +2071,7 @@ def simulation(submit_button, re_pos_perf, re_neg_perf, re_pos_adj, re_neg_adj, 
 		t2.reset_index(inplace = True)
 		t3.reset_index(inplace  =True)
 
+
 		return 'tab-1',sim_result_box(t1),table_sim_result(t1),sim_result_box(t2),table_sim_result(t2),sim_result_box(t3),table_sim_result(t3)
 	return 'tab-0',{},[],{},[],{},[]
 
@@ -2078,5 +2079,5 @@ def simulation(submit_button, re_pos_perf, re_neg_perf, re_pos_adj, re_neg_adj, 
 
 
 if __name__ == "__main__":
-	app.run_server(host="127.0.0.1",debug=True, port = 8052)
+	app.run_server(host="127.0.0.1",debug=True, port = 8050)
 

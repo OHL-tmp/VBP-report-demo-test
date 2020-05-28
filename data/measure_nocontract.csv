@@ -1,27 +1,26 @@
 ﻿Domain,Measure,YTD Level,Annualized Level ,Target(Risk Adj) ,Performance Diff from Target
-Cost & Utilization Reduction,CHF Related Average Cost per Patient,"$11,481 ","$26,174 ","$25,095 ",-0.042999943
-Cost & Utilization Reduction,CHF Related Hospitalization Rate,39.71%,90.86%,88.25%,-0.029561544
-Cost & Utilization Reduction,CHF Related Average IP Cost per Patient ,NA,NA,NA,NA
-Cost & Utilization Reduction,CHF Related ER Rate,NA,NA,NA,NA
-Cost & Utilization Reduction,All Causes Average Cost per Patient,NA,NA,NA,NA
-Cost & Utilization Reduction,All Causes Average IP Cost per Patient,NA,NA,NA,NA
-Cost & Utilization Reduction,All Causes Hospitalization Rate,NA,NA,NA,NA
-Cost & Utilization Reduction,All Causes ER Rate,NA,NA,NA,NA
-Improving Disease Outcome,NT-proBNP Change %,-25.00%,-28.00%,-29.00%,-0.01
-Improving Disease Outcome,LVEF LS Mean Change %,2.70%,4.00%,4.50%,-0.005
+Cost & Utilization Reduction,CHF Related Average Cost per Patient,"$12,529 ","$28,583 ","$28,231 ",-0.012331965
+Cost & Utilization Reduction,CHF Related Hospitalization Rate,20.1%,42.8%,42.0%,-0.008
+Cost & Utilization Reduction,CHF Related Average IP Cost per Patient ,"$6,763 ","$15,440 ","$15,193 ",-0.015982979
+Cost & Utilization Reduction,CHF Related ER Rate,10.2%,16.5%,15.0%,-0.015
+Cost & Utilization Reduction,All Causes Average Cost per Patient,"$20,882 ","$47,638 ","$47,052 ",-0.012315012
+Cost & Utilization Reduction,All Causes Average IP Cost per Patient,"$11,272 ","$23,753 ","$22,676 ",-0.045356621
+Cost & Utilization Reduction,All Causes Hospitalization Rate,30.2%,64.2%,63.0%,-0.012
+Cost & Utilization Reduction,All Causes ER Rate,15.3%,24.8%,22.5%,-0.0225
+Improving Disease Outcome,NT-proBNP Change %,-25.00%,-31.50%,-28.00%,0.035
+Improving Disease Outcome,LVEF LS Mean Change %,2.80%,4.50%,3.00%,0.015
 Improving Disease Outcome,LAVi LS Mean Change,-5,-6.5,-6,0.083333333
 Improving Disease Outcome,LVEDVi LS Mean Change,-8,-10.5,-10,0.05
 Improving Disease Outcome,LVESVi LS Mean Change,-10,-12.5,-12,0.041666667
 Improving Disease Outcome,E/e’ LS Mean Change,-0.8,-1.1,-1,0.1
 Improving Disease Outcome,Change in Self-Care Score,-2.2,-2.7,-2.5,0.08
-Improving Disease Outcome,Change in Mobility Score,-2.2,-2.7,-2.5,0.08
-Improving Disease Outcome,CV Mortality Rate,5.00%,15.00%,15.00%,0
-Improving Disease Outcome,Rate of CHF Progression for 24 months,5.00%,17.00%,20.00%,0.03
-Increasing Patient Safety,Emergent care rate for medication side effect,NA,NA,NA,NA
-Increasing Patient Safety,Hospitalization rate for medication side effect,NA,NA,NA,NA
-Enhancing Care Quality,DOT,NA,NA,NA,NA
-Enhancing Care Quality,PDC,NA,NA,NA,NA
-Enhancing Care Quality,MPR,NA,NA,NA,NA
-Better Patient Experience,Patient Reported SOB changes,NA,NA,NA,NA
-Better Patient Experience,Patient Reported Fatigue and Tiredness Changes,NA,NA,NA,NA
-Better Patient Experience,Patient Reported Peripheral Oedema Changes,NA,NA,NA,NA
+Improving Disease Outcome,Change in Mobility Score ,-2.2,-2.7,-2.5,0.08
+Improving Disease Outcome,CV Mortality Rate,5%,15%,15%,0
+Increasing Patient Safety,Emergent care rate for medication side effect,2.3%,4.5%,5.0%,0.005
+Increasing Patient Safety,Hospitalization rate for medication side effect,1.2%,2.1%,3.0%,0.009
+Enhancing Care Quality,DOT,102,203,220,-0.077272727
+Enhancing Care Quality,PDC,71.0%,78.0%,80.0%,-0.02
+Enhancing Care Quality,MPR,76.0%,83.0%,85.0%,-0.02
+Better Patient Experience,Patient Reported SOB changes,5.0%,8.0%,10.0%,-0.02
+Better Patient Experience,Patient Reported Fatigue and Tiredness Changes,3.0%,5.0%,6.0%,-0.01
+Better Patient Experience,Patient Reported Peripheral Oedema Changes,3.0%,5.0%,5.0%,0

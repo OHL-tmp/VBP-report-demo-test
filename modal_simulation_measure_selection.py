@@ -89,7 +89,7 @@ Triple_Aim_color = ["#1db954", "#ffa319","#ffa319", "#6147d6", "#6147d6", "#6147
 
 dollar_input = ["All Causes Average Cost per Patient", "CHF Related Average Cost per Patient", "All Causes Average IP Cost per Patient", "CHF Related Average IP Cost per Patient"]
 
-percent_input = ["All Causes Hospitalization Rate", "CHF Related Hospitalization Rate", "All Causes ER Rate", "CHF Related ER Rate",
+percent_input = ["All Causes Hospitalization Rate", "All Causes ER Rate", "CHF Related ER Rate",
 "NT-proBNP Change %", "LVEF LS Mean Change %",
 "CV Mortality Rate", "Rate of CHF Progression for 24 months", "Emergent care rate for medication side effect", "Hospitalization rate for medication side effect"]
 
