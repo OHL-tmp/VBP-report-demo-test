@@ -15,7 +15,11 @@ from dash.dependencies import Input, Output, State
 from utils import *
 from figure import *
 
-from app import app
+#from app import app
+
+app = dash.Dash(__name__, url_base_pathname='/vbc-demo/launch/')
+
+server = app.server
 
 df_measure_library = pd.read_csv("data/measure_library.csv")
 
@@ -38,7 +42,8 @@ def create_layout(app):
 
 
 
-layout = create_layout(app)
+#layout = create_layout(app)
+app.layout = create_layout(app)
 
 if __name__ == "__main__":
     app.run_server(host="127.0.0.1",debug=True,port=8049)
