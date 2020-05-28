@@ -25,10 +25,6 @@ from modal_simulation_input import *
 
 from app import app
 
-#app = dash.Dash(__name__, url_base_pathname='/vbc-demo/launch/')
-
-#server = app.server
-
 df_sim_rev=pd.read_csv("data/Output_Pharma_Net_Revenue.csv")
 df_sim_rebate=pd.read_csv("data/Output_Rebate.csv")
 df_sim_cost=pd.read_csv("data/Total_Cost.csv")
@@ -72,7 +68,7 @@ def create_layout(app):
 	return html.Div(
 				[ 
 					html.Div([Header_contract(app, True, False, False, False)], style={"height":"6rem"}, className = "sticky-top navbar-expand-lg"),
-					
+					html.A(id="top"),
 					html.Div(
 						[
 							dbc.Tabs(
@@ -320,7 +316,7 @@ def tab_setup(app):
 								modal_simulation_input()
 								], 
 								width=3,
-								style={"padding-top":"1rem"}),
+								style={"padtop":"1rem"}),
 						],
 						style={"padding-top":"2rem"}
 					),
@@ -357,7 +353,13 @@ def tab_setup(app):
 						]
 					),
 					html.Div([
-						dbc.Button("Submit for Simulation", color="primary",id = 'button-simulation-submit', style={"border-radius":"10rem","box-shadow":"0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05)"})
+						dbc.Button(
+							"Submit for Simulation", 
+							color="primary",
+							id = 'button-simulation-submit', 
+							href='#top',
+							style={"border-radius":"10rem","box-shadow":"0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05)"}
+						)
 						],
 						style={"text-align":"center", "padding-bottom":"2rem"}),
 
@@ -964,9 +966,7 @@ def card_vbc_contract(app):
 											html.Div("VBC Adjustment Method", style={"font-family":"NotoSans-Condensed","font-size":"1rem","text-align":"start"}),
 											dcc.Dropdown(
 												options = [
-																{'label':'Rebate adjustment', 'value':'Rebate adjustment'},
-																{'label':'Shared savings/losses', 'value':'Shared savings/losses'},
-																{'label':'Outcome guarantee', 'value':'Outcome guarantee'}
+																{'label':'Rebate adjustment', 'value':'Rebate adjustment'}
 															],
 												value = 'Rebate adjustment',
 												style={"font-family":"NotoSans-Regular","font-size":"0.8rem","width":"11rem"}
@@ -1345,6 +1345,7 @@ def collapse_confounding_factors(app):
 
 
 layout = create_layout(app)
+
 
 #app.layout = create_layout(app)
 

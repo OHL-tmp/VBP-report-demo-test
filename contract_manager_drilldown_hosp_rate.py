@@ -53,7 +53,7 @@ def col_content_drilldown_crhr(app):
 			[
                 dbc.Row(
 					[
-						dbc.Col(card_overview_drilldown_crhr(0.012),width=8),
+						dbc.Col(card_overview_drilldown_crhr(0.03),width=8),
 						dbc.Col(card_key_driver_drilldown_crhr(app),width=4),
 					]
 				),
@@ -228,10 +228,9 @@ def card_confounding_factors_crhr(app):
                         
                         dbc.Row(
                             [
-                                dbc.Col(element_confounding_factors_crhr(-0.002, "Change in Covered Services"), width=3),
-                                dbc.Col(element_confounding_factors_crhr(0.003, "Benefit Change"), width=3),
-                                dbc.Col(element_confounding_factors_crhr(-0.002, "Provider Contracting Change"), width=3),
-                                dbc.Col(element_confounding_factors_crhr(-0.002, "Outlier Impact"), width=3),
+                               
+                                dbc.Col(element_confounding_factors_crhr(0.003, "Benefit Change")),
+                                dbc.Col(element_confounding_factors_crhr(-0.002, "Outlier Impact")),
                             ],
                         ),
                     ]

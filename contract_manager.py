@@ -818,7 +818,8 @@ def toggle_collapse_domain_selection_measures_6(v1):
 # submit measure selection
 @app.callback(
     Output("table_measure_watchlist", "children"),
-    [Input("close-centered","n_clicks")]+[Input(f"checklist-domain-measures-lv2-{d+1}-{i+1}", "value") for d in range(domain_ct) for i in range(len(list(Domain_options[list(Domain_options.keys())[d]].keys())))],
+    [Input("close-centered","n_clicks")],
+    [State(f"checklist-domain-measures-lv2-{d+1}-{i+1}", "value") for d in range(domain_ct) for i in range(len(list(Domain_options[list(Domain_options.keys())[d]].keys())))],
     )
 def generate_measure_watchlist(n, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24):
     triggered = [t["prop_id"] for t in dash.callback_context.triggered]
@@ -835,4 +836,4 @@ def generate_measure_watchlist(n, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, 
 
 
 if __name__ == "__main__":
-    app.run_server(host="127.0.0.1",debug=True, port = 8050)
+    app.run_server(host="127.0.0.1",debug=True)
