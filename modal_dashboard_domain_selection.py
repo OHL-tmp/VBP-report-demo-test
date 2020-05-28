@@ -46,7 +46,7 @@ Domain_options ={
                                          "LVEDVi LS Mean Change", "LVESVi LS Mean Change", "E/e' LS Mean Change"],
     "Functional Outcomes" : ["Change in Self-Care Score", "Change in Mobility Score"  ],
     "Life Expectancy" : ["CV Mortality Rate"],
-    "Disease Progression" : ["Rate of CHF Progression for 24 months"],
+    "Disease Progression" : [],
     "Clinical Measures Adherence Level" : [],
     "Depressive Symptom Measures" : [],
     "Psychosocial Outcome" : []

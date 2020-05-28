@@ -811,6 +811,10 @@ def tbl_non_contract(df,measures):
             {'if': {'column_id': df.columns[0]},
              'maxWidth': '6rem',
 #             'font-family':'NotoSans-CondensedLight',
+            }, 
+            {'if': {'column_id': df.columns[1]},
+             'maxWidth': '6rem',
+#             'font-family':'NotoSans-CondensedLight',
             },            
         ],
         style_table={
@@ -1273,7 +1277,7 @@ def drillgraph_lv1_crhr(df_table,tableid,dim):
         columns=[ 
         {'id': dim, 'name': dim} ,
         {'id': 'Patient %', 'name': 'Patient %','type': 'numeric',"format":FormatTemplate.percentage(1)} ,
-        {'id': 'Cost %', 'name': 'Cost %','type': 'numeric',"format":FormatTemplate.percentage(1)} ,
+        {'id': 'Cost %', 'name': 'Inpatient Cost %','type': 'numeric',"format":FormatTemplate.percentage(1)} ,
         {'id': 'YTD Hospitalization Rate', 'name': 'YTD Hospitalization Rate Per 1000','type': 'numeric',"format":Format( precision=0,group=',', scheme=Scheme.fixed,)} ,
         {'id': '% Hospitalization Rate Diff from Benchmark', 'name': '% Diff from Benchmark','type': 'numeric',"format":FormatTemplate.percentage(1)} ,
         {'id': 'Contribution to Overall Performance Difference', 'name': 'Contribution to Overall Performance Difference','type': 'numeric',"format":FormatTemplate.percentage(1)} ,
@@ -2075,7 +2079,7 @@ def measure_lib(df):
 
 #   df['detail_fstrow']=df['Detail'].apply(lambda x: str(x)[0:str(x).find(';')])
 
-    df['detail']=df['Detail'].apply(lambda x: str(x).replace(';','  \n')).replace('nan', '')
+    df['detail']=df['Detail'].apply(lambda x: str(x).replace(';',';\n')).replace('nan', '')
 
     
     table=dash_table.DataTable(
@@ -2087,7 +2091,7 @@ def measure_lib(df):
         {"name": 'Category', "id": "Category"},
         {"name": 'Metrics', "id": "Metrics"},
         {"name": 'Published VBP Agreement Counts', "id": "Published VBP Agreement Counts"},
-        {"name": 'Published VBP Agreement Detail', "id": "Detail"},
+        {"name": 'Published VBP Agreement Drug Category', "id": "Detail"},
         ],
 
         fixed_rows={'headers': True},
@@ -2100,18 +2104,18 @@ def measure_lib(df):
             'selector': 'dash-table-tooltip', 
             'rule': 'font-family:"NotoSans-Condensed"'}],
 
-        tooltip_conditional=[
-        {'if': { 'column_id':'Detail',
-                'row_index':c
-                    },
-        'value': df['detail'][c],
-        'type': 'markdown',
-            
-        }
-        for c in [0,2,5,6,7,9,10,12,18,20,29,30,47,]
-        ],
+#        tooltip_conditional=[
+#        {'if': { 'column_id':'Detail',
+#                'row_index':c
+#                    },
+#        'value': df['detail'][c],
+#        'type': 'markdown',
+#            
+#        }
+#        for c in [0,2,5,6,7,9,10,12,18,20,29,30,47,]
+#        ],
 
-        tooltip_duration=None,
+#        tooltip_duration=None,
         style_data={
                 'color': 'black', 
                 'backgroundColor': 'white',
@@ -2122,6 +2126,10 @@ def measure_lib(df):
                 #'border':'1px solid grey',
                 'border-left': '1px solid #bfbfbf',
                 'border-right': '1px solid #bfbfbf',
+                'height':'auto',
+                'whiteSpace':'normal',
+                'padding-left':'0.5rem',
+                'padding-right':'0.5rem',
 
         },
         style_data_conditional=[
@@ -2235,9 +2243,10 @@ def measure_lib(df):
             { 'if': {
                     'column_id':'Detail',
                     },
-                'width':'10rem',
-                'overflow': 'hidden',
-                'textOverflow': 'ellipsis',
+                'textAlign':'start',
+#               'width':'10rem',
+#                'overflow': 'hidden',
+#                'textOverflow': 'ellipsis',
 #                'maxWidth': '10rem',
             }
         ],

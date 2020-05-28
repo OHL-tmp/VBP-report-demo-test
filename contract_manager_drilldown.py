@@ -256,8 +256,29 @@ def update_filter2value(row):
     return row_1
 
 
+#update patient lv1 on sort_by
 
-#update patient lv2 on filter1
+@app.callback(
+   Output("dashtable_patient_lv1","data"), 
+   [ Input('dashtable_patient_lv1', 'sort_by'),
+   ] ,
+   [State('dashtable_patient_lv1', 'data')]
+)
+def update_table3(sort_dim,data):
+    #global data_lv3
+    
+    data_lv3=pd.DataFrame(data)       
+    #data_lv3.to_csv('data/overall_performance.csv')
+    if (sort_dim is None) or (sort_dim==[]):
+        sort_dim=[{"column_id":"Contribution to Overall Performance Difference","direction":"desc"}]
+  
+    df1=data_lv3[0:len(data_lv3)-1].sort_values(by=sort_dim[0]['column_id'],ascending= sort_dim[0]['direction']=='asc')
+    df1=pd.concat([df1,data_lv3[len(data_lv3)-1:len(data_lv3)]])
+    df1['id']=df1[df1.columns[0]]
+    df1.set_index('id', inplace=True, drop=False)
+    return df1.to_dict('records')
+
+#update patient lv2 on sort_by
 
 @app.callback(
    Output("dashtable_patient_lv2","data"), 
@@ -271,7 +292,7 @@ def update_table3(dim1,val1,sort_dim):
     
     data_lv3=drilldata_process(df_drilldown,'Service Category',dim1,val1)       
     #data_lv3.to_csv('data/overall_performance.csv')
-    if sort_dim==[]:
+    if (sort_dim is None) or (sort_dim==[]):
         sort_dim=[{"column_id":"Contribution to Overall Performance Difference","direction":"desc"}]
   
     df1=data_lv3[0:len(data_lv3)-1].sort_values(by=sort_dim[0]['column_id'],ascending= sort_dim[0]['direction']=='asc')
@@ -298,14 +319,13 @@ def update_table4(dim1,val1,dim2,val2,sort_dim):
     #global data_lv4
     data_lv4=drilldata_process(df_drilldown,'Sub Category',dim1,val1,dim2,val2)   
     
-    if sort_dim==[]:
+    if (sort_dim is None) or (sort_dim==[]):
         sort_dim=[{"column_id":"Contribution to Overall Performance Difference","direction":"desc"}]
   
     df1=data_lv4[0:len(data_lv4)-2].sort_values(by=sort_dim[0]['column_id'],ascending= sort_dim[0]['direction']=='asc')
     df1=pd.concat([df1,data_lv4[len(data_lv4)-2:len(data_lv4)]])
     
     return df1.to_dict('records')
-
 
 
 
@@ -340,8 +360,27 @@ def update_filter2value(row):
     return row_1
 
 
+#update physician lv1 on sort_by
 
-#update physician lv2 on filter1
+@app.callback(
+   Output("dashtable_physician_lv1","data"), 
+   [ Input('dashtable_physician_lv1', 'sort_by'),
+   ] ,
+   [State('dashtable_physician_lv1', 'data')]
+)
+def update_table3(sort_dim,data):
+
+    data_lv3=pd.DataFrame(data)
+    if (sort_dim is None) or (sort_dim==[]):
+        sort_dim=[{"column_id":"Contribution to Overall Performance Difference","direction":"desc"}]
+  
+    df1=data_lv3[0:len(data_lv3)-1].sort_values(by=sort_dim[0]['column_id'],ascending= sort_dim[0]['direction']=='asc')
+    df1=pd.concat([df1,data_lv3[len(data_lv3)-1:len(data_lv3)]])
+    df1['id']=df1[df1.columns[0]]
+    df1.set_index('id', inplace=True, drop=False)
+    return df1.to_dict('records')
+
+#update physician lv2 on sort_by
 
 @app.callback(
    Output("dashtable_physician_lv2","data"), 
@@ -354,7 +393,7 @@ def update_table3(dim1,val1,sort_dim):
 
     
     data_lv3=drilldata_process(df_drilldown,'Service Category',dim1,val1)     
-    if sort_dim==[]:
+    if (sort_dim is None) or (sort_dim==[]):
         sort_dim=[{"column_id":"Contribution to Overall Performance Difference","direction":"desc"}]
   
     df1=data_lv3[0:len(data_lv3)-1].sort_values(by=sort_dim[0]['column_id'],ascending= sort_dim[0]['direction']=='asc')
@@ -381,7 +420,7 @@ def update_table4(dim1,val1,dim2,val2,sort_dim):
     #global data_lv4
     data_lv4=drilldata_process(df_drilldown,'Sub Category',dim1,val1,dim2,val2)   
     
-    if sort_dim==[]:
+    if (sort_dim is None) or (sort_dim==[]):
         sort_dim=[{"column_id":"Contribution to Overall Performance Difference","direction":"desc"}]
   
     df1=data_lv4[0:len(data_lv4)-2].sort_values(by=sort_dim[0]['column_id'],ascending= sort_dim[0]['direction']=='asc')
@@ -670,8 +709,28 @@ def update_filter1value_patient(row):
     
     return row_1
 
+#update patient lv1 on sort_by
 
-#update patient lv2 on filter1
+@app.callback(
+   Output("dashtable_patient_lv1_crhr","data"), 
+   [ Input('dashtable_patient_lv1_crhr', 'sort_by'),
+   ] ,
+   [ State('dashtable_patient_lv1_crhr', 'data'),]
+)
+def update_table3(sort_dim,data):
+    #global data_lv3
+    
+    data_lv3=pd.DataFrame(data)       
+    #data_lv3.to_csv('data/overall_performance.csv')
+    if (sort_dim is None) or (sort_dim==[]):
+        sort_dim=[{"column_id":"Contribution to Overall Performance Difference","direction":"desc"}]
+  
+    df1=data_lv3[0:len(data_lv3)-1].sort_values(by=sort_dim[0]['column_id'],ascending= sort_dim[0]['direction']=='asc')
+    df1=pd.concat([df1,data_lv3[len(data_lv3)-1:len(data_lv3)]])
+
+    return df1.to_dict('records')
+
+#update patient lv2 on sort_by
 
 @app.callback(
    Output("dashtable_patient_lv2_crhr","data"), 
@@ -685,7 +744,7 @@ def update_table3(dim1,val1,sort_dim):
     
     data_lv3=drilldata_process_crhr(df_drilldown,'Sub Category',dim1,val1)       
     #data_lv3.to_csv('data/overall_performance.csv')
-    if sort_dim==[]:
+    if (sort_dim is None) or (sort_dim==[]):
         sort_dim=[{"column_id":"Contribution to Overall Performance Difference","direction":"desc"}]
   
     df1=data_lv3[0:len(data_lv3)-2].sort_values(by=sort_dim[0]['column_id'],ascending= sort_dim[0]['direction']=='asc')
@@ -710,8 +769,27 @@ def update_filter1value(row):
     
     return row_1
 
+#update physician lv1 on sort by
 
-#update physician lv2 on filter1
+@app.callback(
+   Output("dashtable_physician_lv1_crhr","data"), 
+   [ Input('dashtable_physician_lv1_crhr', 'sort_by'),
+   ],
+   [State('dashtable_physician_lv1_crhr', 'data'),] 
+)
+def update_table3(sort_dim,data):
+
+    
+    data_lv3=pd.DataFrame(data)    
+    if (sort_dim is None) or (sort_dim==[]):
+        sort_dim=[{"column_id":"Contribution to Overall Performance Difference","direction":"desc"}]
+  
+    df1=data_lv3[0:len(data_lv3)-1].sort_values(by=sort_dim[0]['column_id'],ascending= sort_dim[0]['direction']=='asc')
+    df1=pd.concat([df1,data_lv3[len(data_lv3)-1:len(data_lv3)]])
+
+    return df1.to_dict('records') 
+
+#update physician lv2 on sort by
 
 @app.callback(
    Output("dashtable_physician_lv2_crhr","data"), 
@@ -724,7 +802,7 @@ def update_table3(dim1,val1,sort_dim):
 
     
     data_lv3=drilldata_process_crhr(df_drilldown,'Sub Category',dim1,val1)     
-    if sort_dim==[]:
+    if (sort_dim is None) or (sort_dim==[]):
         sort_dim=[{"column_id":"Contribution to Overall Performance Difference","direction":"desc"}]
   
     df1=data_lv3[0:len(data_lv3)-2].sort_values(by=sort_dim[0]['column_id'],ascending= sort_dim[0]['direction']=='asc')

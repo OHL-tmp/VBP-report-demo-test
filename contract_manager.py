@@ -825,16 +825,19 @@ def toggle_collapse_domain_selection_measures_6(v1):
 def generate_measure_watchlist(n, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24):
 #    triggered = [t["prop_id"] for t in dash.callback_context.triggered]
 #    submit = len([1 for i in triggered if i == "close-centered.n_clicks"])
-#    #switch = len([1 for i in triggered if i == "switch-contract-additional-view.n_clicks"])
-	measure_to_watch = []
-#    if submit:
-	for i in range(24):
-		if eval("v"+str(i+1)) and len(eval("v"+str(i+1))) > 0:
-			measure_to_watch.extend(eval("v"+str(i+1)))
-	return tbl_non_contract(df_nocontract,measure_to_watch)
+    #switch = len([1 for i in triggered if i == "switch-contract-additional-view.n_clicks"])
+    measure_to_watch = []
+#if submit:
+    for i in range(24):
+        if eval("v"+str(i+1)) and len(eval("v"+str(i+1))) > 0:
+            measure_to_watch.extend(eval("v"+str(i+1)))
+    if len(measure_to_watch)>0:
+        return tbl_non_contract(df_nocontract,measure_to_watch)
+    else:
+        return ""
 #    return ""
-	
+    
 
 
 if __name__ == "__main__":
-	app.run_server(host="127.0.0.1",debug=True)
+    app.run_server(host="127.0.0.1",debug=True, port = 8052)
