@@ -2075,7 +2075,7 @@ def measure_lib(df):
 
 #   df['detail_fstrow']=df['Detail'].apply(lambda x: str(x)[0:str(x).find(';')])
 
-    df['detail']=df['Detail'].apply(lambda x: str(x).replace(';','  \n')).replace('nan', '')
+    df['detail']=df['Detail'].apply(lambda x: str(x).replace(';',';\n')).replace('nan', '')
 
     
     table=dash_table.DataTable(
@@ -2100,18 +2100,18 @@ def measure_lib(df):
             'selector': 'dash-table-tooltip', 
             'rule': 'font-family:"NotoSans-Condensed"'}],
 
-        tooltip_conditional=[
-        {'if': { 'column_id':'Detail',
-                'row_index':c
-                    },
-        'value': df['detail'][c],
-        'type': 'markdown',
-            
-        }
-        for c in [0,2,5,6,7,9,10,12,18,20,29,30,47,]
-        ],
+#        tooltip_conditional=[
+#        {'if': { 'column_id':'Detail',
+#                'row_index':c
+#                    },
+#        'value': df['detail'][c],
+#        'type': 'markdown',
+#            
+#        }
+#        for c in [0,2,5,6,7,9,10,12,18,20,29,30,47,]
+#        ],
 
-        tooltip_duration=None,
+#        tooltip_duration=None,
         style_data={
                 'color': 'black', 
                 'backgroundColor': 'white',
@@ -2122,6 +2122,10 @@ def measure_lib(df):
                 #'border':'1px solid grey',
                 'border-left': '1px solid #bfbfbf',
                 'border-right': '1px solid #bfbfbf',
+                'height':'auto',
+                'whiteSpace':'normal',
+                'padding-left':'0.5rem',
+                'padding-right':'0.5rem',
 
         },
         style_data_conditional=[
@@ -2235,9 +2239,10 @@ def measure_lib(df):
             { 'if': {
                     'column_id':'Detail',
                     },
-                'width':'10rem',
-                'overflow': 'hidden',
-                'textOverflow': 'ellipsis',
+                'textAlign':'start',
+#               'width':'10rem',
+#                'overflow': 'hidden',
+#                'textOverflow': 'ellipsis',
 #                'maxWidth': '10rem',
             }
         ],
