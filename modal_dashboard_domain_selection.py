@@ -72,7 +72,7 @@ Domain_options ={
 
 "checklist-domain-measures-lv1-6" : {
     "Symptom management" : ["Patient Reported SOB changes", "Patient Reported Fatigue and Tiredness Changes",
-                           "Patient Reported Peripheral Oedema Changes", "Patient Reported Disturbed Sleep Changes"],
+                           "Patient Reported Peripheral Oedema Changes"],
     "Patient Satisfaction" : []
 }}
 

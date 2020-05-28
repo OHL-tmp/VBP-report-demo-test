@@ -23,6 +23,7 @@ from contract_manager_drilldown_avg_cost import *
 
 
 from modal_drilldown_tableview import *
+from modal_drilldown_tableview_crhr import *
 
 from app import app
 #app = dash.Dash(__name__)
@@ -106,17 +107,17 @@ def dropdownmenu_select_measures():
 	return dbc.DropdownMenu(
                 [
                     dbc.DropdownMenuItem("Volume Based Measures", header=True),
-                    dbc.DropdownMenuItem("YTD Market Share %"),
-                    dbc.DropdownMenuItem("Utilizer Count"),
-                    dbc.DropdownMenuItem("Avg Script(30-day adj) per Utilizer"),
-                    dbc.DropdownMenuItem("Total Script Count (30-day-adj) by Dosage (in thousand)"),
-                    dbc.DropdownMenuItem("Total Units by Dosage (in thousand)"),
+                    dbc.DropdownMenuItem("YTD Market Share %", disabled=True),
+                    dbc.DropdownMenuItem("Utilizer Count", disabled=True),
+                    dbc.DropdownMenuItem("Avg Script(30-day adj) per Utilizer", disabled=True),
+                    dbc.DropdownMenuItem("Total Script Count (30-day-adj) by Dosage (in thousand)", disabled=True),
+                    dbc.DropdownMenuItem("Total Units by Dosage (in thousand)", disabled=True),
                     dbc.DropdownMenuItem(divider=True),
                     dbc.DropdownMenuItem("Value Based Measures", header=True),
                     dbc.DropdownMenuItem("CHF Related Average Cost per Patient", id="avg_cost"),
                     dbc.DropdownMenuItem("CHF Related Hospitalization Rate", id="crhr"),
-                    dbc.DropdownMenuItem("NT - proBNP Change %"),
-                    dbc.DropdownMenuItem("LVEF LS Mean Change %"),
+                    dbc.DropdownMenuItem("NT - proBNP Change %", disabled=True),
+                    dbc.DropdownMenuItem("LVEF LS Mean Change %", disabled=True),
                     dbc.DropdownMenuItem(divider=True),
                     html.P(
                         "Select measure to drill.",
@@ -570,7 +571,7 @@ def datatable_data_selection(v1, v2, v3, d1, d2, f1, f2, m):
 
     table_column.extend(list(set(selected_dimension + ['Service Category', 'Sub Category'])))
     table_column.append("Pt Count")
-    percent_list = ['Diff % from Benchmark Utilization', 'Diff % from Benchmark Total Cost', 'Diff % from Benchmark Unit Cost', 'Patient %', 'Diff % from Benchmark Hospitalization Rate per Patient']
+    percent_list = ['Diff % from Benchmark Utilization per Thousand', 'Diff % from Benchmark Total Cost', 'Diff % from Benchmark Unit Cost', 'Patient %', 'Diff % from Benchmark Hospitalization Rate per Thousand']
     dollar_list = ['YTD Total Cost', 'Annualized Total Cost', 'Benchmark Total Cost', 'YTD Unit Cost', 'Annualized Unit Cost', 'Benchmark Unit Cost']
     if len(selected_dimension) > 0:
 #        ptct_dimension = set(selected_dimension + ['Service Category', 'Sub Category'])
@@ -578,12 +579,12 @@ def datatable_data_selection(v1, v2, v3, d1, d2, f1, f2, m):
         df_agg_pre = df_drilldown_filtered[table_column].groupby(by = list(set(selected_dimension + ['Service Category', 'Sub Category']))).sum().reset_index()
         df_agg = df_agg_pre[table_column].groupby(by = selected_dimension).agg({'Pt Count':'mean', 'YTD Utilization':'sum', 'Annualized Utilization':'sum', 'Benchmark Utilization':'sum', 
             'YTD Total Cost':'sum', 'Annualized Total Cost':'sum', 'Benchmark Total Cost':'sum', 'YTD IP Utilization':'sum', 'Annualized IP Utilization':'sum', 'Benchmark IP Utilization':'sum'}).reset_index()
-#        df_agg['Pt Count'] = df_agg['Pt Count']/cate_cnt
+#        df_agg['Pt Count'] = df_agg[' Pt Count']/cate_cnt
         df_agg['Patient %'] = df_agg['Pt Count']/995000
-        df_agg['YTD Utilization'] = df_agg['YTD Utilization']/df_agg['Pt Count']
-        df_agg['Annualized Utilization'] = df_agg['Annualized Utilization']/df_agg['Pt Count']
-        df_agg['Benchmark Utilization'] = df_agg['Benchmark Utilization']/df_agg['Pt Count']
-        df_agg['Diff % from Benchmark Utilization'] = (df_agg['Annualized Utilization'] - df_agg['Benchmark Utilization'])/df_agg['Benchmark Utilization']
+        df_agg['YTD Utilization per Thousand'] = 1000 * df_agg['YTD Utilization']/df_agg['Pt Count']
+        df_agg['Annualized Utilization per Thousand'] = 1000 * df_agg['Annualized Utilization']/df_agg['Pt Count']
+        df_agg['Benchmark Utilization per Thousand'] = 1000 * df_agg['Benchmark Utilization']/df_agg['Pt Count']
+        df_agg['Diff % from Benchmark Utilization per Thousand'] = (df_agg['Annualized Utilization'] - df_agg['Benchmark Utilization'])/df_agg['Benchmark Utilization']
         df_agg['YTD Total Cost'] = df_agg['YTD Total Cost']/df_agg['Pt Count']
         df_agg['Annualized Total Cost'] = df_agg['Annualized Total Cost']/df_agg['Pt Count']
         df_agg['Benchmark Total Cost'] = df_agg['Benchmark Total Cost']/df_agg['Pt Count']
@@ -592,10 +593,10 @@ def datatable_data_selection(v1, v2, v3, d1, d2, f1, f2, m):
         df_agg['Annualized Unit Cost'] = df_agg['Annualized Total Cost']/df_agg['Annualized Utilization']
         df_agg['Benchmark Unit Cost'] = df_agg['Benchmark Total Cost']/df_agg['Benchmark Utilization']
         df_agg['Diff % from Benchmark Unit Cost'] = (df_agg['Annualized Unit Cost'] - df_agg['Benchmark Unit Cost'])/df_agg['Benchmark Unit Cost']
-        df_agg['YTD Hospitalization Rate per Patient'] = df_agg['YTD IP Utilization']/df_agg['Pt Count']
-        df_agg['Annualized Hospitalization Rate per Patient'] = df_agg['Annualized IP Utilization']/df_agg['Pt Count']
-        df_agg['Benchmark Hospitalization Rate per Patient'] = df_agg['Benchmark IP Utilization']/df_agg['Pt Count']
-        df_agg['Diff % from Benchmark Hospitalization Rate per Patient'] = (df_agg['Annualized IP Utilization'] - df_agg['Benchmark IP Utilization'])/df_agg['Benchmark IP Utilization']
+        df_agg['YTD Hospitalization Rate per Thousand'] = 1000 * df_agg['YTD IP Utilization']/df_agg['Pt Count']
+        df_agg['Annualized Hospitalization Rate per Thousand'] = 1000 * df_agg['Annualized IP Utilization']/df_agg['Pt Count']
+        df_agg['Benchmark Hospitalization Rate per Thousand'] = 1000 * df_agg['Benchmark IP Utilization']/df_agg['Pt Count']
+        df_agg['Diff % from Benchmark Hospitalization Rate per Thousand'] = (df_agg['Annualized IP Utilization'] - df_agg['Benchmark IP Utilization'])/df_agg['Benchmark IP Utilization']
 #        df_agg.style.format({'Diff % from Target Utilization' : "{:.2%}", 'Diff % from Target Total Cost': "{:.2%}", 'Diff % from Target Unit Cost' : "{:.2%}"})
 #        df_agg.reset_index(inplace = True)
         show_column = selected_dimension + ['Patient %'] + m 
@@ -732,18 +733,21 @@ def update_table3(dim1,val1,sort_dim):
     return df1.to_dict('records')  
 
 
-#### callback ####
-
-## modal
 @app.callback(
     Output("drilldown-modal-centered-crhr", "is_open"),
-    [Input("drilldown-open-centered-crhr", "n_clicks"), Input("drilldown-close-centered", "n_clicks")],
+    [Input("drilldown-open-centered-crhr", "n_clicks"), Input("drilldown-close-centered-crhr", "n_clicks")],
     [State("drilldown-modal-centered-crhr", "is_open")],
 )
 def toggle_modal_dashboard_domain_selection(n1, n2, is_open):
     if n1 or n2:
         return not is_open
     return is_open
+
+
+#### callback ####
+
+## modal
+
 
 
 @app.callback(
@@ -912,7 +916,7 @@ def datatable_data_selection(v1, v2, v3, d1, d2, f1, f2, m):
 
     table_column.extend(list(set(selected_dimension + ['Service Category', 'Sub Category'])))
     table_column.append("Pt Count")
-    percent_list = ['Diff % from Benchmark Utilization', 'Diff % from Benchmark Total Cost', 'Diff % from Benchmark Unit Cost', 'Patient %', 'Diff % from Benchmark Hospitalization Rate per Patient']
+    percent_list = ['Diff % from Benchmark Utilization per Thousand', 'Diff % from Benchmark Total Cost', 'Diff % from Benchmark Unit Cost', 'Patient %', 'Diff % from Benchmark Hospitalization Rate per Thousand']
     dollar_list = ['YTD Total Cost', 'Annualized Total Cost', 'Benchmark Total Cost', 'YTD Unit Cost', 'Annualized Unit Cost', 'Benchmark Unit Cost']
     if len(selected_dimension) > 0:
 #        ptct_dimension = set(selected_dimension + ['Service Category', 'Sub Category'])
@@ -920,12 +924,12 @@ def datatable_data_selection(v1, v2, v3, d1, d2, f1, f2, m):
         df_agg_pre = df_drilldown_filtered[table_column].groupby(by = list(set(selected_dimension + ['Service Category', 'Sub Category']))).sum().reset_index()
         df_agg = df_agg_pre[table_column].groupby(by = selected_dimension).agg({'Pt Count':'mean', 'YTD Utilization':'sum', 'Annualized Utilization':'sum', 'Benchmark Utilization':'sum', 
             'YTD Total Cost':'sum', 'Annualized Total Cost':'sum', 'Benchmark Total Cost':'sum', 'YTD IP Utilization':'sum', 'Annualized IP Utilization':'sum', 'Benchmark IP Utilization':'sum'}).reset_index()
-#        df_agg['Pt Count'] = df_agg['Pt Count']/cate_cnt
+#        df_agg['Pt Count'] = df_agg[' Pt Count']/cate_cnt
         df_agg['Patient %'] = df_agg['Pt Count']/995000
-        df_agg['YTD Utilization'] = df_agg['YTD Utilization']/df_agg['Pt Count']
-        df_agg['Annualized Utilization'] = df_agg['Annualized Utilization']/df_agg['Pt Count']
-        df_agg['Benchmark Utilization'] = df_agg['Benchmark Utilization']/df_agg['Pt Count']
-        df_agg['Diff % from Benchmark Utilization'] = (df_agg['Annualized Utilization'] - df_agg['Benchmark Utilization'])/df_agg['Benchmark Utilization']
+        df_agg['YTD Utilization per Thousand'] = 1000 * df_agg['YTD Utilization']/df_agg['Pt Count']
+        df_agg['Annualized Utilization per Thousand'] = 1000 * df_agg['Annualized Utilization']/df_agg['Pt Count']
+        df_agg['Benchmark Utilization per Thousand'] = 1000 * df_agg['Benchmark Utilization']/df_agg['Pt Count']
+        df_agg['Diff % from Benchmark Utilization per Thousand'] = (df_agg['Annualized Utilization'] - df_agg['Benchmark Utilization'])/df_agg['Benchmark Utilization']
         df_agg['YTD Total Cost'] = df_agg['YTD Total Cost']/df_agg['Pt Count']
         df_agg['Annualized Total Cost'] = df_agg['Annualized Total Cost']/df_agg['Pt Count']
         df_agg['Benchmark Total Cost'] = df_agg['Benchmark Total Cost']/df_agg['Pt Count']
@@ -934,10 +938,10 @@ def datatable_data_selection(v1, v2, v3, d1, d2, f1, f2, m):
         df_agg['Annualized Unit Cost'] = df_agg['Annualized Total Cost']/df_agg['Annualized Utilization']
         df_agg['Benchmark Unit Cost'] = df_agg['Benchmark Total Cost']/df_agg['Benchmark Utilization']
         df_agg['Diff % from Benchmark Unit Cost'] = (df_agg['Annualized Unit Cost'] - df_agg['Benchmark Unit Cost'])/df_agg['Benchmark Unit Cost']
-        df_agg['YTD Hospitalization Rate per Patient'] = df_agg['YTD IP Utilization']/df_agg['Pt Count']
-        df_agg['Annualized Hospitalization Rate per Patient'] = df_agg['Annualized IP Utilization']/df_agg['Pt Count']
-        df_agg['Benchmark Hospitalization Rate per Patient'] = df_agg['Benchmark IP Utilization']/df_agg['Pt Count']
-        df_agg['Diff % from Benchmark Hospitalization Rate per Patient'] = (df_agg['Annualized IP Utilization'] - df_agg['Benchmark IP Utilization'])/df_agg['Benchmark IP Utilization']
+        df_agg['YTD Hospitalization Rate per Thousand'] = 1000 * df_agg['YTD IP Utilization']/df_agg['Pt Count']
+        df_agg['Annualized Hospitalization Rate per Thousand'] = 1000 * df_agg['Annualized IP Utilization']/df_agg['Pt Count']
+        df_agg['Benchmark Hospitalization Rate per Thousand'] = 1000 * df_agg['Benchmark IP Utilization']/df_agg['Pt Count']
+        df_agg['Diff % from Benchmark Hospitalization Rate per Thousand'] = (df_agg['Annualized IP Utilization'] - df_agg['Benchmark IP Utilization'])/df_agg['Benchmark IP Utilization']
 #        df_agg.style.format({'Diff % from Target Utilization' : "{:.2%}", 'Diff % from Target Total Cost': "{:.2%}", 'Diff % from Target Unit Cost' : "{:.2%}"})
 #        df_agg.reset_index(inplace = True)
         show_column = selected_dimension + ['Patient %'] + m 
@@ -951,7 +955,6 @@ def datatable_data_selection(v1, v2, v3, d1, d2, f1, f2, m):
     
     
     return [{"name": i, "id": i, "selectable":True,"type":"numeric", "format": FormatTemplate.percentage(1)} if i in percent_list else {"name": i, "id": i, "selectable":True, "type":"numeric","format": FormatTemplate.money(0)} if i in dollar_list else {"name": i, "id": i, "selectable":True, "type":"numeric","format": Format(precision=1, scheme = Scheme.fixed)} for i in show_column], df_agg.to_dict('records')
-
 
 
 
