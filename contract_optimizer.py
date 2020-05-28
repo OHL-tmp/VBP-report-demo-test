@@ -592,6 +592,7 @@ def card_outcome_measure(app):
 #                        card_measure_modifier(),
 #,[0,1,2,9,11]
 						html.Div([table_setup(df_initial,False)],id='table_setup'),
+                        html.Div(html.H6("\u29bf Hospitalization rate is on per 1,000 patient basis"))
 					]
 				),
 				className="mb-3",
