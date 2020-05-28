@@ -62,7 +62,7 @@ def input_session():
 										html.Br(),
 										html.A('Download Template', 
 											id = 'download-age',
-											href='http://127.0.0.1:8052/downloads/Age Distribution template.xlsx',
+											href='http://139.224.186.182:8098/downloads/Age Distribution template.xlsx',
 											target = "_blank")
 										], style={"font-size":"0.8rem"}),
 								width=2
@@ -117,7 +117,7 @@ def input_session():
 								html.Div([
 										html.A('Download Template', 
 											id = 'download-geo',
-											href='http://127.0.0.1:8052/downloads/Geographic Distribution template.xlsx',
+											href='http://139.224.186.182:8098/downloads/Geographic Distribution template.xlsx',
 											target = "_blank")
 										]),
 								),
@@ -222,7 +222,7 @@ def input_session():
 					]),
 				dbc.Row([
 					html.Div(id = 'output-data-upload', style={"text-align":"center","padding":"0.5rem","font-family":"NotoSans-Regular","font-size":"0.6rem"}),
-					], style={"padding-top":"1rem"}),
+					], style={"padding-top":"1rem", "text-align":"center"}),
 				]),
 			]),
 		dbc.ListGroupItem([html.H4("Modeling Assumptions")]),
@@ -253,7 +253,7 @@ def input_session():
 							html.Div([
 									html.A('Download Workbook', 
 										id = 'download-cohort',
-										href='http://127.0.0.1:8052/downloads/CHF Cost and Utilization Assumptions.xlsx',
+										href='http://139.224.186.182:8098/downloads/CHF Cost and Utilization Assumptions.xlsx',
 										target = "_blank")
 									]),
 							),
@@ -545,7 +545,7 @@ def download_template():
 							# ),
 							"Download the template file",
 							id = 'download-link',
-							href='http://127.0.0.1:8052/downloads/Pharma Value-Based Measures Template.xlsx',
+							href='http://139.224.186.182:8098/downloads/Pharma Value-Based Measures Template.xlsx',
 							# download="test.xlsx",
 							target = "_blank"
 						)
