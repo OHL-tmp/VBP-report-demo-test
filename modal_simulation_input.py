@@ -198,7 +198,7 @@ def input_session():
 				dbc.Row([
 					dbc.Col("Assumptions for Value Based Measure", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
 					dbc.Col(
-						dbc.Button("Measure Library Preview", color = 'link', href = "/vbc-demo/contract-optimizer/measures-library/")
+						html.A("Measure Library Preview", href = "http://139.224.186.182:8097/vbc-demo/measure-library/", target='_blank')
 						),
 					dbc.Col(download_template()),
 						], style={"padding-top":"1rem"}),
