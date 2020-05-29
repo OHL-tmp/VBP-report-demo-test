@@ -32,7 +32,7 @@ def create_layout(app):
                     		html.Div(html.H1("Measures Library")),
                     		html.Div(children=measure_lib(df_measure_library)),
                     	],
-                    	style={"padding":"1rem"}
+                    	style={"padding":"1rem","height":"100rem"}
                     )
                     
                 ])

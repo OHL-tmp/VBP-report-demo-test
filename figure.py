@@ -2095,7 +2095,7 @@ def measure_lib(df):
         ],
 
         fixed_rows={'headers': True},
-        style_table={'height': '100rem', 'overflowY': 'scroll'},
+        style_table={'height': '45rem', 'overflowY': 'scroll'},
 
 #       filter_action="native",
 
