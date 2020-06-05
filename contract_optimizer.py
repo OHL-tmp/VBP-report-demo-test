@@ -774,7 +774,7 @@ def card_contract_wo_vbc_adjustment(app):
 								dbc.Col(
 									dbc.InputGroup(
 												[
-													 dcc.Input(id = 'input-rebate',
+													 dcc.Input(id = 'input-rebate', value = 40,
 																type = 'number', debounce = True, persistence = True, persistence_type = 'session',
 																min = 0, max = 100, size="13", style={"text-align":"center"}), 
 													dbc.InputGroupAddon("%", addon_type="append"),
@@ -877,7 +877,7 @@ def card_vbc_contract(app):
 											html.Div("Base Rebate", style={"font-family":"NotoSans-Condensed","font-size":"1rem","text-align":"start"}),
 											dbc.InputGroup(
 												[
-													dcc.Input(id = 'input-base-rebate',
+													dcc.Input(id = 'input-base-rebate', value = 40,
 														type = 'number', debounce = True, persistence = True, persistence_type = 'session',
 														min = 0, max = 100, size="13",style={"text-align":"center"}), 
 													dbc.InputGroupAddon("%", addon_type="append"),
@@ -1734,6 +1734,19 @@ def upload_output(list_of_contents, list_of_names, list_of_dates):
 			parse_contents(list_of_contents, list_of_names, list_of_dates) 
 		]
 		return children
+
+@app.callback(
+    Output('output-rebate-upload', 'children'),
+    [Input('upload-rebate', 'contents')],
+    [State('upload-rebate', 'filename'),
+    State('upload-rebate','last_modified')]
+    )
+def upload_output(list_of_contents, list_of_names, list_of_dates):
+    if list_of_contents is not None:
+        children = [
+            parse_contents(list_of_contents, list_of_names, list_of_dates) 
+        ]
+        return children
 
 @app.callback(
 	Output('output-age-upload', 'children'),
