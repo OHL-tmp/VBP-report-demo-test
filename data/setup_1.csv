@@ -1,7 +1,7 @@
 ﻿measures,recom_value,tarrecom_value,taruser_value,probrecom,probuser,weight_recom,weight_user,highlight_recom,highlight_user,green_thres,yellow_thres,id
 Cost & Utilization Reduction,,,,,,60%,60%,,,,,0
-CHF Related Average Cost per Patient,"$30,020 ","$29,630 ","$29,630 ",High,High,30%,30%,green,green,29630,28149,1
-CHF Related Hospitalization Rate,1150,980,980,High,High,30%,30%,green,green,980,930,2
+CHF Related Average Cost per Patient,"$31,474 ","$30,849 ","$30,849 ",High,High,30%,30%,green,green,30849,29307,1
+CHF Related Hospitalization Rate,1180,998,998,High,High,30%,30%,green,green,998,948,2
 CHF Related Average IP Cost per Patient ,"$4,000 ","$3,500 ","$3,500 ",High,High,0%,0%,green,green,3500,3000,3
 CHF Related ER Rate,40%,35%,35%,High,High,0%,0%,green,green,35,30,4
 All Causes Average Cost per Patient,"$4,000 ","$3,500 ","$3,500 ",High,High,0%,0%,green,green,3500,3000,5

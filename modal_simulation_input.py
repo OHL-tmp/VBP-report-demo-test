@@ -19,9 +19,9 @@ from app import app
 
 def modal_simulation_input():
 	return html.Div([
-		dbc.Button("Input & Edit Assumption", id = 'button-edit-assumption', style={"border-radius":"5rem"}),
+		dbc.Button("Data Intake", id = 'button-edit-assumption', style={"border-radius":"5rem"}),
 								dbc.Modal([
-									dbc.ModalHeader(html.H1("Input & Edit Assumption", style={"font-family":"NotoSans-Black","font-size":"1.5rem"})),
+									dbc.ModalHeader(html.H1("Data Intake", style={"font-family":"NotoSans-Black","font-size":"1.5rem"})),
 									dbc.ModalBody([
 										input_session(),
 										]),
@@ -189,7 +189,6 @@ def input_session():
 						html.Div(id = 'output-price-upload', style={"text-align":"center","padding":"0.5rem","font-family":"NotoSans-Regular","font-size":"0.6rem"}),
 						)
 					], style={"padding-top":"1rem"}),
-				
 				dbc.Row([
 					dbc.Col("Market Basket Definition", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
 					dbc.Col(dbc.Input(value = "ACE, ARB", bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
@@ -272,7 +271,7 @@ def input_session():
 					], style={"padding-top":"1rem"}),
 				dbc.Row([
 					dbc.Col("Annual CHF Related Cost PPPY Trend Before Taking Entresto", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
-					dbc.Col(dbc.Input(value = "7%", bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
+					dbc.Col(dbc.Input(value = "0%", bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}))
 					], style={"padding-top":"1rem"}),
 				dbc.Row([
 					dbc.Col("Assumptions by Patient Cohort and Service Category Workbook", style={"font-family":"NotoSans-Regular","font-size":"1rem"}),
@@ -565,14 +564,8 @@ def card_collapse_month():
 
 def download_template():
 	return html.A(
-							# children=dbc.Button(
-							#     "Download the template file",
-							#     id='download-template',
-							#     color= 'link',
-							# ),
 							"Download the template file",
 							id = 'download-link',
 							href='http://139.224.186.182:8098/downloads/Pharma Value-Based Measures Template.xlsx',
-							# download="test.xlsx",
 							target = "_blank"
 						)

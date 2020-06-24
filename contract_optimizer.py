@@ -6,9 +6,13 @@ import dash_html_components as html
 import dash_bootstrap_components as dbc
 import dash_table
 
+import base64
 import datetime
+import io
+
 import pandas as pd
 import numpy as np
+import json
 
 import pathlib
 import plotly.graph_objects as go
@@ -22,20 +26,24 @@ from figure import *
 from modal_simulation_measure_selection import *
 from contract_calculation import *
 from modal_simulation_input import *
+from modal_simulation_realtime_assump import *
+from model_simulation import *
 
 from app import app
 
-df_sim_rev=pd.read_csv("data/Output_Pharma_Net_Revenue.csv")
-df_sim_rebate=pd.read_csv("data/Output_Rebate.csv")
-df_sim_cost=pd.read_csv("data/Total_Cost.csv")
+#app = dash.Dash(__name__, url_base_pathname='/vbc-demo/launch/')
 
-## setup
-#df_setup=pd.read_csv("data/setup.csv")
+#server = app.server
+
+
 df_setup1=pd.read_csv("data/setup_1.csv")
 df_setup2=pd.read_csv("data/setup_2.csv")
 df_initial=df_setup1[df_setup1['id'].isin([0,1,2,9,11])]
 ## 初始化
-global measures_select,df_setup_filter
+global measures_select,df_setup_filter,dropdown_cohort,cohort_now
+
+dropdown_cohort = 'CHF+AF'
+cohort_now='CHF+AF'
 
 df_setup_filter=pd.read_csv('data/setup_1.csv')
 measures_select=['Cost & Utilization Reduction', 'Improving Disease Outcome', 'CHF Related Average Cost per Patient', 'CHF Related Hospitalization Rate', 'NT-proBNP Change %', 'LVEF LS Mean Change %']
@@ -77,7 +85,8 @@ def create_layout(app):
 									dbc.Tab(tab_result(app), label="Result", style={"background-color":"#fff"}, tab_style={"font-family":"NotoSans-Condensed"}),
 									
 								], id = 'tab_container'
-							)
+							),
+							html.Div(default_temp_data(),id = 'temp-data',  style = {'display':'none'})
 						],
 						className="mb-3",
 						style={"padding-left":"3rem", "padding-right":"3rem"},
@@ -87,11 +96,31 @@ def create_layout(app):
 				style={"background-color":"#f5f5f5"},
 			)
 
-def table_setup(df,cohort_change):#,rows
-	global df_setup_filter,domain_index,domain1_index,domain2_index,domain3_index,domain4_index,domain5_index
+def default_temp_data():
+	t1 = pd.read_csv('data/performance_assumption.csv')
+	t2 = pd.read_csv('data/recom_measure.csv')
+	t3 = 'CHF+AF'
+	t4 = ['CHF Related Average Cost per Patient', 'CHF Related Hospitalization Rate', 'LVEF LS Mean Change %']
+	t5 = ['CHF Related Hospitalization Rate', 'LVEF LS Mean Change %']
+	t6 = df_setup2
+	t7 = df_setup1
 
-	if cohort_change:
-		dff=df
+
+	result = {'df_perfom_assump': t1.to_dict(), 'df_recom_measure': t2.to_dict(), 'recom_cohort':t3, 'meas_recom':t4, 'meas_recom_not':t5, 'setup_all':t6.to_dict(),  'setup_af':t7.to_dict()}
+	
+	with open('configure/optimizer_input.json','w') as outfile:
+		json.dump(result, outfile)
+
+	return [json.dumps(result)]
+
+def table_setup(df_dict,cohort):
+	global df_setup_filter,domain_index,domain1_index,domain2_index,domain3_index,domain4_index,domain5_index,dropdown_cohort,cohort_now
+
+	
+	if cohort==df_dict['cohort']:
+		dff=pd.DataFrame(df_dict['data'])
+
+
 		
 	else:
 		dff=df[df['measures']=='1'].copy()
@@ -114,7 +143,7 @@ def table_setup(df,cohort_change):#,rows
 			weight2=[int(i.replace('$','').replace('%','').replace(',','')) for i in weight2_str ]
 			dff['weight_recom'][i]=str(sum(weight2))+'%'
 		
-			
+     
 	table=dash_table.DataTable(
 		data=dff.to_dict('records'),
 		id='computed-table',
@@ -311,11 +340,16 @@ def tab_setup(app):
 				[
 					dbc.Row(
 						[
-							dbc.Col(html.H1("Contract Simulation Setup", style={"padding-left":"2rem","font-size":"3"}), width=9),
+							dbc.Col(html.H1("Contract Simulation Setup", style={"padding-left":"2rem","font-size":"3"}), width=8),
 							dbc.Col([
 								modal_simulation_input()
 								], 
-								width=3,
+								width=2,
+								style={"padtop":"1rem"}),
+							dbc.Col([
+								modal_simulation_assump()
+								], 
+								width=2,
 								style={"padtop":"1rem"}),
 						],
 						style={"padding-top":"2rem"}
@@ -410,9 +444,9 @@ def card_target_patient(app):
 										html.Div([
 											dcc.Dropdown(
 												id = 'target-patient-input',
-												options = [{'label':'CHF+AF (Recommended)', 'value':'CHF+AF (Recommended)'},
+												options = [{'label':'CHF+AF (Recommended)', 'value':'CHF+AF'},
 															{'label':'All CHF Patients', 'value':'All CHF Patients'}],
-												value = 'CHF+AF (Recommended)',
+												value = 'CHF+AF',
 												persistence = True,
 												persistence_type = 'session',
 												style={"font-family":"NotoSans-Regular"}
@@ -469,7 +503,7 @@ def card_outcome_measure(app):
 						dbc.Row(
 							[
 								dbc.Col(
-#                                	dbc.Button("Edit Assumption"),
+#                                   dbc.Button("Edit Assumption"),
 									modal_optimizer_domain_selection(domain_ct),
 									style={"padding-left":"2rem","text-align":"center"},
 									width=5,
@@ -591,8 +625,8 @@ def card_outcome_measure(app):
 #                        card_measure_modifier(domain_ct),
 #                        card_measure_modifier(),
 #,[0,1,2,9,11]
-						html.Div([table_setup(df_initial,False)],id='table_setup'),
-                        html.Div(html.H6("\u29bf Hospitalization rate is on per 1,000 patient basis"))
+						html.Div([table_setup({'cohort': 'CHF+AF', 'data': df_initial.to_dict()},'CHF+AF')],id='table_setup'),
+						html.Div(html.H6("\u29bf Hospitalization rate is on per 1,000 patient basis"))
 					]
 				),
 				className="mb-3",
@@ -735,7 +769,7 @@ def card_overall_likelihood_to_achieve(app):
 							[
 								dbc.Col(html.Img(src=app.get_asset_url("bullet-round-blue.png"), width="10px"), width="auto", align="start", style={"margin-top":"-4px"}),
 								dbc.Col(html.H4("Overall likelihood to achieve", style={"font-size":"1rem", "margin-left":"10px"}), width=8),
-								dbc.Col(html.Div(id = 'overall-like-recom'), width=1),
+								dbc.Col(html.Div('High'), width=1),
 								dbc.Col(html.Div(id = 'overall-like-user'), width=1),
 								dbc.Col(html.Div(""), width=2),
 							],
@@ -774,9 +808,10 @@ def card_contract_wo_vbc_adjustment(app):
 								dbc.Col(
 									dbc.InputGroup(
 												[
-													 dcc.Input(id = 'input-rebate', value = 40,
-																type = 'number', debounce = True, persistence = True, persistence_type = 'session',
-																min = 0, max = 100, size="13", style={"text-align":"center"}), 
+													 dcc.Input(id = 'input-rebate',
+																type = 'number', debounce = True, persistence = True, persistence_type = 'session', value = 40, 
+																min = 0, max = 100, size="13", style={"text-align":"center"},
+																disabled = True), 
 													dbc.InputGroupAddon("%", addon_type="append"),
 												],
 												className="mb-3",
@@ -785,7 +820,7 @@ def card_contract_wo_vbc_adjustment(app):
 									width=2
 								),
 								dbc.Col([
-									dbc.Button("Edit Rebate Input", id = 'button-edit-rebate-1', style={"background-color":"#38160f", "border":"none", "border-radius":"10rem", "font-family":"NotoSans-Regular", "font-size":"0.6rem"}),
+									dbc.Button("Volumn Based Rebate", id = 'button-edit-rebate-1', style={"background-color":"#38160f", "border":"none", "border-radius":"10rem", "font-family":"NotoSans-Regular", "font-size":"0.6rem"}),
 									dbc.Modal([
 										dbc.ModalHeader(html.H1("EDIT Rebate Input", style={"font-size":"1rem"})),
 										dbc.ModalBody([
@@ -796,61 +831,83 @@ def card_contract_wo_vbc_adjustment(app):
 												style={"padding":"1rem"}),
 											dbc.Row([
 												dbc.Col(dbc.InputGroup([
-													dbc.Input(),
+													dbc.Input(id = 'novbc-l-1',type = 'number', disabled = True),
+													dbc.InputGroupAddon('%', addon_type = 'append'),
 													dbc.InputGroupAddon('~', addon_type = 'append'),
-													dbc.Input(),
+													dbc.Input(id = 'novbc-r-1',type = 'number', disabled = True),
+													dbc.InputGroupAddon('%', addon_type = 'append'),
 													])),
 												dbc.Col(dbc.InputGroup([
-													dbc.Input(),
+													dbc.Input(id = 'novbc-p-1',type = 'number', disabled = True),
 													dbc.InputGroupAddon('%', addon_type = 'append'),
 													])),
 												],
 												style={"padding":"1rem"}),
 											dbc.Row([
 												dbc.Col(dbc.InputGroup([
-													dbc.Input(),
+													dbc.Input(id = 'novbc-l-2',type = 'number', disabled = True),
+													dbc.InputGroupAddon('%', addon_type = 'append'),
 													dbc.InputGroupAddon('~', addon_type = 'append'),
-													dbc.Input(),
+													dbc.Input(id = 'novbc-r-2',type = 'number', disabled = True),
+													dbc.InputGroupAddon('%', addon_type = 'append'),
 													])),
 												dbc.Col(dbc.InputGroup([
-													dbc.Input(),
+													dbc.Input(id = 'novbc-p-2', type = 'number',disabled = True),
 													dbc.InputGroupAddon('%', addon_type = 'append'),
 													])),
 												],
 												style={"padding":"1rem"}),
 											dbc.Row([
 												dbc.Col(dbc.InputGroup([
-													dbc.Input(),
+													dbc.Input(id = 'novbc-l-3',type = 'number', disabled = True),
+													dbc.InputGroupAddon('%', addon_type = 'append'),
 													dbc.InputGroupAddon('~', addon_type = 'append'),
-													dbc.Input(),
+													dbc.Input(id = 'novbc-r-3',type = 'number', disabled = True),
+													dbc.InputGroupAddon('%', addon_type = 'append'),
 													])),
 												dbc.Col(dbc.InputGroup([
-													dbc.Input(),
+													dbc.Input(id = 'novbc-p-3',type = 'number', disabled = True),
 													dbc.InputGroupAddon('%', addon_type = 'append'),
 													])),
 												],
 												style={"padding":"1rem"}),
 											dbc.Row([
 												dbc.Col(dbc.InputGroup([
-													dbc.Input(),
+													dbc.Input(id = 'novbc-l-4', type = 'number',disabled = True),
+													dbc.InputGroupAddon('%', addon_type = 'append'),
 													dbc.InputGroupAddon('~', addon_type = 'append'),
-													dbc.Input(),
+													dbc.Input(id = 'novbc-r-4', type = 'number',disabled = True),
+													dbc.InputGroupAddon('%', addon_type = 'append'),
 													])),
 												dbc.Col(dbc.InputGroup([
-													dbc.Input(),
+													dbc.Input(id = 'novbc-p-4',type = 'number', disabled = True),
 													dbc.InputGroupAddon('%', addon_type = 'append'),
 													])),
 												],
 												style={"padding":"1rem"}),
-#											dbc.Row([
-#												dbc.Col(html.H4("+ Add another range", style={"font-size":"0.8rem","color":"#1357DD"}), ),
-#												],
-#												style={"padding":"1rem"}),
+											dbc.Row([
+												dbc.Col(dbc.InputGroup([
+													dbc.Input(id = 'novbc-l-5',type = 'number', disabled = True),
+													dbc.InputGroupAddon('%', addon_type = 'append'),
+													dbc.InputGroupAddon('~', addon_type = 'append'),
+													dbc.Input(id = 'novbc-r-5',type = 'number', disabled = True),
+													dbc.InputGroupAddon('%', addon_type = 'append'),
+													])),
+												dbc.Col(dbc.InputGroup([
+													dbc.Input(id = 'novbc-p-5',type = 'number', disabled = True),
+													dbc.InputGroupAddon('%', addon_type = 'append'),
+													])),
+												],
+												style={"padding":"1rem"}),
+#                                           dbc.Row([
+#                                               dbc.Col(html.H4("+ Add another range", style={"font-size":"0.8rem","color":"#1357DD"}), ),
+#                                               ],
+#                                               style={"padding":"1rem"}),
 											]),
 										dbc.ModalFooter(
-											dbc.Button('SAVE', id = 'close-edit-rebate-1', size="sm")
+											dbc.Button('CLOSE', id = 'close-edit-rebate-1', size="sm")
 											)
-										], id = 'modal-edit-rebate-1', backdrop = 'static'),
+										], id = 'modal-edit-rebate-1', backdrop = 'static', size = 'lg'),
 									], width=2
 								),
 							],
@@ -877,9 +934,9 @@ def card_vbc_contract(app):
 											html.Div("Base Rebate", style={"font-family":"NotoSans-Condensed","font-size":"1rem","text-align":"start"}),
 											dbc.InputGroup(
 												[
-													dcc.Input(id = 'input-base-rebate', value = 40,
-														type = 'number', debounce = True, persistence = True, persistence_type = 'session',
-														min = 0, max = 100, size="13",style={"text-align":"center"}), 
+													dcc.Input(id = 'input-base-rebate',
+														type = 'number', debounce = True, persistence = True, persistence_type = 'session', value = 40,
+														min = 0, max = 100, size="13",style={"text-align":"center"}, disabled = True), 
 													dbc.InputGroupAddon("%", addon_type="append"),
 												],
 												className="mb-3",
@@ -892,7 +949,7 @@ def card_vbc_contract(app):
 								),
 
 								dbc.Col([
-									dbc.Button("EDIT Rebate Input", id = 'button-edit-rebate-2', style={"background-color":"#38160f", "border":"none", "border-radius":"10rem", "font-family":"NotoSans-Regular", "font-size":"0.6rem"}),
+									dbc.Button("Volumn Based Rebate", id = 'button-edit-rebate-2', style={"background-color":"#38160f", "border":"none", "border-radius":"10rem", "font-family":"NotoSans-Regular", "font-size":"0.6rem"}),
 									dbc.Modal([
 										dbc.ModalHeader(html.H1("Edit Rebate Input", style={"font-size":"1rem"})),
 										dbc.ModalBody([
@@ -903,61 +960,83 @@ def card_vbc_contract(app):
 												style={"padding":"1rem"}),
 											dbc.Row([
 												dbc.Col(dbc.InputGroup([
-													dbc.Input(),
+													dbc.Input(id = 'vbc-l-1', type = 'number',disabled = True),
+													dbc.InputGroupAddon('%', addon_type = 'append'),
 													dbc.InputGroupAddon('~', addon_type = 'append'),
-													dbc.Input(),
+													dbc.Input(id = 'vbc-r-1',type = 'number', disabled = True),
+													dbc.InputGroupAddon('%', addon_type = 'append'),
 													])),
 												dbc.Col(dbc.InputGroup([
-													dbc.Input(),
+													dbc.Input(id = 'vbc-p-1',type = 'number', disabled = True),
 													dbc.InputGroupAddon('%', addon_type = 'append'),
 													])),
 												],
 												style={"padding":"1rem"}),
 											dbc.Row([
 												dbc.Col(dbc.InputGroup([
-													dbc.Input(),
+													dbc.Input(id = 'vbc-l-2', type = 'number',disabled = True),
+													dbc.InputGroupAddon('%', addon_type = 'append'),
 													dbc.InputGroupAddon('~', addon_type = 'append'),
-													dbc.Input(),
+													dbc.Input(id = 'vbc-r-2',type = 'number', disabled = True),
+													dbc.InputGroupAddon('%', addon_type = 'append'),
 													])),
 												dbc.Col(dbc.InputGroup([
-													dbc.Input(),
+													dbc.Input(id = 'vbc-p-2', type = 'number',disabled = True),
 													dbc.InputGroupAddon('%', addon_type = 'append'),
 													])),
 												],
 												style={"padding":"1rem"}),
 											dbc.Row([
 												dbc.Col(dbc.InputGroup([
-													dbc.Input(),
+													dbc.Input(id = 'vbc-l-3',type = 'number', disabled = True),
+													dbc.InputGroupAddon('%', addon_type = 'append'),
 													dbc.InputGroupAddon('~', addon_type = 'append'),
-													dbc.Input(),
+													dbc.Input(id = 'vbc-r-3',type = 'number', disabled = True),
+													dbc.InputGroupAddon('%', addon_type = 'append'),
 													])),
 												dbc.Col(dbc.InputGroup([
-													dbc.Input(),
+													dbc.Input(id = 'vbc-p-3',type = 'number', disabled = True),
 													dbc.InputGroupAddon('%', addon_type = 'append'),
 													])),
 												],
 												style={"padding":"1rem"}),
 											dbc.Row([
 												dbc.Col(dbc.InputGroup([
-													dbc.Input(),
+													dbc.Input(id = 'vbc-l-4', type = 'number',disabled = True),
+													dbc.InputGroupAddon('%', addon_type = 'append'),
 													dbc.InputGroupAddon('~', addon_type = 'append'),
-													dbc.Input(),
+													dbc.Input(id = 'vbc-r-4', type = 'number',disabled = True),
+													dbc.InputGroupAddon('%', addon_type = 'append'),
 													])),
 												dbc.Col(dbc.InputGroup([
-													dbc.Input(),
+													dbc.Input(id = 'vbc-p-4', type = 'number',disabled = True),
 													dbc.InputGroupAddon('%', addon_type = 'append'),
 													])),
 												],
 												style={"padding":"1rem"}),
-#											dbc.Row([
-#												dbc.Col(html.H4("+ Add another range", style={"font-size":"0.8rem","color":"#1357DD"})),
-#												],
-#												style={"padding":"1rem"}),
+											dbc.Row([
+												dbc.Col(dbc.InputGroup([
+													dbc.Input(id = 'vbc-l-5',type = 'number', disabled = True),
+													dbc.InputGroupAddon('%', addon_type = 'append'),
+													dbc.InputGroupAddon('~', addon_type = 'append'),
+													dbc.Input(id = 'vbc-r-5', type = 'number',disabled = True),
+													dbc.InputGroupAddon('%', addon_type = 'append'),
+													])),
+												dbc.Col(dbc.InputGroup([
+													dbc.Input(id = 'vbc-p-5', type = 'number',disabled = True),
+													dbc.InputGroupAddon('%', addon_type = 'append'),
+													])),
+												],
+												style={"padding":"1rem"}),
+#                                           dbc.Row([
+#                                               dbc.Col(html.H4("+ Add another range", style={"font-size":"0.8rem","color":"#1357DD"})),
+#                                               ],
+#                                               style={"padding":"1rem"}),
 											]),
 										dbc.ModalFooter(
-											dbc.Button('SAVE', id = 'close-edit-rebate-2', size="sm")
+											dbc.Button('CLOSE', id = 'close-edit-rebate-2', size="sm")
 											)
-										], id = 'modal-edit-rebate-2', backdrop = 'static'),
+										], id = 'modal-edit-rebate-2', backdrop = 'static', size = 'lg'),
 									], width=2
 								),
 
@@ -978,7 +1057,7 @@ def card_vbc_contract(app):
 									width=3
 								),
 									
-#								dbc.Col(html.Div("Maximum Positive Adjustment"), width=1),
+#                               dbc.Col(html.Div("Maximum Positive Adjustment"), width=1),
 
 
 							],
@@ -1051,29 +1130,29 @@ def card_contract_adjust_sub(app):
 										[
 											dcc.Input(id = 'input-max-pos-adj',
 												type = 'number', debounce = True, persistence = True, persistence_type = 'session',
-												min = 0, max = 100, size="6", style={"text-align":"center"}), 
+												min = 0, max = 100, size="30", style={"text-align":"center"}), 
 											dbc.InputGroupAddon("%", addon_type="append"),
 										],
 										className="mb-3",
 										size="sm"
 									),
-									width=3,
+									width=6,
 									style={"text-align":"end"}
 								),
-								dbc.Col(
-									dbc.InputGroup(
-										[
-											dcc.Input(id = 'input-pos-adj',
-												type = 'number', debounce = True, persistence = True, persistence_type = 'session',
-												min = 0, size="6",style={"text-align":"center"}), 
-											dbc.InputGroupAddon("%", addon_type="append"),
-										],
-										className="mb-3",
-										size="sm"
-									),
-									width=3,
-									style={"text-align":"end"}
-								),
+								# dbc.Col(
+								# 	dbc.InputGroup(
+								# 		[
+								# 			dcc.Input(id = 'input-pos-adj',
+								# 				type = 'number', debounce = True, persistence = True, persistence_type = 'session',
+								# 				min = 0, size="6",style={"text-align":"center"}), 
+								# 			dbc.InputGroupAddon("%", addon_type="append"),
+								# 		],
+								# 		className="mb-3",
+								# 		size="sm"
+								# 	),
+								# 	width=3,
+								# 	style={"text-align":"end"}
+								# ),
 								
 							],
 							no_gutters=True,
@@ -1142,30 +1221,30 @@ def card_contract_adjust_sub(app):
 											dbc.InputGroupAddon("-", addon_type="prepend"),
 											dcc.Input(id = 'input-max-neg-adj',
 												type = 'number', debounce = True, persistence = True, persistence_type = 'session',
-												min = 0, max = 100, size="4", style={"text-align":"center"}), 
+												min = 0, max = 100, size="27", style={"text-align":"center"}), 
 											dbc.InputGroupAddon("%", addon_type="append"),
 										],
 										className="mb-3",
 										size="sm"
 									),
-									width=3,
+									width=6,
 									style={"text-align":"end"}
 								),
-								dbc.Col(
-									dbc.InputGroup(
-										[
-											dbc.InputGroupAddon("-", addon_type="prepend"),
-											dcc.Input(id = 'input-neg-adj',
-												type = 'number', debounce = True, persistence = True, persistence_type = 'session',
-												min = 0, max = 100, size="4",style={"text-align":"center"}), 
-											dbc.InputGroupAddon("%", addon_type="append"),
-										],
-										className="mb-3",
-										size="sm"
-									),
-									width=3,
-									style={"text-align":"end"}
-								),
+								# dbc.Col(
+								# 	dbc.InputGroup(
+								# 		[
+								# 			dbc.InputGroupAddon("-", addon_type="prepend"),
+								# 			dcc.Input(id = 'input-neg-adj',
+								# 				type = 'number', debounce = True, persistence = True, persistence_type = 'session',
+								# 				min = 0, max = 100, size="4",style={"text-align":"center"}), 
+								# 			dbc.InputGroupAddon("%", addon_type="append"),
+								# 		],
+								# 		className="mb-3",
+								# 		size="sm"
+								# 	),
+								# 	width=3,
+								# 	style={"text-align":"end"}
+								# ),
 								
 							],
 							no_gutters=True,
@@ -1351,114 +1430,217 @@ layout = create_layout(app)
 #app.layout = create_layout(app)
 
 
+#realtime assump modal
+@app.callback(
+	Output('modal-edit-realtime-assumption','is_open'),
+	[Input('button-edit-realtime-assumption','n_clicks'),
+	Input('close-edit-realtime-assumption','n_clicks')],
+	[State('modal-edit-realtime-assumption','is_open')]
+	)
+def open_modal(n1,n2,is_open):
+	if n1 or n2:
+		return not is_open
+	else:
+		return is_open
+
+@app.callback(
+	[Output('realtime-assump-input-utilizer', 'value'),
+	Output('realtime-assump-input-script', 'value')],
+	[Input('realtime-assump-dropdown-tier', 'value')]
+	)
+def tier_assump(t):
+	if t == 1:
+		return 10,0.86
+	elif t == 2:
+		return 8,0.83
+	elif t == 3:
+		return 7,0.8
+	elif t == 4:
+		return 6,0.74
+	elif t == 5:
+		return 5.5,0.7
+	else:
+		return "",""
+
+@app.callback(
+	Output('realtime-assump-button-collapse-rebatenovbc','disabled'),
+	[Input('realtime-assump-input-rebatenovbc', 'value')]
+	)
+def disable_collapse(v):
+	if v:
+		return True
+	else:
+		return False
+
+@app.callback(
+	Output('realtime-assump-button-collapse-rebatevbc','disabled'),
+	[Input('realtime-assump-input-rebatevbc', 'value')]
+	)
+def disable_collapse(v):
+	if v:
+		return True
+	else:
+		return False
+
+@app.callback(
+	Output('realtime-assump-input-rebatevbc', 'disabled'),
+	[Input('vbc-l-1-input', 'value'),
+	Input('vbc-r-1-input', 'value'),
+	Input('vbc-p-1-input', 'value')]
+	)
+def disable_rebate(v1, v2, v3):
+	if v1 or v2 or v3:
+		return True
+	else: 
+		return False
+
+@app.callback(
+	Output('realtime-assump-input-rebatenovbc', 'disabled'),
+	[Input('novbc-l-1-input', 'value'),
+	Input('novbc-r-1-input', 'value'),
+	Input('novbc-p-1-input', 'value')]
+	)
+def disable_rebate(v1, v2, v3):
+	if v1 or v2 or v3:
+		return True
+	else: 
+		return False
+
+@app.callback(
+	[Output('realtime-assump-collapse-rebatenovbc', 'is_open'),
+	Output('realtime-assump-button-collapse-rebatenovbc', 'children')],
+	[Input('realtime-assump-button-collapse-rebatenovbc', 'n_clicks')]
+	)
+def toggle_collapse(n):
+	if n and n%2 == 1:
+		return True, '\u25B2'
+	return False, '\u25BC'
+
+@app.callback(
+	[Output('realtime-assump-collapse-rebatevbc', 'is_open'),
+	Output('realtime-assump-button-collapse-rebatevbc', 'children')],
+	[Input('realtime-assump-button-collapse-rebatevbc', 'n_clicks')]
+	)
+def toggle_collapse(n):
+	if n and n%2 == 1:
+		return True, '\u25B2'
+	return False, '\u25BC'
+
+@app.callback(
+	[Output('realtime-assump-collapse-rampup', 'is_open'),
+	Output('realtime-assump-button-collapse-rampup', 'children')],
+	[Input('realtime-assump-button-collapse-rampup', 'n_clicks')]
+	)
+def toggle_collapse(n):
+	if n and n%2 == 1:
+		return True, '\u25B2'
+	return False, '\u25BC'
+
+@app.callback(
+	[Output('realtime-assump-div-rebatenovbc-2', 'hidden'),
+	Output('realtime-assump-div-rebatenovbc-3', 'hidden'),
+	Output('realtime-assump-div-rebatenovbc-4', 'hidden'),
+	Output('realtime-assump-div-rebatenovbc-5', 'hidden'),
+	Output('realtime-assump-button-addrebatenovbc', 'disabled')],
+	[Input('realtime-assump-button-addrebatenovbc', 'n_clicks')]
+	)
+def add_rebate_range(n):
+	if n:
+		if n == 1:
+			return False, True, True, True, False
+		elif n == 2:
+			return False, False, True, True, False
+		elif n == 3:
+			return False, False, False, True, False
+		else:
+			return False, False, False, False, True
+	else:
+		return True, True, True, True, False
+
+@app.callback(
+	[Output('realtime-assump-div-rebatevbc-2', 'hidden'),
+	Output('realtime-assump-div-rebatevbc-3', 'hidden'),
+	Output('realtime-assump-div-rebatevbc-4', 'hidden'),
+	Output('realtime-assump-div-rebatevbc-5', 'hidden'),
+	Output('realtime-assump-button-addrebatevbc', 'disabled')],
+	[Input('realtime-assump-button-addrebatevbc', 'n_clicks')]
+	)
+def add_rebate_range(n):
+	if n:
+		if n == 1:
+			return False, True, True, True, False
+		elif n == 2:
+			return False, False, True, True, False
+		elif n == 3:
+			return False, False, False, True, False
+		else:
+			return False, False, False, False, True
+	else:
+		return True, True, True, True, False
+
+@app.callback(
+	[Output('input-rebate', 'value'),
+	Output('input-base-rebate', 'value')],
+	[Input('close-edit-realtime-assumption', 'n_clicks')],
+	[State('realtime-assump-input-rebatenovbc', 'value'),
+	State('realtime-assump-input-rebatevbc', 'value')]
+	)
+def update_rebate(n, v1, v2):
+	return v1, v2
+
+@app.callback(
+	[Output(f'novbc-l-{i+1}', 'value') for i in range(5)]
+	+[Output(f'novbc-r-{i+1}', 'value') for i in range(5)]
+	+[Output(f'novbc-p-{i+1}', 'value') for i in range(5)],
+	[Input('close-edit-realtime-assumption', 'n_clicks')],
+	[State(f'novbc-l-{i+1}-input', 'value') for i in range(5)]
+	+[State(f'novbc-r-{i+1}-input', 'value') for i in range(5)]
+	+[State(f'novbc-p-{i+1}-input', 'value') for i in range(5)]
+	)
+def update_rebate_range(n, l1,l2,l3,l4,l5, r1,r2,r3,r4,r5, p1,p2,p3,p4,p5):
+	return l1,l2,l3,l4,l5, r1,r2,r3,r4,r5, p1,p2,p3,p4,p5
+
+@app.callback(
+	[Output(f'vbc-l-{i+1}', 'value') for i in range(5)]
+	+[Output(f'vbc-r-{i+1}', 'value') for i in range(5)]
+	+[Output(f'vbc-p-{i+1}', 'value') for i in range(5)],
+	[Input('close-edit-realtime-assumption', 'n_clicks')],
+	[State(f'vbc-l-{i+1}-input', 'value') for i in range(5)]
+	+[State(f'vbc-r-{i+1}-input', 'value') for i in range(5)]
+	+[State(f'vbc-p-{i+1}-input', 'value') for i in range(5)]
+	)
+def update_rebate_range(n, l1,l2,l3,l4,l5, r1,r2,r3,r4,r5, p1,p2,p3,p4,p5):
+	return l1,l2,l3,l4,l5, r1,r2,r3,r4,r5, p1,p2,p3,p4,p5
 
 
-'''
-##input likelihood
 
-def cal_measure_likelihood(recom_like, recom_target, user_target, measure, h):
-	if h == False:
-		if user_target:
-			if recom_like[0] == 'High':
-				rl = 3
-			elif recom_like[0] == 'Mid':
-				rl = 2
-			else:
-				rl = 1
-			if measure in percent_input:
-				ur_target = user_target/100
-			else: 
-				ur_target = user_target
-
-			if measure in positive_measure:
-				if (ur_target-recom_target[0])/recom_target[0] > 0.1:
-					ul = rl -2
-				elif (ur_target-recom_target[0])/recom_target[0] > 0.05:
-					ul = rl -1
-				elif (ur_target-recom_target[0])/recom_target[0] < -0.05:
-					ul = rl +1
-				elif (ur_target-recom_target[0])/recom_target[0] < -0.1:
-					ul = rl +2
-				else:
-					ul = rl
-			else:
-				if (ur_target-recom_target[0])/recom_target[0] > 0.1:
-					ul = rl +2
-				elif (ur_target-recom_target[0])/recom_target[0] > 0.05:
-					ul = rl +1
-				elif (ur_target-recom_target[0])/recom_target[0] < -0.05:
-					ul = rl -1
-				elif (ur_target-recom_target[0])/recom_target[0] < -0.1:
-					ul = rl -2
-				else:
-					ul = rl
-
-			if ul <= 1:
-				return ['Low',{"background-color": '#C00000'}]
-			elif ul == 2:
-				return ['Mid',{"background-color": '#ffffff'}]
-			else:
-				return ['High',{"background-color": '#ffffff'}]
-		return ['',{"background-color": '#ffffff'}]
-	return ['',{"background-color": '#ffffff'}]
-
-for d in range(domain_ct):
-	for m in range(domain_measure[domain_set[d]]):
-		app.callback(
-			[Output(f'measure-like-user-{d+1}-{m+1}', 'children'),
-			Output(f'measure-like-user-{d+1}-{m+1}', 'style')],
-			[Input(f'measure-like-recom-{d+1}-{m+1}', 'children'),
-			Input(f'measure-target-recom-{d+1}-{m+1}', 'children'),
-			Input(f'measure-target-user-{d+1}-{m+1}', 'value'),
-			Input(f'measure-name-{d+1}-{m+1}', 'children'),
-			Input(f'outcome-measure-row-{d+1}-{m+1}', 'hidden')]
-			)(cal_measure_likelihood)
-'''
 # overall likelihood
 @app.callback(
-	[Output('overall-like-recom', 'children'),
-	Output('overall-like-user', 'children'),],
+	Output('overall-like-user', 'children'),
 	[Input('computed-table', 'data'),
 	Input('target-patient-input', 'value')]
 	)
 def overall_like(data, cohort_selected):
-	if cohort_selected == 'CHF+AF (Recommended)':
-			df = df_setup1
+	if cohort_selected == 'CHF+AF':
+		df = df_setup1
 	else:
 		df = df_setup2
 			
 	dff = df if data is None else pd.DataFrame(data)
 	measure_list = list(dff['measures'])
-	ml_list = []
 	ul_list = []
 	for i in range(len(measure_list)):
 		if measure_list[i] not in ['Cost & Utilization Reduction','Improving Disease Outcome','Increasing Patient Safety','Enhancing Care Quality','Better Patient Experience']:
-			if dff['probrecom'][i] == 'High':
-				ml = 3
-			elif dff['probrecom'][i] == 'Mid':
-				ml = 2
-			else:
-				ml = 1
-			ml_list.append(ml)
 			
 			if dff['probuser'][i] == 'High':
-				ul = 3
+				ul = 3 * int(dff['weight_user'][i].replace('%',''))/100
 			elif dff['probuser'][i] == 'Mid':
-				ul = 2
+				ul = 2 * int(dff['weight_user'][i].replace('%',''))/100
 			else:
-				ul = 1
+				ul = 1 * int(dff['weight_user'][i].replace('%',''))/100
 			ul_list.append(ul)
 	
-	avg_ul = np.mean(ul_list)
-	avg_ml = np.mean(ml_list)
-	if avg_ml <= 1.5:
-		recom_like= 'Low'
-	elif avg_ml <= 2.5:
-		recom_like= 'Mid'
-	elif avg_ml > 2.5:
-		recom_like= 'High'
-	else:
-		recom_like= ''
+	avg_ul = np.sum(ul_list)
 
 	if avg_ul <= 1.5:
 		user_like= 'Low'
@@ -1469,43 +1651,9 @@ def overall_like(data, cohort_selected):
 	else:
 		user_like= ''
 
-	return recom_like,user_like
+	return user_like
 
-'''   
-@app.callback(
-	[Output('overall-like-user', 'children'),
-	Output('overall-like-user', 'style')],
-	[Input(f'measure-like-user-1-{m+1}', 'children') for m in range(8)]
-	+ [Input(f'measure-like-user-2-{m+1}', 'children') for m in range(10)]
-	+ [Input(f'measure-like-user-4-{m+1}', 'children') for m in range(2)]
-	+ [Input(f'measure-like-user-5-{m+1}', 'children') for m in range(3)]
-	+ [Input(f'measure-like-user-6-{m+1}', 'children') for m in range(4)]
-	)
-def overall_like(l1,l2,l3,l4,l5,l6,l7,l8,l9,l10,l11,l12,l13,l14,l15,l16,l17,l18,l19,l20,l21,l22,l23,l24,l25,l26,l27):
-	ml_list = []
-	for i in range(27):
-		if eval('l'+str(i+1)):
-			if eval('l'+str(i+1) ) == 'High':
-				ml = 3
-			elif eval('l'+str(i+1)) == 'Mid':
-				ml = 2
-			elif eval('l'+str(i+1) ) == 'Low':
-				ml = 1
-			ml_list.append(ml)
-	if len(ml_list) > 0:
-		avg_ml = np.mean(ml_list)
-		if avg_ml <= 1.5:
-			return 'Low', {"background-color": '#C00000'}
-		elif avg_ml <= 2.5 and avg_ml > 1.5:
-			return 'Mid',{"background-color": '#ffffff'}
-		elif avg_ml > 2.5:
-			return 'High',{"background-color": '#ffffff'}
-		else:
-			return '',{"background-color": '#ffffff'}
-	else:
-		return '',{"background-color": '#ffffff'}
 
-'''
 #input modal measure
 @app.callback(
 	Output("optimizer-modal-centered", "is_open"),
@@ -1722,6 +1870,22 @@ def parse_contents(contents, filename, date):
 		html.H6(datetime.datetime.fromtimestamp(date)),
 		])
 
+def trans_upload_to_download(contents, filename, date):
+	content_type, content_string = contents.split(',')
+	decoded = base64.b64decode(content_string)
+
+	filename = filename.replace(" ",'_')	
+	path = str('downloads/') + filename
+	with open(path, "wb") as file:
+		file.write(decoded)
+
+	return html.Div([
+				html.A(filename, 
+					href='http://139.224.186.182:8098/' + path,
+					target = "_blank")
+				])
+
+
 @app.callback(
 	Output('output-data-upload', 'children'),
 	[Input('upload-data', 'contents')],
@@ -1731,22 +1895,9 @@ def parse_contents(contents, filename, date):
 def upload_output(list_of_contents, list_of_names, list_of_dates):
 	if list_of_contents is not None:
 		children = [
-			parse_contents(list_of_contents, list_of_names, list_of_dates) 
+			trans_upload_to_download(list_of_contents, list_of_names, list_of_dates) 
 		]
 		return children
-
-@app.callback(
-    Output('output-rebate-upload', 'children'),
-    [Input('upload-rebate', 'contents')],
-    [State('upload-rebate', 'filename'),
-    State('upload-rebate','last_modified')]
-    )
-def upload_output(list_of_contents, list_of_names, list_of_dates):
-    if list_of_contents is not None:
-        children = [
-            parse_contents(list_of_contents, list_of_names, list_of_dates) 
-        ]
-        return children
 
 @app.callback(
 	Output('output-age-upload', 'children'),
@@ -1757,7 +1908,7 @@ def upload_output(list_of_contents, list_of_names, list_of_dates):
 def upload_output(list_of_contents, list_of_names, list_of_dates):
 	if list_of_contents is not None:
 		children = [
-			parse_contents(list_of_contents, list_of_names, list_of_dates)
+			trans_upload_to_download(list_of_contents, list_of_names, list_of_dates)
 		]
 		return children
 
@@ -1770,7 +1921,7 @@ def upload_output(list_of_contents, list_of_names, list_of_dates):
 def upload_output(list_of_contents, list_of_names, list_of_dates):
 	if list_of_contents is not None:
 		children = [
-			parse_contents(list_of_contents, list_of_names, list_of_dates)
+			trans_upload_to_download(list_of_contents, list_of_names, list_of_dates)
 		]
 		return children
 
@@ -1783,7 +1934,20 @@ def upload_output(list_of_contents, list_of_names, list_of_dates):
 def upload_output(list_of_contents, list_of_names, list_of_dates):
 	if list_of_contents is not None:
 		children = [
-			parse_contents(list_of_contents, list_of_names, list_of_dates)
+			trans_upload_to_download(list_of_contents, list_of_names, list_of_dates)
+		]
+		return children
+
+@app.callback(
+	Output('output-rebate-upload', 'children'),
+	[Input('upload-rebate', 'contents')],
+	[State('upload-rebate', 'filename'),
+	State('upload-rebate','last_modified')]
+	)
+def upload_output(list_of_contents, list_of_names, list_of_dates):
+	if list_of_contents is not None:
+		children = [
+			trans_upload_to_download(list_of_contents, list_of_names, list_of_dates)
 		]
 		return children
 
@@ -1852,7 +2016,7 @@ def toggle_popover(n1, n2, is_open):
 def toggle_popover(n1, n2, is_open):
 	if n1 or n2:
 		return not is_open
-	return is_open	
+	return is_open  
 
 @app.callback(
 	Output('table_setup', 'children'),
@@ -1870,26 +2034,34 @@ def toggle_popover(n1, n2, is_open):
 	#[State('computed-table', 'data')]
 	)
 def update_table(d1,d2,d3,d4,d5,d6,mc1,mc2,mc3,mc4,mc5,mc6,mc7,mc8,mc9,mc10,mc11,cohort):#,timestamp, data
-	global domain_index,domain1_index,domain2_index,domain3_index,domain4_index,domain5_index,list_forborder,df_setup_filter,measures_select,df_setup
-   
+	global domain_index,domain1_index,domain2_index,domain3_index,domain4_index,domain5_index,list_forborder,df_setup_filter,measures_select,df_setup,df_setup1,df_setup2,dropdown_cohort,cohort_now
+
+	cohort_now=cohort
+
 	ctx = dash.callback_context
-	if ctx.triggered[0]['prop_id'] == 'target-patient-input.value':
-		cohort_change = True
+
+
+	
+
+	if cohort == 'CHF+AF':
+		df_setup_dict = {'cohort': 'CHF+AF', 'data': df_setup1.to_dict()}
 	else:
-		cohort_change = False
-	if cohort == 'CHF+AF (Recommended)':
-		df_setup = df_setup1
-	else:
-		df_setup = df_setup2
+		df_setup_dict = {'cohort': 'All CHF Patients', 'data': df_setup2.to_dict()}
 
 	domain_selected = []
 	measure_selected = []
+
+	d1_meas=[]
+	d2_meas=[]
+
 	for i in range(11):
 		if eval('mc'+str(i+1)) and len(eval('mc'+str(i+1))) > 0:
 			if i in [0,1,2,3]:
 				domain_selected.append(domain_set[0])
+				d1_meas.extend(eval('mc'+str(i+1)))
 			elif i in [4,5,6,7]:
 				domain_selected.append(domain_set[1])
+				d2_meas.extend(eval('mc'+str(i+1)))
 			elif i == 8:
 				domain_selected.append(domain_set[3])
 			elif i == 9:
@@ -1899,10 +2071,22 @@ def update_table(d1,d2,d3,d4,d5,d6,mc1,mc2,mc3,mc4,mc5,mc6,mc7,mc8,mc9,mc10,mc11
 			measure_selected.extend(eval('mc'+str(i+1)))
 
 	measures_select = domain_selected + measure_selected
-	#print(measures_select)
-	#df=df_setup[df_setup['measures'].isin(measures_select)]
+
+
+
+	df_setup = pd.DataFrame(df_setup_dict['data'])
 	rows=df_setup[df_setup['measures'].isin(measures_select)]['id'].to_list()
 	temp=df_setup[df_setup['measures'].isin(measures_select)]
+	ct=0
+	if domain_set[0] in domain_selected:
+		ct=1+len(d1_meas)
+		temp.iloc[[0],[6]]=str(temp[temp['measures'].isin(d1_meas)]['weight_recom'].apply(lambda x : int(str(x).replace('%',''))).sum())+'%'
+		temp.iloc[[0],[7]]=str(temp[temp['measures'].isin(d1_meas)]['weight_user'].apply(lambda x : int(str(x).replace('%',''))).sum())+'%'
+
+	if domain_set[1] in domain_selected:
+		temp.iloc[[ct],[6]]=str(temp[temp['measures'].isin(d2_meas)]['weight_recom'].apply(lambda x : int(str(x).replace('%',''))).sum())+'%'
+		temp.iloc[[ct],[7]]=str(temp[temp['measures'].isin(d2_meas)]['weight_user'].apply(lambda x : int(str(x).replace('%',''))).sum())+'%'
+
 	domain_index=[]
 	domain1_index=[]
 	domain2_index=[]
@@ -1926,11 +2110,12 @@ def update_table(d1,d2,d3,d4,d5,d6,mc1,mc2,mc3,mc4,mc5,mc6,mc7,mc8,mc9,mc10,mc11
 			else: 
 				if (j>domain_index[i]) & (j<domain_index[i+1]):
 					eval('domain'+str(i+1)+'_index').append(j)
-					
-	return table_setup(temp,cohort_change) 
+
+	temp_dict = {'cohort': df_setup_dict['cohort'], 'data': temp.to_dict()}             
+	return table_setup(temp_dict,cohort) 
 	
 
-#    return False #table_setup(df)
+
 
 @app.callback(
 	Output('computed-table', 'data'),
@@ -1938,7 +2123,6 @@ def update_table(d1,d2,d3,d4,d5,d6,mc1,mc2,mc3,mc4,mc5,mc6,mc7,mc8,mc9,mc10,mc11
 	[State('computed-table', 'data')])
 def update_columns(timestamp, data):
 
-	
 
 	global measures_select,df_setup_filter
 
@@ -1946,12 +2130,20 @@ def update_columns(timestamp, data):
 	weight_2=0
 	weight_3=0
 	weight_4=0
-	weight_5=0 
+	weight_5=0
+
+	weight_1_recom=0
+	weight_2_recom=0
+	weight_3_recom=0
+	weight_4_recom=0
+	weight_5_recom=0
+
 	for i in domain1_index+domain2_index+domain3_index+domain4_index+domain5_index:
 
 		row=data[i]
 		row['weight_user']=str(row['weight_user']).replace('$','').replace('%','').replace(',','')
-		row['taruser_value']=str(row['taruser_value']).replace('$','').replace('%','').replace(',','')      
+		row['taruser_value']=str(row['taruser_value']).replace('$','').replace('%','').replace(',','')
+
 		if i in domain1_index:
 			weight_1=weight_1+int(row['weight_user'])
 		if i in domain2_index:
@@ -1964,6 +2156,7 @@ def update_columns(timestamp, data):
 			weight_5=weight_5+int(row['weight_user'])
 			
 		row['weight_user']= '{}%'.format(row['weight_user']) 
+		
 		
 		if row['measures'] in ["LVEF LS Mean Change %", "Change in Self-Care Score", "Change in Mobility Score", "DOT", "PDC", "MPR"] :
 
@@ -2007,6 +2200,128 @@ def update_columns(timestamp, data):
 	return data 
 
 @app.callback(
+	Output('temp-data','children'),
+	[Input('close-edit-realtime-assumption', 'n_clicks')],
+	[State('realtime-assump-input-trend','value'),
+	State('realtime-assump-input-iprate', 'value'),
+	State('realtime-assump-input-hospitalization', 'value'),
+	State('realtime-assump-input-probnp', 'value'),
+	State('realtime-assump-input-lvef', 'value'),
+	State('realtime-assump-input-utilizer', 'value'),
+	State('realtime-assump-input-script', 'value'),
+	State('realtime-assump-input-rebatevbc', 'value')]
+	+[State(f'vbc-l-{i+1}-input', 'value') for i in range(5)]
+	+[State(f'vbc-r-{i+1}-input', 'value') for i in range(5)]
+	+[State(f'vbc-p-{i+1}-input', 'value') for i in range(5)]
+	+[State(f'realtime-assump-month-{i+1}', 'value') for i in range(12)]
+	)
+def data_prep(save_assump, cost_trend,util_trend,hr_input,probnp_input,lvef_input,Entresto_Utilizer_Perc,Script_PMPM,rebate_vbc, l1,l2,l3,l4,l5,r1,r2,r3,r4,r5,p1,p2,p3,p4,p5,m1,m2,m3,m4,m5,m6,m7,m8,m9,m10,m11,m12):
+	
+	global df_setup1,df_setup2,df_setup_filter,dropdown_cohort
+	if save_assump:
+		if l1 is None:
+			input5 = {'Marketshare_L':[],
+				 'Marketshare_H':[],
+				 'Rebate':[]}
+		else:
+			vbc_l = list(filter(None,[l1+1, l2, l3, l4, l5]))
+			vbc_r = list(filter(None,[r1, r2, r3, r4, r5]))
+			vbc_p = list(filter(None,[p1, p2, p3, p4, p5]))
+			input5 = {'Marketshare_L':[vbc_l[i]-1 if i==0 else vbc_l[i] for i in range(len(vbc_l))],
+					 'Marketshare_H':vbc_r,
+					 'Rebate':vbc_p}
+		Rebate_VBC_table=pd.DataFrame(input5, columns = ['Marketshare_L', 'Marketshare_H', 'Rebate'])
+		Rebate_VBC_table['Marketshare_L'] = Rebate_VBC_table['Marketshare_L'].apply(int)/100
+		Rebate_VBC_table['Marketshare_H'] = Rebate_VBC_table['Marketshare_H'].apply(int)/100
+		Rebate_VBC_table['Rebate'] = Rebate_VBC_table['Rebate'].apply(int)/100
+
+		if rebate_vbc is None:
+			rebate_vbc_flat = 0
+		else:
+			rebate_vbc_flat = rebate_vbc/100
+
+		input6={'Month':[1,2,3,4,5,6,7,8,9,10,11,12],
+			'MarketShare':[m1/100,m2/100,m3/100,m4/100,m5/100,m6/100,m7/100,m8/100,m9/100,m10/100,m11/100,m12/100]}
+		MarketShare_table=pd.DataFrame(input6, columns = ['Month','MarketShare'])
+
+
+		t1, t2, t3, t4, t5 ,t6, t7= simulate_input(cost_trend/100,util_trend/100,hr_input/100,-probnp_input/100,lvef_input/100,Entresto_Utilizer_Perc/100,Script_PMPM,rebate_vbc_flat,Rebate_VBC_table,MarketShare_table)       
+
+		df_setup1=t7
+		df_setup2=t6
+
+		t1.to_csv('df_perfom_assump.csv')
+		t2.to_csv('df_recom_measure.csv')
+
+		if t3=='CHF+AF':
+			df_setup_filter=df_setup1
+		else:
+			df_setup_filter=df_setup2
+
+		dropdown_cohort=t3
+	
+		result = {'df_perfom_assump': t1.to_dict(), 'df_recom_measure': t2.to_dict(), 'recom_cohort':t3, 'meas_recom':t4, 'meas_recom_not':t5, 'setup_all':t6.to_dict(),  'setup_af':t7.to_dict()}
+		
+		with open('configure/optimizer_input.json','w') as outfile:
+			json.dump(result, outfile)
+
+		return json.dumps(result)
+
+
+@app.callback(
+	[Output('target-patient-input', 'options'),
+	Output('target-patient-input', 'value')],
+	[Input('temp-data', 'children')]
+	)
+def update_recom_cohort(temp):
+	global dropdown_cohort
+	result = json.load(open('configure/optimizer_input.json', encoding = 'utf-8'))
+#	result = json.loads(temp)
+	recom_cohort = result['recom_cohort']
+
+	dropdown_cohort=recom_cohort
+	
+	if recom_cohort == 'CHF+AF':
+		return [{'label':'CHF+AF (Recommended)', 'value':'CHF+AF'}, {'label':'All CHF Patients', 'value':'All CHF Patients'}], 'CHF+AF'
+	else:
+		return [{'label':'CHF+AF', 'value':'CHF+AF'}, {'label':'All CHF Patients (Recommended)', 'value':'All CHF Patients'}], 'All CHF Patients'
+
+
+
+@app.callback(
+	[Output('optimizer-checklist-domain-measures-lv2-1-1', 'value'),
+	Output('optimizer-checklist-domain-measures-lv2-1-3', 'value'),
+	Output('optimizer-checklist-domain-measures-lv2-2-1', 'value')],
+	[Input('temp-data', 'children'),
+	Input('target-patient-input', 'value')]
+	)
+def update_measure_selection(temp, v):
+	result = json.load(open('configure/optimizer_input.json', encoding = 'utf-8'))
+
+	meas_recom = result['meas_recom']
+	meas_recom_not = result['meas_recom_not']
+	recom_cohort = result['recom_cohort']
+
+	measures_1_1 = ["All Causes Average Cost per Patient", "CHF Related Average Cost per Patient"]
+	measures_1_3 = ["All Causes Hospitalization Rate", "CHF Related Hospitalization Rate"]
+	measures_2_1 = ["NT-proBNP Change %", "LVEF LS Mean Change %", "LAVi LS Mean Change", "LVEDVi LS Mean Change", "LVESVi LS Mean Change", "E/e' LS Mean Change"]
+
+	if v==recom_cohort:
+		value_1_1 = list(set(measures_1_1).intersection(set(meas_recom)))
+		value_1_3 = list(set(measures_1_3).intersection(set(meas_recom)))
+		value_2_1 = list(set(measures_2_1).intersection(set(meas_recom)))
+	else:
+		value_1_1 = list(set(measures_1_1).intersection(set(meas_recom_not)))
+		value_1_3 = list(set(measures_1_3).intersection(set(meas_recom_not)))
+		value_2_1 = list(set(measures_2_1).intersection(set(meas_recom_not)))
+
+	return value_1_1, value_1_3, value_2_1
+
+
+
+
+
+@app.callback(
 	[Output('tab_container', 'active_tab'),
 	Output('sim_result_box_1','figure'),
 	Output('sim_result_table_1','children'),
@@ -2014,30 +2329,49 @@ def update_columns(timestamp, data):
 	Output('sim_result_table_2','children'),
 	Output('sim_result_box_3','figure'),
 	Output('sim_result_table_3','children')],
-	[Input('button-simulation-submit', 'n_clicks'),
-	Input('recom-pos-perf','children'),
-	Input('recom-neg-perf','children'),
-	Input('input-max-pos-adj','value'),
-	Input('input-max-neg-adj','value'),
-	Input('input-pos-perform', 'value'),
-	Input('input-neg-perform', 'value'),
-	Input('input-pos-adj', 'value'),
-	Input('input-neg-adj', 'value'),
-	Input('target-patient-recom','children'),
-	Input('target-patient-input','value'),
-	Input('input-rebate','value'),
-	Input('input-base-rebate','value'),]
-	+[Input('computed-table','derived_virtual_data')]
+	[Input('button-simulation-submit', 'n_clicks')],
+	[State('recom-pos-perf','children'),
+	State('recom-neg-perf','children'),
+	State('input-max-pos-adj','value'),
+	State('input-max-neg-adj','value'),
+	State('input-pos-perform', 'value'),
+	State('input-neg-perform', 'value'),
+#	State('input-pos-adj', 'value'),
+#	State('input-neg-adj', 'value'),
+	State('target-patient-recom','children'),
+	State('target-patient-input','value'),
+	State('input-rebate','value'),
+	State('input-base-rebate','value'),]
+	+[State('computed-table','derived_virtual_data')]
+	+[State(f'novbc-l-{i+1}-input', 'value') for i in range(5)]
+	+[State(f'novbc-r-{i+1}-input', 'value') for i in range(5)]
+	+[State(f'novbc-p-{i+1}-input', 'value') for i in range(5)]
+	+[State(f'vbc-l-{i+1}-input', 'value') for i in range(5)]
+	+[State(f'vbc-r-{i+1}-input', 'value') for i in range(5)]
+	+[State(f'vbc-p-{i+1}-input', 'value') for i in range(5)]
+	+[State(f'realtime-assump-month-{i+1}', 'value') for i in range(12)]
+	+[State('realtime-assump-input-utilizer', 'value'),
+	State('realtime-assump-input-script', 'value'),
+	State('temp-data','children')]
 )
-def simulation(submit_button, re_pos_perf, re_neg_perf, re_pos_adj, re_neg_adj, in_pos_perf, in_neg_perf, in_pos_adj, in_neg_adj, cohort_recom, cohort_selected, rebate_novbc, rebate_vbc,data):
+def simulation(submit_button, re_pos_perf, re_neg_perf, re_pos_adj, re_neg_adj, in_pos_perf, in_neg_perf, cohort_recom, cohort_selected, rebate_novbc, rebate_vbc, data, nl1,nl2,nl3,nl4,nl5, nr1,nr2,nr3,nr4,nr5, np1,np2,np3,np4,np5, l1,l2,l3,l4,l5, r1,r2,r3,r4,r5, p1,p2,p3,p4,p5, m1,m2,m3,m4,m5,m6,m7,m8,m9,m10,m11,m12, utilizer, script, temp ):
 
-	if cohort_selected == 'CHF+AF (Recommended)':
-		df = df_setup1
-	else:
-		df = df_setup2
-	triggered = [t["prop_id"] for t in dash.callback_context.triggered]
-	submit = len([1 for i in triggered if i == "button-simulation-submit.n_clicks"])
-	if submit:
+	
+
+#   cohort_selected = cohort_selected.replace(' (Recommended)','')
+#   triggered = [t["prop_id"] for t in dash.callback_context.triggered]
+#   submit = len([1 for i in triggered if i == "button-simulation-submit.n_clicks"])
+#   if submit:
+	if submit_button:
+		result = json.load(open('configure/optimizer_input.json', encoding = 'utf-8'))
+#		result = json.loads(temp)
+		Performance_assumption = pd.DataFrame(result['df_perfom_assump'])
+		Recom_Measure_all = pd.DataFrame(result['df_recom_measure'])
+
+		if cohort_selected == 'CHF+AF':
+			df = df_setup1
+		else:
+			df = df_setup2
 		
 		dff = df if data is None else pd.DataFrame(data)
 		
@@ -2069,16 +2403,69 @@ def simulation(submit_button, re_pos_perf, re_neg_perf, re_pos_adj, re_neg_adj, 
 
 		input3 = {'Perf_Range_U_Min': [1], 
 						'Perf_Range_U_Max': [in_pos_perf/100], 
-						'Adj_Limit_U': [in_pos_adj/100],
+						'Adj_Limit_U': [re_pos_adj/100],
 						'Perf_Range_L_Min': [1],
 						'Perf_Range_L_Max': [in_neg_perf/100],
-						'Adj_Limit_L': [-in_neg_adj/100]} 
+						'Adj_Limit_L': [-re_neg_adj/100]} 
 		UD_Contract = pd.DataFrame(input3, columns = ['Perf_Range_U_Min','Perf_Range_U_Max','Adj_Limit_U','Perf_Range_L_Min','Perf_Range_L_Max', 'Adj_Limit_L']) 
 
-		t1,t2,t3=Contract_Calculation(Recom_Contract, UD_Measure,UD_Contract,cohort_selected,rebate_novbc/100, rebate_vbc/100)
+		if nl1 is None:
+			input4 = {'Marketshare_L':[],
+				 'Marketshare_H':[],
+				 'Rebate':[]}
+		else:
+			novbc_l = list(filter(None,[nl1+1, nl2, nl3, nl4, nl5]))
+			novbc_r = list(filter(None,[nr1, nr2, nr3, nr4, nr5]))
+			novbc_p = list(filter(None,[np1, np2, np3, np4, np5]))
+			input4 = {'Marketshare_L':[novbc_l[i]-1 if i==0 else novbc_l[i] for i in range(len(novbc_l))],
+					 'Marketshare_H':novbc_r,
+					 'Rebate':novbc_p}
+		Rebate_noVBC_table=pd.DataFrame(input4, columns = ['Marketshare_L', 'Marketshare_H', 'Rebate'])
+		Rebate_noVBC_table['Marketshare_L'] = Rebate_noVBC_table['Marketshare_L'].apply(int)/100
+		Rebate_noVBC_table['Marketshare_H'] = Rebate_noVBC_table['Marketshare_H'].apply(int)/100
+		Rebate_noVBC_table['Rebate'] = Rebate_noVBC_table['Rebate'].apply(int)/100
+		
+		if l1 is None:
+			input5 = {'Marketshare_L':[],
+				 'Marketshare_H':[],
+				 'Rebate':[]}
+		else:
+			vbc_l = list(filter(None,[l1+1, l2, l3, l4, l5]))
+			vbc_r = list(filter(None,[r1, r2, r3, r4, r5]))
+			vbc_p = list(filter(None,[p1, p2, p3, p4, p5]))
+			input5 = {'Marketshare_L':[vbc_l[i]-1 if i==0 else vbc_l[i] for i in range(len(vbc_l))],
+					 'Marketshare_H':vbc_r,
+					 'Rebate':vbc_p}
+		Rebate_VBC_table=pd.DataFrame(input5, columns = ['Marketshare_L', 'Marketshare_H', 'Rebate'])
+		Rebate_VBC_table['Marketshare_L'] = Rebate_VBC_table['Marketshare_L'].apply(int)/100
+		Rebate_VBC_table['Marketshare_H'] = Rebate_VBC_table['Marketshare_H'].apply(int)/100
+		Rebate_VBC_table['Rebate'] = Rebate_VBC_table['Rebate'].apply(int)/100
+
+		input6={'Month':[1,2,3,4,5,6,7,8,9,10,11,12],
+			'MarketShare':[m1/100,m2/100,m3/100,m4/100,m5/100,m6/100,m7/100,m8/100,m9/100,m10/100,m11/100,m12/100]}
+
+		MarketShare_table=pd.DataFrame(input6, columns = ['Month','MarketShare'])
+
+
+		if rebate_novbc is None:
+			rebate_novbc_flat = 0
+		else:
+			rebate_novbc_flat = rebate_novbc/100
+
+		if rebate_vbc is None:
+			rebate_vbc_flat = 0
+		else:
+			rebate_vbc_flat = rebate_vbc/100
+		
+		Recom_Contract.to_csv('Recom_Contract.csv')
+		UD_Measure.to_csv('UD_Measure.csv')
+		UD_Contract.to_csv('UD_Contract.csv')
+
+		t1,t2,t3=Contract_Calculation(Recom_Contract, UD_Measure,UD_Contract,cohort_selected,rebate_novbc_flat, rebate_vbc_flat, Rebate_noVBC_table,Rebate_VBC_table, MarketShare_table, utilizer/100, script, Performance_assumption, Recom_Measure_all)
 		t1.reset_index(inplace = True)
 		t2.reset_index(inplace = True)
 		t3.reset_index(inplace  =True)
+
 
 
 		return 'tab-1',sim_result_box(t1),table_sim_result(t1),sim_result_box(t2),table_sim_result(t2),sim_result_box(t3),table_sim_result(t3)
@@ -2088,5 +2475,5 @@ def simulation(submit_button, re_pos_perf, re_neg_perf, re_pos_adj, re_neg_adj, 
 
 
 if __name__ == "__main__":
-	app.run_server(host="127.0.0.1",debug=True, port = 8050)
+	app.run_server(host="127.0.0.1",debug=True, port = 8052)
 

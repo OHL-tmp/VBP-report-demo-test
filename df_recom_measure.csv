@@ -1,0 +1,9 @@
+,Cohort,Measure,Target,Weight,Baseline,Likelihood
+0,All CHF Patients,CHF Related Average Cost per Patient,25001.0,0.0,23906.0,High
+1,CHF+AF,CHF Related Average Cost per Patient,30760.0,0.3,31474.0,High
+2,All CHF Patients,CHF Related Hospitalization Rate,822.0,0.43,910.0,High
+3,CHF+AF,CHF Related Hospitalization Rate,990.0,0.3,1180.0,High
+4,All CHF Patients,NT-proBNP Change %,-0.25,0.0,0.0,High
+5,CHF+AF,NT-proBNP Change %,-0.3,0.0,0.0,High
+6,All CHF Patients,LVEF LS Mean Change %,0.03,0.57,0.0,High
+7,CHF+AF,LVEF LS Mean Change %,0.05,0.4,0.0,High
