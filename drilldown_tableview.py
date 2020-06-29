@@ -30,14 +30,16 @@ server = app.server'''
 dimension = {'Age Band' : ['<65', '65-74', '75-85', '>=85'], 'Gender' : ['F', 'M'], 
 'Patient Health Risk Level' : ['Low', 'Mid', 'High'], 'NYHA Class' : ['I', 'II', 'III', 'IV'], 
        'Medication Adherence' : ['Compliant', 'Non-compliant'], 'Managing Physician (Group)': ['Group A', 'Group B', 'Group C', 'Group D'], 
-       'Weight Band' : [], 'Comorbidity Type' : [], 'Comorbidity Score' : [], 'Ejection Fraction' : [], 'Years Since HF Diagnosis' : [], 'Prior Use of ACE/ARB' : []}
+       'Weight Band' : [], 'Comorbidity Type' : [], 'Comorbidity Score' : [], 'Ejection Fraction' : [], 'Years Since HF Diagnosis' : [], 'Prior Use of ACE/ARB' : [], 
+       'KCCQ Category' : ['Physical Limitation', 'Symptom Frequency', 'Quality of Life', 'Social Limitation', 'ALL']}
 measure = ['YTD Utilization per Thousand', 'Annualized Utilization per Thousand', 'Benchmark Utilization per Thousand', 'Diff % from Benchmark Utilization per Thousand',
 		'YTD Total Cost', 'Annualized Total Cost', 'Benchmark Total Cost', 'Diff % from Benchmark Total Cost',
 		'YTD Unit Cost', 'Annualized Unit Cost', 'Benchmark Unit Cost', 'Diff % from Benchmark Unit Cost',
 		'YTD Hospitalization Rate per Thousand', 'Annualized Hospitalization Rate per Thousand', 'Benchmark Hospitalization Rate per Thousand', 'Diff % from Benchmark Hospitalization Rate per Thousand']
 measure_ori = ['YTD Utilization', 'Annualized Utilization', 'Benchmark Utilization', 
 		'YTD Total Cost', 'Annualized Total Cost', 'Benchmark Total Cost',
-		'YTD IP Utilization', 'Annualized IP Utilization', 'Benchmark IP Utilization']
+		'YTD IP Utilization', 'Annualized IP Utilization', 'Benchmark IP Utilization',
+		'Baseline Average KCCQ Score', 'YTD Average KCCQ Score']
 filter_list = {
        'Inpatient' : ['Acute myocardial infarction', 'CABG', 'Cardiac Arrhythmia', 'Cardiac arrest and ventricular fibrillation', 'Heart Failure', 'Hypertension', 'ICD', 'Others', 'PCI', 'Pacemaker Implant', 'Pleural effusion', 'Renal Failure'],
  		'Outpatient ER' : ['AMI', 'Aftercare following surgery', 'COPD', 'Cardiac dysrhythmias', 'Diabetes', 'Heart Failure', 'Hypertension', 'Others', 'Respiratory system and chest symptoms'], 
