@@ -25,6 +25,8 @@ from contract_manager_drilldown_kccq import *
 
 from modal_drilldown_tableview import *
 from modal_drilldown_tableview_crhr import *
+from modal_drilldown_tableview_kccq import *
+
 
 from app import app
 #app = dash.Dash(__name__)
@@ -1171,6 +1173,243 @@ def update_filter1value_patient(val,dim):
     df= drilldata_process_kccq(df_drilldown,'Category',dim,val)       
     
     return df.to_dict('records')
+
+
+
+
+## kccq modal
+
+
+
+@app.callback(
+    [Output('dimension_filter_1_kccq', 'options'),
+    Output('dimension_filter_1_kccq', 'value'),
+    Output('dimension_filter_1_kccq', 'multi')],
+    [Input('dimension_filter_selection_1_kccq', 'value')]
+    )
+def filter_dimension_1(v):
+    if v:
+        if v == 'Service Category':
+            return [{"label": 'All', "value": 'All'}]+[{"label": k, "value": k} for k in list(filter_list.keys())], 'All', False
+        else:
+            return [{"label": k, "value": k} for k in dimension[v]], dimension[v], True
+    return [], [], True
+
+
+@app.callback(
+    [Output('dimension_filter_2_kccq', 'options'),
+    Output('dimension_filter_2_kccq', 'value'),
+    Output('dimension_filter_2_kccq', 'multi')],
+    [Input('dimension_filter_selection_1_kccq', 'value'),
+    Input('dimension_filter_selection_2_kccq', 'value'),
+    Input('dimension_filter_1_kccq', 'value')]
+    )
+def filter_dimension_1(v1, v2, v3):
+    if v2:
+        if v2 == 'Service Category':
+            return [{"label": 'All', "value": 'All'}]+[{"label": k, "value": k} for k in list(filter_list.keys())], 'All', False
+        elif v1 == 'Service Category' and v2 == 'Sub Category':
+            sub_filter = filter_list[v3]
+            if v3 == 'All':
+                return [], 'All', False
+            return [{"label": k, "value": k} for k in sub_filter], sub_filter, True
+        else:
+            return [{"label": k, "value": k} for k in dimension[v2]], dimension[v2], True
+    return [], [], True
+
+    
+@app.callback(
+    Output('dropdown-dimension-2-kccq','clearable'),
+    [Input('dropdown-dimension-3-kccq','value')]
+    )
+def dropdown_clear(v):
+    if v:
+        return False
+    return True
+
+@app.callback(
+    [Output('dropdown-dimension-2-kccq','options'),
+    Output('dropdown-dimension-2-kccq','disabled')],
+    [Input('dropdown-dimension-1-kccq','value')]
+    )
+def dropdown_menu_2(v):
+    if v is None:
+        return [], True
+    elif v == 'Service Category':
+        dropdown_option = [{"label": k, "value": k, 'disabled' : False} for k in list(dimension.keys()) if len(dimension[k]) != 0] + [{"label": 'Service Category', "value": 'Service Category', 'disabled' : True}, {"label": 'Sub Category', "value": 'Sub Category'}] + [{"label": k, "value": k, 'disabled' : True} for k in list(dimension.keys()) if len(dimension[k]) == 0]
+        return dropdown_option, False
+    else:
+        dropdown_option = [{"label": k, "value": k, 'disabled' : False} for k in list(dimension.keys()) if len(dimension[k]) != 0 and k != v] + [{"label": 'Service Category', "value": 'Service Category'}, {"label": 'Sub Category', "value": 'Sub Category', 'disabled' : True}] + [{"label": k, "value": k, 'disabled' : True} for k in list(dimension.keys()) if len(dimension[k]) == 0 or k ==v]
+        return dropdown_option, False
+
+@app.callback(
+    [Output('dropdown-dimension-3-kccq','options'),
+    Output('dropdown-dimension-3-kccq','disabled')],
+    [Input('dropdown-dimension-1-kccq','value'),
+    Input('dropdown-dimension-2-kccq','value')]
+    )
+def dropdown_menu_3(v1, v2):
+    v = [v1, v2]
+    if v2 is None:
+        return [], True
+    elif 'Service Category' in v and 'Sub Category' not in v:
+        dropdown_option = [{"label": k, "value": k, 'disabled' : False} for k in list(dimension.keys()) if len(dimension[k]) != 0] + [{"label": 'Service Category', "value": 'Service Category', 'disabled' : True}, {"label": 'Sub Category', "value": 'Sub Category'}] + [{"label": k, "value": k, 'disabled' : True} for k in list(dimension.keys()) if len(dimension[k]) == 0]
+        return dropdown_option, False
+    elif 'Service Category' in v and 'Sub Category' in v:
+        dropdown_option =  [{"label": k, "value": k, 'disabled' : False} for k in list(dimension.keys()) if len(dimension[k]) != 0] + [{"label": 'Service Category', "value": 'Service Category', 'disabled' : True}, {"label": 'Sub Category', "value": 'Sub Category', 'disabled' : True}] + [{"label": k, "value": k, 'disabled' : True} for k in list(dimension.keys()) if len(dimension[k]) == 0]
+        return dropdown_option, False
+    else:
+        dropdown_option = [{"label": k, "value": k, 'disabled' : False} for k in list(dimension.keys()) if len(dimension[k]) != 0 and k not in v] + [{"label": 'Service Category', "value": 'Service Category'}, {"label": 'Sub Category', "value": 'Sub Category', 'disabled' : True}] + [{"label": k, "value": k, 'disabled' : True} for k in list(dimension.keys()) if len(dimension[k]) == 0 or k in v]
+        return dropdown_option, False
+
+@app.callback(
+    [Output('dimension_filter_selection_2_kccq', 'options'),
+    Output('dimension_filter_selection_2_kccq', 'disabled')],
+    [Input('dimension_filter_selection_1_kccq', 'value'),
+    Input('dimension_filter_1_kccq', 'value')]
+    )
+def filter_menu_2(v, f):
+    if v is None:
+        return [], True
+    elif v == 'Service Category':
+        if f =='All':
+            dropdown_option = [{"label": k, "value": k, 'disabled' : False} for k in list(dimension.keys()) if len(dimension[k]) != 0] + [{"label": 'Service Category', "value": 'Service Category', 'disabled' : True}, {"label": 'Sub Category', "value": 'Sub Category', 'disabled' : True}] + [{"label": k, "value": k, 'disabled' : True} for k in list(dimension.keys()) if len(dimension[k]) == 0]
+            return dropdown_option, False
+        else:
+            dropdown_option = [{"label": k, "value": k, 'disabled' : False} for k in list(dimension.keys()) if len(dimension[k]) != 0] + [{"label": 'Service Category', "value": 'Service Category', 'disabled' : True}, {"label": 'Sub Category', "value": 'Sub Category'}] + [{"label": k, "value": k, 'disabled' : True} for k in list(dimension.keys()) if len(dimension[k]) == 0]
+            return dropdown_option, False
+    else:
+        dropdown_option = [{"label": k, "value": k, 'disabled' : False} for k in list(dimension.keys()) if len(dimension[k]) != 0 and k != v] + [{"label": 'Service Category', "value": 'Service Category'}, {"label": 'Sub Category', "value": 'Sub Category', 'disabled' : True}] + [{"label": k, "value": k, 'disabled' : True} for k in list(dimension.keys()) if len(dimension[k]) == 0 or k ==v]
+        return dropdown_option, False
+
+@app.callback(
+    Output('dropdown-measure-1-kccq', 'options'),
+    [Input('dropdown-dimension-1-kccq','value'),
+    Input('dropdown-dimension-2-kccq','value'),
+    Input('dropdown-dimension-3-kccq','value')]
+    )
+def update_measures(d1, d2, d3):
+    d = [d1, d2, d3]
+    measure_kccq = ['YTD Utilization per Thousand', 'Annualized Utilization per Thousand', 'Benchmark Utilization per Thousand', 'Diff % from Benchmark Utilization per Thousand',
+        'YTD Total Cost', 'Annualized Total Cost', 'Benchmark Total Cost', 'Diff % from Benchmark Total Cost',
+        'YTD Unit Cost', 'Annualized Unit Cost', 'Benchmark Unit Cost', 'Diff % from Benchmark Unit Cost',
+        'YTD Hospitalization Rate per Thousand', 'Annualized Hospitalization Rate per Thousand', 'Benchmark Hospitalization Rate per Thousand', 'Diff % from Benchmark Hospitalization Rate per Thousand',
+        'Baseline Average KCCQ Score', 'YTD Average KCCQ Score', 'KCCQ Improvement from Baseline']
+    if 'KCCQ Category' in d:
+        return [{"label": k, "value": k} for k in measure_kccq]
+    else:
+        return [{"label": k, "value": k} for k in measure]
+
+@app.callback(
+    [Output('datatable-tableview-kccq', "columns"),
+    Output('datatable-tableview-kccq', "data")],
+    [Input('dropdown-dimension-1-kccq','value'),
+    Input('dropdown-dimension-2-kccq','value'),
+    Input('dropdown-dimension-3-kccq','value'),
+    Input('dimension_filter_selection_1_kccq','value'),
+    Input('dimension_filter_selection_2_kccq','value'),
+    Input('dimension_filter_1_kccq','value'),
+    Input('dimension_filter_2_kccq','value'),
+    Input('dropdown-measure-1-kccq', 'value')]
+    )
+def datatable_data_selection(v1, v2, v3, d1, d2, f1, f2, m):
+    if d1:
+        if d1 == 'Service Category':
+            if d2 is None:
+                if f1 == 'All':
+                    df_drilldown_filtered = df_drilldown_reshape
+                    cate_cnt = cate_mix_cnt
+                else:
+                    df_drilldown_filtered = df_drilldown_reshape[df_drilldown_reshape['Service Category'].isin([f1])]
+                    cate_cnt = len(filter_list[f1])
+            elif f1 != 'All' and d2 == 'Sub Category':
+                df_drilldown_filtered = df_drilldown_reshape[(df_drilldown_reshape['Service Category'].isin([f1])) & (df_drilldown_reshape['Sub Category'].isin(f2))]
+                cate_cnt = len(f2)
+            else:
+                df_drilldown_filtered = df_drilldown_reshape[df_drilldown_reshape[d2].isin(f2)]
+                if f1 == 'All':
+                    cate_cnt = cate_mix_cnt
+                else:
+                    cate_cnt = len(filter_list[f1])
+        elif d2 == 'Service Category':
+            if f2 == 'All':
+                df_drilldown_filtered = df_drilldown_reshape[df_drilldown_reshape[d1].isin(f1)]
+                cate_cnt = cate_mix_cnt
+            else:
+                df_drilldown_filtered = df_drilldown_reshape[(df_drilldown_reshape['Service Category'].isin([f2])) & (df_drilldown_reshape[d1].isin(f1))]
+                cate_cnt = len(filter_list[f2])
+        else:
+            if d2:
+                df_drilldown_filtered = df_drilldown_reshape[(df_drilldown_reshape[d1].isin(f1)) & (df_drilldown_reshape[d2].isin(f2))]
+                cate_cnt = cate_mix_cnt
+            else: 
+                df_drilldown_filtered = df_drilldown_reshape[df_drilldown_reshape[d1].isin(f1)]
+                cate_cnt = cate_mix_cnt
+    else:
+        df_drilldown_filtered = df_drilldown_reshape
+        cate_cnt = cate_mix_cnt
+
+    df_drilldown_filtered['YTD IP Utilization'] = df_drilldown_filtered.apply(lambda x: x['YTD Utilization'] if x['Service Category'] == 'Inpatient' else 0, axis = 1)
+    df_drilldown_filtered['Annualized IP Utilization'] = df_drilldown_filtered.apply(lambda x: x['Annualized Utilization'] if x['Service Category'] == 'Inpatient' else 0, axis = 1)
+    df_drilldown_filtered['Benchmark IP Utilization'] = df_drilldown_filtered.apply(lambda x: x['Benchmark Utilization'] if x['Service Category'] == 'Inpatient' else 0, axis = 1)
+
+    table_column = []
+    selected_dimension = []
+    if v1 is not None:
+        selected_dimension.append(v1)
+    if v2 is not None:
+        selected_dimension.append(v2)
+    if v3 is not None:
+        selected_dimension.append(v3)
+
+    table_column.extend(list(set(selected_dimension + ['Service Category', 'Sub Category'])))
+    table_column.append("Pt Count")
+    percent_list = ['Diff % from Benchmark Utilization per Thousand', 'Diff % from Benchmark Total Cost', 'Diff % from Benchmark Unit Cost', 'Patient %', 'Diff % from Benchmark Hospitalization Rate per Thousand']
+    dollar_list = ['YTD Total Cost', 'Annualized Total Cost', 'Benchmark Total Cost', 'YTD Unit Cost', 'Annualized Unit Cost', 'Benchmark Unit Cost']
+    if len(selected_dimension) > 0:
+
+        table_column.extend(measure_ori) 
+        df_agg_pre = df_drilldown_filtered[table_column].groupby(by = list(set(selected_dimension + ['Service Category', 'Sub Category']))).sum().reset_index()
+        df_agg = df_agg_pre[table_column].groupby(by = selected_dimension).agg({'Pt Count':'mean', 'YTD Utilization':'sum', 'Annualized Utilization':'sum', 'Benchmark Utilization':'sum', 
+            'YTD Total Cost':'sum', 'Annualized Total Cost':'sum', 'Benchmark Total Cost':'sum', 'YTD IP Utilization':'sum', 'Annualized IP Utilization':'sum', 'Benchmark IP Utilization':'sum',
+            'Baseline Average KCCQ Score':'mean', 'YTD Average KCCQ Score':'mean'}).reset_index()
+
+        df_agg['Patient %'] = df_agg['Pt Count']/995000
+        df_agg['YTD Utilization per Thousand'] = 1000 * df_agg['YTD Utilization']/df_agg['Pt Count']
+        df_agg['Annualized Utilization per Thousand'] = 1000 * df_agg['Annualized Utilization']/df_agg['Pt Count']
+        df_agg['Benchmark Utilization per Thousand'] = 1000 * df_agg['Benchmark Utilization']/df_agg['Pt Count']
+        df_agg['Diff % from Benchmark Utilization per Thousand'] = (df_agg['Annualized Utilization'] - df_agg['Benchmark Utilization'])/df_agg['Benchmark Utilization']
+        df_agg['YTD Total Cost'] = df_agg['YTD Total Cost']/df_agg['Pt Count']
+        df_agg['Annualized Total Cost'] = df_agg['Annualized Total Cost']/df_agg['Pt Count']
+        df_agg['Benchmark Total Cost'] = df_agg['Benchmark Total Cost']/df_agg['Pt Count']
+        df_agg['Diff % from Benchmark Total Cost'] = (df_agg['Annualized Total Cost'] - df_agg['Benchmark Total Cost'])/df_agg['Benchmark Total Cost']
+        df_agg['YTD Unit Cost'] = df_agg['YTD Total Cost']/df_agg['YTD Utilization']
+        df_agg['Annualized Unit Cost'] = 1000 * df_agg['Annualized Total Cost']/df_agg['Annualized Utilization']
+        df_agg['Benchmark Unit Cost'] = 1000 * df_agg['Benchmark Total Cost']/df_agg['Benchmark Utilization']
+        df_agg['Diff % from Benchmark Unit Cost'] = (df_agg['Annualized Unit Cost'] - df_agg['Benchmark Unit Cost'])/df_agg['Benchmark Unit Cost']
+        df_agg['YTD Hospitalization Rate per Thousand'] = 1000 * df_agg['YTD IP Utilization']/df_agg['Pt Count']
+        df_agg['Annualized Hospitalization Rate per Thousand'] = 1000 * df_agg['Annualized IP Utilization']/df_agg['Pt Count']
+        df_agg['Benchmark Hospitalization Rate per Thousand'] = 1000 * df_agg['Benchmark IP Utilization']/df_agg['Pt Count']
+        df_agg['Diff % from Benchmark Hospitalization Rate per Thousand'] = (df_agg['Annualized IP Utilization'] - df_agg['Benchmark IP Utilization'])/df_agg['Benchmark IP Utilization']
+
+        df_agg['Baseline Average KCCQ Score'] = df_agg['Baseline Average KCCQ Score']/df_agg['Pt Count']
+        df_agg['YTD Average KCCQ Score'] = df_agg['YTD Average KCCQ Score']/df_agg['Pt Count']
+        df_agg['KCCQ Improvement from Baseline'] = df_agg['YTD Average KCCQ Score'] - df_agg['Baseline Average KCCQ Score']
+
+        show_column = selected_dimension + ['Patient %'] + m 
+        if 'Diff % from Benchmark Total Cost' in m:
+            df_agg =  df_agg[show_column].sort_values(by =  'Diff % from Benchmark Total Cost', ascending =False)
+        else:
+            df_agg = df_agg[show_column]
+    else:
+        show_column = ['Patient %'] + m 
+        df_agg = df_drilldown_filtered[show_column]
+    
+    
+    return [{"name": i, "id": i, "selectable":True,"type":"numeric", "format": FormatTemplate.percentage(1)} if i in percent_list else {"name": i, "id": i, "selectable":True, "type":"numeric","format": FormatTemplate.money(0)} if i in dollar_list else {"name": i, "id": i, "selectable":True, "type":"numeric","format": Format(precision=1, scheme = Scheme.fixed)} for i in show_column], df_agg.to_dict('records')
+
+
+
 
 
 if __name__ == "__main__":
