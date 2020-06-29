@@ -279,8 +279,8 @@ def checklist_domain_measures_lv1(d):
                                    value=default,
                                    id=u"optimizer-checklist-domain-measures-lv2-{}-{}".format(d+1,i+1),
                                    inline=True,
-                                   persistence = True,
-                                   persistence_type = 'session',
+#                                   persistence = True,
+#                                   persistence_type = 'session',
                                ),
                                html.Hr(className="my-2")
                            ]),

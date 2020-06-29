@@ -129,7 +129,7 @@ def tableview():
 										multi = True,
 										style = {"font-family":"NotoSans-Condensed","font-size":"0.8rem"}
 										),
-									html.H5("+ Add more Filter", style={"font-size":"1rem","color":"#1357DD","padding-left":"0.5rem", "padding-top":"0.5rem"}),
+#									html.H5("+ Add more Filter", style={"font-size":"1rem","color":"#1357DD","padding-left":"0.5rem", "padding-top":"0.5rem"}),
 								]
 							)
 						],

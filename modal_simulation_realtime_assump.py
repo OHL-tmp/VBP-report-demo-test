@@ -35,7 +35,9 @@ def realtime_assump_session():
 						options = [{'label':'Tier 1', 'value':1},{'label':'Tier 2', 'value':2},{'label':'Tier 3', 'value':3},{'label':'Tier 4', 'value':4},{'label':'Tier 5', 'value':5}],
 						persistence = True,
 						persistence_type = 'session',
-						id = 'realtime-assump-dropdown-tier'
+						id = 'realtime-assump-dropdown-tier',
+						value = 3,
+
 					)
 				),
 			], style={"padding-top":"0.5rem"}),
@@ -48,7 +50,7 @@ def realtime_assump_session():
 			dbc.Col([
 				dbc.InputGroup([
 					dbc.Input(id = 'realtime-assump-input-rebatenovbc',type = 'number',
-							persistence = True,
+							persistence = True, value = 40,
 							persistence_type = 'session'),
 					dbc.InputGroupAddon('%', addon_type = 'append'),
 					], size="sm")
@@ -60,7 +62,7 @@ def realtime_assump_session():
 			dbc.Col([
 				dbc.InputGroup([
 					dbc.Input(id = 'realtime-assump-input-rebatevbc',type = 'number',
-							persistence = True,
+							persistence = True, value = 40,
 							persistence_type = 'session'),
 					dbc.InputGroupAddon('%', addon_type = 'append'),
 					], size="sm")
@@ -87,7 +89,7 @@ def realtime_assump_session():
 			dbc.Col('Expected Entresto Utilizer as a % of Total CHF Patients',width=6),
 			dbc.Col([
 				dbc.InputGroup([
-					dbc.Input(id = 'realtime-assump-input-utilizer',type = 'number',
+					dbc.Input(id = 'realtime-assump-input-utilizer',type = 'number', value = 7,
 							persistence = True,
 							persistence_type = 'session'),
 					dbc.InputGroupAddon('%', addon_type = 'append')
@@ -114,7 +116,7 @@ def realtime_assump_session():
 			dbc.Col('Expected Average Script PPPM for Entresto Utilizer',width=6),
 			dbc.Col([
 				dbc.InputGroup([
-					dbc.Input(id = 'realtime-assump-input-script',type = 'number',
+					dbc.Input(id = 'realtime-assump-input-script',type = 'number', value = 0.8,
 							persistence = True,
 							persistence_type = 'session')
 					], size="sm")
@@ -128,7 +130,7 @@ def realtime_assump_session():
 			dbc.Col('Projected Annual CHF Related Medical Cost Trend', width=6),
 			dbc.Col([
 				dbc.InputGroup([
-					dbc.Input(id = 'realtime-assump-input-trend',type = 'number',
+					dbc.Input(id = 'realtime-assump-input-trend',type = 'number',  value = 0,
 							persistence = True,
 							persistence_type = 'session'),
 					dbc.InputGroupAddon('%', addon_type = 'append')
@@ -139,7 +141,7 @@ def realtime_assump_session():
 			dbc.Col('Projected Annual Change in CHF Related Inpatient Rates (per 1,000 CHF patients)',width=6),
 			dbc.Col([
 				dbc.InputGroup([
-					dbc.Input(id = 'realtime-assump-input-iprate',type = 'number',
+					dbc.Input(id = 'realtime-assump-input-iprate',type = 'number',  value = 0,
 							persistence = True,
 							persistence_type = 'session'),
 					dbc.InputGroupAddon('%', addon_type = 'append')
@@ -154,7 +156,7 @@ def realtime_assump_session():
 			dbc.Col('Projected Reduction in CHF Related Hospitalization',width=6),
 			dbc.Col([
 				dbc.InputGroup([
-					dbc.Input(id = 'realtime-assump-input-hospitalization',type = 'number',
+					dbc.Input(id = 'realtime-assump-input-hospitalization',type = 'number',  value = 10,
 							persistence = True,
 							persistence_type = 'session'),
 					dbc.InputGroupAddon('%', addon_type = 'append')
@@ -165,7 +167,7 @@ def realtime_assump_session():
 			dbc.Col('Projected LVEF LS Mean Change %',width=6),
 			dbc.Col([
 				dbc.InputGroup([
-					dbc.Input(id = 'realtime-assump-input-lvef',type = 'number',
+					dbc.Input(id = 'realtime-assump-input-lvef',type = 'number',  value = 3,
 							persistence = True,
 							persistence_type = 'session'),
 					dbc.InputGroupAddon('%', addon_type = 'append')
@@ -177,7 +179,7 @@ def realtime_assump_session():
 			dbc.Col([
 				dbc.InputGroup([
 					dbc.InputGroupAddon('-', addon_type = 'preprend'),
-					dbc.Input(id = 'realtime-assump-input-probnp',type = 'number',
+					dbc.Input(id = 'realtime-assump-input-probnp',type = 'number', value = 25,
 							persistence = True,
 							persistence_type = 'session'),
 					dbc.InputGroupAddon('%', addon_type = 'append')
@@ -453,7 +455,7 @@ def card_collapse_rampup():
 					dbc.Col("Month 1", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
 					dbc.Col(
 						dbc.InputGroup([
-						dbc.Input(id = 'realtime-assump-month-1',value = 5, type = 'number',bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}),
+						dbc.Input(id = 'realtime-assump-month-1',value = 2, type = 'number',bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}),
 						dbc.InputGroupAddon('%', addon_type = 'append')])
 						)
 					], style={"padding-top":"1rem"}),
@@ -461,77 +463,77 @@ def card_collapse_rampup():
 					dbc.Col("Month 2", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
 					dbc.Col(
 						dbc.InputGroup([
-							dbc.Input(id = 'realtime-assump-month-2',value = 12, type = 'number',bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}),
+							dbc.Input(id = 'realtime-assump-month-2',value = 3, type = 'number',bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}),
 							dbc.InputGroupAddon('%', addon_type = 'append')]))
 					], style={"padding-top":"1rem"}),
 				dbc.Row([
 					dbc.Col("Month 3", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
 					dbc.Col(
 						dbc.InputGroup([
-							dbc.Input(id = 'realtime-assump-month-3',value = 23, type = 'number',bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}),
+							dbc.Input(id = 'realtime-assump-month-3',value = 4, type = 'number',bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}),
 							dbc.InputGroupAddon('%', addon_type = 'append')]))
 					], style={"padding-top":"1rem"}),
 				dbc.Row([
 					dbc.Col("Month 4", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
 					dbc.Col(
 						dbc.InputGroup([
-							dbc.Input(id = 'realtime-assump-month-4',value = 41,type = 'number', bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}),
+							dbc.Input(id = 'realtime-assump-month-4',value = 5,type = 'number', bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}),
 							dbc.InputGroupAddon('%', addon_type = 'append')]))
 					], style={"padding-top":"1rem"}),
 				dbc.Row([
 					dbc.Col("Month 5", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
 					dbc.Col(
 						dbc.InputGroup([
-							dbc.Input(id = 'realtime-assump-month-5',value = 68,type = 'number', bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}),
+							dbc.Input(id = 'realtime-assump-month-5',value = 6,type = 'number', bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}),
 							dbc.InputGroupAddon('%', addon_type = 'append')]))
 					], style={"padding-top":"1rem"}),
 				dbc.Row([
 					dbc.Col("Month 6", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
 					dbc.Col(
 						dbc.InputGroup([
-							dbc.Input(id = 'realtime-assump-month-6',value = 100,type = 'number', bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}),
+							dbc.Input(id = 'realtime-assump-month-6',value = 7,type = 'number', bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}),
 							dbc.InputGroupAddon('%', addon_type = 'append')]))
 					], style={"padding-top":"1rem"}),
 				dbc.Row([
 					dbc.Col("Month 7", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
 					dbc.Col(
 						dbc.InputGroup([
-							dbc.Input(id = 'realtime-assump-month-7',value = 100,type = 'number', bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}),
+							dbc.Input(id = 'realtime-assump-month-7',value = 7,type = 'number', bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}),
 							dbc.InputGroupAddon('%', addon_type = 'append')]))
 					], style={"padding-top":"1rem"}),
 				dbc.Row([
 					dbc.Col("Month 8", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
 					dbc.Col(
 						dbc.InputGroup([
-							dbc.Input(id = 'realtime-assump-month-8',value = 100, type = 'number',bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}),
+							dbc.Input(id = 'realtime-assump-month-8',value = 7, type = 'number',bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}),
 							dbc.InputGroupAddon('%', addon_type = 'append')]))
 					], style={"padding-top":"1rem"}),
 				dbc.Row([
 					dbc.Col("Month 9", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
 					dbc.Col(
 						dbc.InputGroup([
-							dbc.Input(id = 'realtime-assump-month-9',value = 100, type = 'number',bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}),
+							dbc.Input(id = 'realtime-assump-month-9',value = 7, type = 'number',bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}),
 							dbc.InputGroupAddon('%', addon_type = 'append')]))
 					], style={"padding-top":"1rem"}),
 				dbc.Row([
 					dbc.Col("Month 10", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
 					dbc.Col(
 						dbc.InputGroup([
-							dbc.Input(id = 'realtime-assump-month-10',value = 100, type = 'number',bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}),
+							dbc.Input(id = 'realtime-assump-month-10',value = 7, type = 'number',bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}),
 							dbc.InputGroupAddon('%', addon_type = 'append')]))
 					], style={"padding-top":"1rem"}),
 				dbc.Row([
 					dbc.Col("Month 11", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
 					dbc.Col(
 						dbc.InputGroup([
-							dbc.Input(id = 'realtime-assump-month-11',value = 100, type = 'number',bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}),
+							dbc.Input(id = 'realtime-assump-month-11',value = 7, type = 'number',bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}),
 							dbc.InputGroupAddon('%', addon_type = 'append')]))
 					], style={"padding-top":"1rem"}),
 				dbc.Row([
 					dbc.Col("Month 12", style={"font-family":"NotoSans-Regular","font-size":"0.8rem"}),
 					dbc.Col(
 						dbc.InputGroup([
-							dbc.Input(id = 'realtime-assump-month-12',value = 100, type = 'number',bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}),
+							dbc.Input(id = 'realtime-assump-month-12',value = 7, type = 'number',bs_size="sm", persistence = True, persistence_type = 'session', style={"border-radius":"5rem","padding-left":"1rem","padding-right":"1rem","color":"#000","font-family":"NotoSans-Regular"}),
 							dbc.InputGroupAddon('%', addon_type = 'append')]))
 					], style={"padding-top":"1rem"}),
 			], style={"font-family":"NotoSans-Regular","font-size":"1rem", "padding":"1rem"}
