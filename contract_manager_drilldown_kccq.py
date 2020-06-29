@@ -163,19 +163,19 @@ def card_key_driver_drilldown_kccq(app):
                                 dbc.Col(
                                     [
                                         html.Div([gaugegraph(df_driver_kccq,0)], style={"padding-top":"1.5rem"}),
-                                        html.Div(html.H4("{:.1f} %".format(abs(df_driver_kccq['%'][0]*100)),style={"color":"#ff4d17"}), style={"margin-top":"-1.5rem","text-align":"center","font-size":"1rem","color":"#ffeb78"}),
+                                        html.Div(html.H4("{:.0f} ".format(abs(df_driver_kccq['%'][0])),style={"color":"#ff4d17"}), style={"margin-top":"-1.5rem","text-align":"center","font-size":"1rem","color":"#ffeb78"}),
                                     ],
                                     width=6),
                                 dbc.Col(
                                     [
                                         html.Div([gaugegraph(df_driver_kccq,1)], style={"padding-top":"1.5rem"}),
-                                        html.Div(html.H4("{:.1f} %".format(abs(df_driver_kccq['%'][1]*100)),style={"color":"#ff4d17"}), style={"margin-top":"-1.5rem","text-align":"center","font-size":"1rem","color":"#aeff78"}),
+                                        html.Div(html.H4("{:.0f}".format(abs(df_driver_kccq['%'][1])),style={"color":'rgba(246,177,17,1)'}), style={"margin-top":"-1.5rem","text-align":"center","font-size":"1rem","color":"#aeff78"}),
                                     ],
                                     width=6),
                                 dbc.Col(
                                     [
                                         html.Div([gaugegraph(df_driver_kccq,2)], style={"padding-top":"1.5rem"}),
-                                        html.Div(html.H4("{:.1f} %".format(abs(df_driver_kccq['%'][2]*100)),style={"color":"#ff4d17"}), style={"margin-top":"-1.5rem","text-align":"center","font-size":"1rem","color":"#39db44"}),
+                                        html.Div(html.H4("{:.0f}".format(abs(df_driver_kccq['%'][2])),style={"color":'rgba(246,177,17,1)'}), style={"margin-top":"-1.5rem","text-align":"center","font-size":"1rem","color":"#39db44"}),
                                     ],
                                     width=6),
 

@@ -1106,6 +1106,22 @@ def piechart_kccq(df):
     )   
     return fig
 
+def gaugegraph_kccq(df,row):
+    fig=daq.Gauge(
+            #showCurrentValue=True,
+            scale={'start': 0, 'interval': 5, 'labelInterval': 5},
+            #units="%",
+            color={"gradient":True,"ranges":{"#ff4d17":[0,10],"#ffeb78":[10,20],"#aeff78":[20,25],"#39db44":[25,28],"#18cc75":[28,30]}}, #
+            value=df['%'][row],
+            label=df['Name'][row],
+            labelPosition='top',    
+            max=30,
+            min=0,
+            size=110,
+            style={"font-family":"NotoSans-CondensedLight","font-size":"0.4rem"}
+        )  
+    return fig
+
 def drill_bubble(df):
     df['Weight']=df['Pt_Count']/df.values[0,7]
     n=len(df)
