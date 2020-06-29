@@ -54,8 +54,43 @@ disable_list=['Comorbidity Type', 'Weight Band','Comorbidity Score','Ejection Fr
 button_to_rm=['zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'hoverClosestCartesian','hoverCompareCartesian','hoverClosestGl2d', 'hoverClosestPie', 'toggleHover','toggleSpikelines']
 
 
+def reshape_drilldowndata(df):
+    df1 = pd.melt(df, 
+        id_vars = ['Age Band', 'Gender', 'Weight Band', 'Comorbidity Type',
+       'Comorbidity Score', 'Patient Health Risk Level', 'NYHA Class',
+       'Ejection Fraction', 'Years Since HF Diagnosis', 'Prior Use of ACE/ARB',
+       'Medication Adherence', 'Managing Physician (Group)',
+       'Service Category', 'Sub Category', 'Pt Count', 'YTD Utilization',
+       'Annualized Utilization', 'Benchmark Utilization', 'YTD Total Cost',
+       'Annualized Total Cost', 'Benchmark Total Cost',], 
+        value_vars = ['KCCQ BL PL Score',
+       'KCCQ BL SF Score', 'KCCQ BL QL Score', 'KCCQ BL SL Score',
+       'KCCQ BL ALL Score'], var_name = 'KCCQ Category', value_name = 'Baseline Average KCCQ Score')
+    df1['KCCQ Category'] = df1['KCCQ Category'].apply(lambda x: 'Physical Limitation' if x == 'KCCQ BL PL Score' else ('Symptom Frequency' if x == 'KCCQ BL SF Score' else ('Quality of Life' if x == 'KCCQ BL QL Score' else ('Social Limitation' if x == 'KCCQ BL SL Score' else 'ALL'))))
 
+    df2 = pd.melt(df, 
+        id_vars = ['Age Band', 'Gender', 'Weight Band', 'Comorbidity Type',
+       'Comorbidity Score', 'Patient Health Risk Level', 'NYHA Class',
+       'Ejection Fraction', 'Years Since HF Diagnosis', 'Prior Use of ACE/ARB',
+       'Medication Adherence', 'Managing Physician (Group)',
+       'Service Category', 'Sub Category', 'Pt Count', 'YTD Utilization',
+       'Annualized Utilization', 'Benchmark Utilization', 'YTD Total Cost',
+       'Annualized Total Cost', 'Benchmark Total Cost',], 
+        value_vars = ['KCCQ YTD PL Score',
+       'KCCQ YTD SF Score', 'KCCQ YTD QL Score', 'KCCQ YTD SL Score',
+       'KCCQ YTD ALL Score'], var_name = 'KCCQ Category', value_name = 'YTD Average KCCQ Score')
+    df2['KCCQ Category'] = df2['KCCQ Category'].apply(lambda x: 'Physical Limitation' if x == 'KCCQ YTD PL Score' else ('Symptom Frequency' if x == 'KCCQ YTD SF Score' else ('Quality of Life' if x == 'KCCQ YTD QL Score' else ('Social Limitation' if x == 'KCCQ YTD SL Score' else 'ALL'))))
 
+    df_reshape = pd.merge(df1, df2, how = 'left', on = ['Age Band', 'Gender', 'Weight Band', 'Comorbidity Type',
+       'Comorbidity Score', 'Patient Health Risk Level', 'NYHA Class',
+       'Ejection Fraction', 'Years Since HF Diagnosis', 'Prior Use of ACE/ARB',
+       'Medication Adherence', 'Managing Physician (Group)',
+       'Service Category', 'Sub Category', 'Pt Count', 'YTD Utilization',
+       'Annualized Utilization', 'Benchmark Utilization', 'YTD Total Cost',
+       'Annualized Total Cost', 'Benchmark Total Cost','KCCQ Category'])
+    return df_reshape
+
+df_drilldown_reshape = reshape_drilldowndata(df_drilldown)
 
 def create_layout(app):
 #    load_data()
@@ -69,7 +104,6 @@ def create_layout(app):
                         [
                             html.Div(col_content_drilldown(app), id='drilldown-div-avgcost-container', hidden=False),
                             html.Div(col_content_drilldown_crhr(app), id='drilldown-div-crhr-container', hidden=True),
-                            html.Div(col_content_drilldown_kccq(app), id='drilldown-div-kccq-container', hidden=True),
                         ],
                         className="mb-3",
                         style={"padding-left":"3rem", "padding-right":"3rem","padding-top":"1rem"},
@@ -440,6 +474,7 @@ def update_table4(dim1,val1,dim2,val2,sort_dim):
 
 #### callback ####
 
+
 ## modal
 @app.callback(
     Output("drilldown-modal-centered", "is_open"),
@@ -553,6 +588,23 @@ def filter_menu_2(v, f):
         dropdown_option = [{"label": k, "value": k, 'disabled' : False} for k in list(dimension.keys()) if len(dimension[k]) != 0 and k != v] + [{"label": 'Service Category', "value": 'Service Category'}, {"label": 'Sub Category', "value": 'Sub Category', 'disabled' : True}] + [{"label": k, "value": k, 'disabled' : True} for k in list(dimension.keys()) if len(dimension[k]) == 0 or k ==v]
         return dropdown_option, False
 
+@app.callback(
+    Output('dropdown-measure-1', 'options'),
+    [Input('dropdown-dimension-1','value'),
+    Input('dropdown-dimension-2','value'),
+    Input('dropdown-dimension-3','value')]
+    )
+def update_measures(d1, d2, d3):
+    d = [d1, d2, d3]
+    measure_kccq = ['YTD Utilization per Thousand', 'Annualized Utilization per Thousand', 'Benchmark Utilization per Thousand', 'Diff % from Benchmark Utilization per Thousand',
+        'YTD Total Cost', 'Annualized Total Cost', 'Benchmark Total Cost', 'Diff % from Benchmark Total Cost',
+        'YTD Unit Cost', 'Annualized Unit Cost', 'Benchmark Unit Cost', 'Diff % from Benchmark Unit Cost',
+        'YTD Hospitalization Rate per Thousand', 'Annualized Hospitalization Rate per Thousand', 'Benchmark Hospitalization Rate per Thousand', 'Diff % from Benchmark Hospitalization Rate per Thousand',
+        'Baseline Average KCCQ Score', 'YTD Average KCCQ Score', 'KCCQ Improvement from Baseline']
+    if 'KCCQ Category' in d:
+        return [{"label": k, "value": k} for k in measure_kccq]
+    else:
+        return [{"label": k, "value": k} for k in measure]
 
 @app.callback(
     [Output('datatable-tableview', "columns"),
@@ -571,36 +623,36 @@ def datatable_data_selection(v1, v2, v3, d1, d2, f1, f2, m):
         if d1 == 'Service Category':
             if d2 is None:
                 if f1 == 'All':
-                    df_drilldown_filtered = df_drilldown
+                    df_drilldown_filtered = df_drilldown_reshape
                     cate_cnt = cate_mix_cnt
                 else:
-                    df_drilldown_filtered = df_drilldown[df_drilldown['Service Category'].isin([f1])]
+                    df_drilldown_filtered = df_drilldown_reshape[df_drilldown_reshape['Service Category'].isin([f1])]
                     cate_cnt = len(filter_list[f1])
             elif f1 != 'All' and d2 == 'Sub Category':
-                df_drilldown_filtered = df_drilldown[(df_drilldown['Service Category'].isin([f1])) & (df_drilldown['Sub Category'].isin(f2))]
+                df_drilldown_filtered = df_drilldown_reshape[(df_drilldown_reshape['Service Category'].isin([f1])) & (df_drilldown_reshape['Sub Category'].isin(f2))]
                 cate_cnt = len(f2)
             else:
-                df_drilldown_filtered = df_drilldown[df_drilldown[d2].isin(f2)]
+                df_drilldown_filtered = df_drilldown_reshape[df_drilldown_reshape[d2].isin(f2)]
                 if f1 == 'All':
                     cate_cnt = cate_mix_cnt
                 else:
                     cate_cnt = len(filter_list[f1])
         elif d2 == 'Service Category':
             if f2 == 'All':
-                df_drilldown_filtered = df_drilldown[df_drilldown[d1].isin(f1)]
+                df_drilldown_filtered = df_drilldown_reshape[df_drilldown_reshape[d1].isin(f1)]
                 cate_cnt = cate_mix_cnt
             else:
-                df_drilldown_filtered = df_drilldown[(df_drilldown['Service Category'].isin([f2])) & (df_drilldown[d1].isin(f1))]
+                df_drilldown_filtered = df_drilldown_reshape[(df_drilldown_reshape['Service Category'].isin([f2])) & (df_drilldown_reshape[d1].isin(f1))]
                 cate_cnt = len(filter_list[f2])
         else:
             if d2:
-                df_drilldown_filtered = df_drilldown[(df_drilldown[d1].isin(f1)) & (df_drilldown[d2].isin(f2))]
+                df_drilldown_filtered = df_drilldown_reshape[(df_drilldown_reshape[d1].isin(f1)) & (df_drilldown_reshape[d2].isin(f2))]
                 cate_cnt = cate_mix_cnt
             else: 
-                df_drilldown_filtered = df_drilldown[df_drilldown[d1].isin(f1)]
+                df_drilldown_filtered = df_drilldown_reshape[df_drilldown_reshape[d1].isin(f1)]
                 cate_cnt = cate_mix_cnt
     else:
-        df_drilldown_filtered = df_drilldown
+        df_drilldown_filtered = df_drilldown_reshape
         cate_cnt = cate_mix_cnt
 
     df_drilldown_filtered['YTD IP Utilization'] = df_drilldown_filtered.apply(lambda x: x['YTD Utilization'] if x['Service Category'] == 'Inpatient' else 0, axis = 1)
@@ -621,12 +673,13 @@ def datatable_data_selection(v1, v2, v3, d1, d2, f1, f2, m):
     percent_list = ['Diff % from Benchmark Utilization per Thousand', 'Diff % from Benchmark Total Cost', 'Diff % from Benchmark Unit Cost', 'Patient %', 'Diff % from Benchmark Hospitalization Rate per Thousand']
     dollar_list = ['YTD Total Cost', 'Annualized Total Cost', 'Benchmark Total Cost', 'YTD Unit Cost', 'Annualized Unit Cost', 'Benchmark Unit Cost']
     if len(selected_dimension) > 0:
-#        ptct_dimension = set(selected_dimension + ['Service Category', 'Sub Category'])
+
         table_column.extend(measure_ori) 
         df_agg_pre = df_drilldown_filtered[table_column].groupby(by = list(set(selected_dimension + ['Service Category', 'Sub Category']))).sum().reset_index()
         df_agg = df_agg_pre[table_column].groupby(by = selected_dimension).agg({'Pt Count':'mean', 'YTD Utilization':'sum', 'Annualized Utilization':'sum', 'Benchmark Utilization':'sum', 
-            'YTD Total Cost':'sum', 'Annualized Total Cost':'sum', 'Benchmark Total Cost':'sum', 'YTD IP Utilization':'sum', 'Annualized IP Utilization':'sum', 'Benchmark IP Utilization':'sum'}).reset_index()
-#        df_agg['Pt Count'] = df_agg[' Pt Count']/cate_cnt
+            'YTD Total Cost':'sum', 'Annualized Total Cost':'sum', 'Benchmark Total Cost':'sum', 'YTD IP Utilization':'sum', 'Annualized IP Utilization':'sum', 'Benchmark IP Utilization':'sum',
+            'Baseline Average KCCQ Score':'mean', 'YTD Average KCCQ Score':'mean'}).reset_index()
+
         df_agg['Patient %'] = df_agg['Pt Count']/995000
         df_agg['YTD Utilization per Thousand'] = 1000 * df_agg['YTD Utilization']/df_agg['Pt Count']
         df_agg['Annualized Utilization per Thousand'] = 1000 * df_agg['Annualized Utilization']/df_agg['Pt Count']
@@ -644,8 +697,11 @@ def datatable_data_selection(v1, v2, v3, d1, d2, f1, f2, m):
         df_agg['Annualized Hospitalization Rate per Thousand'] = 1000 * df_agg['Annualized IP Utilization']/df_agg['Pt Count']
         df_agg['Benchmark Hospitalization Rate per Thousand'] = 1000 * df_agg['Benchmark IP Utilization']/df_agg['Pt Count']
         df_agg['Diff % from Benchmark Hospitalization Rate per Thousand'] = (df_agg['Annualized IP Utilization'] - df_agg['Benchmark IP Utilization'])/df_agg['Benchmark IP Utilization']
-#        df_agg.style.format({'Diff % from Target Utilization' : "{:.2%}", 'Diff % from Target Total Cost': "{:.2%}", 'Diff % from Target Unit Cost' : "{:.2%}"})
-#        df_agg.reset_index(inplace = True)
+
+        df_agg['Baseline Average KCCQ Score'] = df_agg['Baseline Average KCCQ Score']/df_agg['Pt Count']
+        df_agg['YTD Average KCCQ Score'] = df_agg['YTD Average KCCQ Score']/df_agg['Pt Count']
+        df_agg['KCCQ Improvement from Baseline'] = df_agg['YTD Average KCCQ Score'] - df_agg['Baseline Average KCCQ Score']
+
         show_column = selected_dimension + ['Patient %'] + m 
         if 'Diff % from Benchmark Total Cost' in m:
             df_agg =  df_agg[show_column].sort_values(by =  'Diff % from Benchmark Total Cost', ascending =False)
@@ -937,6 +993,23 @@ def filter_menu_2(v, f):
         dropdown_option = [{"label": k, "value": k, 'disabled' : False} for k in list(dimension.keys()) if len(dimension[k]) != 0 and k != v] + [{"label": 'Service Category', "value": 'Service Category'}, {"label": 'Sub Category', "value": 'Sub Category', 'disabled' : True}] + [{"label": k, "value": k, 'disabled' : True} for k in list(dimension.keys()) if len(dimension[k]) == 0 or k ==v]
         return dropdown_option, False
 
+@app.callback(
+    Output('dropdown-measure-1-crhr', 'options'),
+    [Input('dropdown-dimension-1-crhr','value'),
+    Input('dropdown-dimension-2-crhr','value'),
+    Input('dropdown-dimension-3-crhr','value')]
+    )
+def update_measures(d1, d2, d3):
+    d = [d1, d2, d3]
+    measure_kccq = ['YTD Utilization per Thousand', 'Annualized Utilization per Thousand', 'Benchmark Utilization per Thousand', 'Diff % from Benchmark Utilization per Thousand',
+        'YTD Total Cost', 'Annualized Total Cost', 'Benchmark Total Cost', 'Diff % from Benchmark Total Cost',
+        'YTD Unit Cost', 'Annualized Unit Cost', 'Benchmark Unit Cost', 'Diff % from Benchmark Unit Cost',
+        'YTD Hospitalization Rate per Thousand', 'Annualized Hospitalization Rate per Thousand', 'Benchmark Hospitalization Rate per Thousand', 'Diff % from Benchmark Hospitalization Rate per Thousand',
+        'Baseline Average KCCQ Score', 'YTD Average KCCQ Score', 'KCCQ Improvement from Baseline']
+    if 'KCCQ Category' in d:
+        return [{"label": k, "value": k} for k in measure_kccq]
+    else:
+        return [{"label": k, "value": k} for k in measure]
 
 @app.callback(
     [Output('datatable-tableview-crhr', "columns"),
@@ -955,36 +1028,36 @@ def datatable_data_selection(v1, v2, v3, d1, d2, f1, f2, m):
         if d1 == 'Service Category':
             if d2 is None:
                 if f1 == 'All':
-                    df_drilldown_filtered = df_drilldown
+                    df_drilldown_filtered = df_drilldown_reshape
                     cate_cnt = cate_mix_cnt
                 else:
-                    df_drilldown_filtered = df_drilldown[df_drilldown['Service Category'].isin([f1])]
+                    df_drilldown_filtered = df_drilldown_reshape[df_drilldown_reshape['Service Category'].isin([f1])]
                     cate_cnt = len(filter_list[f1])
             elif f1 != 'All' and d2 == 'Sub Category':
-                df_drilldown_filtered = df_drilldown[(df_drilldown['Service Category'].isin([f1])) & (df_drilldown['Sub Category'].isin(f2))]
+                df_drilldown_filtered = df_drilldown_reshape[(df_drilldown_reshape['Service Category'].isin([f1])) & (df_drilldown_reshape['Sub Category'].isin(f2))]
                 cate_cnt = len(f2)
             else:
-                df_drilldown_filtered = df_drilldown[df_drilldown[d2].isin(f2)]
+                df_drilldown_filtered = df_drilldown_reshape[df_drilldown_reshape[d2].isin(f2)]
                 if f1 == 'All':
                     cate_cnt = cate_mix_cnt
                 else:
                     cate_cnt = len(filter_list[f1])
         elif d2 == 'Service Category':
             if f2 == 'All':
-                df_drilldown_filtered = df_drilldown[df_drilldown[d1].isin(f1)]
+                df_drilldown_filtered = df_drilldown_reshape[df_drilldown_reshape[d1].isin(f1)]
                 cate_cnt = cate_mix_cnt
             else:
-                df_drilldown_filtered = df_drilldown[(df_drilldown['Service Category'].isin([f2])) & (df_drilldown[d1].isin(f1))]
+                df_drilldown_filtered = df_drilldown_reshape[(df_drilldown_reshape['Service Category'].isin([f2])) & (df_drilldown_reshape[d1].isin(f1))]
                 cate_cnt = len(filter_list[f2])
         else:
             if d2:
-                df_drilldown_filtered = df_drilldown[(df_drilldown[d1].isin(f1)) & (df_drilldown[d2].isin(f2))]
+                df_drilldown_filtered = df_drilldown_reshape[(df_drilldown_reshape[d1].isin(f1)) & (df_drilldown_reshape[d2].isin(f2))]
                 cate_cnt = cate_mix_cnt
             else: 
-                df_drilldown_filtered = df_drilldown[df_drilldown[d1].isin(f1)]
+                df_drilldown_filtered = df_drilldown_reshape[df_drilldown_reshape[d1].isin(f1)]
                 cate_cnt = cate_mix_cnt
     else:
-        df_drilldown_filtered = df_drilldown
+        df_drilldown_filtered = df_drilldown_reshape
         cate_cnt = cate_mix_cnt
 
     df_drilldown_filtered['YTD IP Utilization'] = df_drilldown_filtered.apply(lambda x: x['YTD Utilization'] if x['Service Category'] == 'Inpatient' else 0, axis = 1)
@@ -1005,12 +1078,13 @@ def datatable_data_selection(v1, v2, v3, d1, d2, f1, f2, m):
     percent_list = ['Diff % from Benchmark Utilization per Thousand', 'Diff % from Benchmark Total Cost', 'Diff % from Benchmark Unit Cost', 'Patient %', 'Diff % from Benchmark Hospitalization Rate per Thousand']
     dollar_list = ['YTD Total Cost', 'Annualized Total Cost', 'Benchmark Total Cost', 'YTD Unit Cost', 'Annualized Unit Cost', 'Benchmark Unit Cost']
     if len(selected_dimension) > 0:
-#        ptct_dimension = set(selected_dimension + ['Service Category', 'Sub Category'])
+
         table_column.extend(measure_ori) 
         df_agg_pre = df_drilldown_filtered[table_column].groupby(by = list(set(selected_dimension + ['Service Category', 'Sub Category']))).sum().reset_index()
         df_agg = df_agg_pre[table_column].groupby(by = selected_dimension).agg({'Pt Count':'mean', 'YTD Utilization':'sum', 'Annualized Utilization':'sum', 'Benchmark Utilization':'sum', 
-            'YTD Total Cost':'sum', 'Annualized Total Cost':'sum', 'Benchmark Total Cost':'sum', 'YTD IP Utilization':'sum', 'Annualized IP Utilization':'sum', 'Benchmark IP Utilization':'sum'}).reset_index()
-#        df_agg['Pt Count'] = df_agg[' Pt Count']/cate_cnt
+            'YTD Total Cost':'sum', 'Annualized Total Cost':'sum', 'Benchmark Total Cost':'sum', 'YTD IP Utilization':'sum', 'Annualized IP Utilization':'sum', 'Benchmark IP Utilization':'sum',
+            'Baseline Average KCCQ Score':'mean', 'YTD Average KCCQ Score':'mean'}).reset_index()
+
         df_agg['Patient %'] = df_agg['Pt Count']/995000
         df_agg['YTD Utilization per Thousand'] = 1000 * df_agg['YTD Utilization']/df_agg['Pt Count']
         df_agg['Annualized Utilization per Thousand'] = 1000 * df_agg['Annualized Utilization']/df_agg['Pt Count']
@@ -1028,8 +1102,11 @@ def datatable_data_selection(v1, v2, v3, d1, d2, f1, f2, m):
         df_agg['Annualized Hospitalization Rate per Thousand'] = 1000 * df_agg['Annualized IP Utilization']/df_agg['Pt Count']
         df_agg['Benchmark Hospitalization Rate per Thousand'] = 1000 * df_agg['Benchmark IP Utilization']/df_agg['Pt Count']
         df_agg['Diff % from Benchmark Hospitalization Rate per Thousand'] = (df_agg['Annualized IP Utilization'] - df_agg['Benchmark IP Utilization'])/df_agg['Benchmark IP Utilization']
-#        df_agg.style.format({'Diff % from Target Utilization' : "{:.2%}", 'Diff % from Target Total Cost': "{:.2%}", 'Diff % from Target Unit Cost' : "{:.2%}"})
-#        df_agg.reset_index(inplace = True)
+
+        df_agg['Baseline Average KCCQ Score'] = df_agg['Baseline Average KCCQ Score']/df_agg['Pt Count']
+        df_agg['YTD Average KCCQ Score'] = df_agg['YTD Average KCCQ Score']/df_agg['Pt Count']
+        df_agg['KCCQ Improvement from Baseline'] = df_agg['YTD Average KCCQ Score'] - df_agg['Baseline Average KCCQ Score']
+
         show_column = selected_dimension + ['Patient %'] + m 
         if 'Diff % from Benchmark Total Cost' in m:
             df_agg =  df_agg[show_column].sort_values(by =  'Diff % from Benchmark Total Cost', ascending =False)
