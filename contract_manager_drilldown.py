@@ -38,12 +38,7 @@ df_driver_all=pd.read_csv("data/Drilldown All Drivers.csv")
 data_lv3=drilldata_process(df_drilldown,'Service Category')
 data_lv4=drilldata_process(df_drilldown,'Sub Category')
 
-all_dimension=[]
-for i in list(df_drilldown.columns[0:14]):
-    all_dimension.append([i,'All'])
-    for j in list(df_drilldown[i].unique()):
-        all_dimension.append([i,j])
-all_dimension=pd.DataFrame(all_dimension,columns=['dimension','value'])
+all_dimension=pd.read_csv('data/all_dimension.csv')
 
 #for modify criteria list
 dimensions = ['Age Band' , 'Gender'  , 'Patient Health Risk Level' , 'NYHA Class' , 'Medication Adherence' , 'Comorbidity Type',  'Weight Band' , 'Comorbidity Score' , 'Ejection Fraction' , 'Years Since HF Diagnosis' , 'Prior Use of ACE/ARB' ]
@@ -52,9 +47,6 @@ disable_list=['Comorbidity Type', 'Weight Band','Comorbidity Score','Ejection Fr
 
 #modebar display
 button_to_rm=['zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'hoverClosestCartesian','hoverCompareCartesian','hoverClosestGl2d', 'hoverClosestPie', 'toggleHover','toggleSpikelines']
-
-
-
 
 
 def create_layout(app):
@@ -1042,6 +1034,63 @@ def datatable_data_selection(v1, v2, v3, d1, d2, f1, f2, m):
     
     return [{"name": i, "id": i, "selectable":True,"type":"numeric", "format": FormatTemplate.percentage(1)} if i in percent_list else {"name": i, "id": i, "selectable":True, "type":"numeric","format": FormatTemplate.money(0)} if i in dollar_list else {"name": i, "id": i, "selectable":True, "type":"numeric","format": Format(precision=1, scheme = Scheme.fixed)} for i in show_column], df_agg.to_dict('records')
 
+##### KCCQ callbacks #####
+
+# modify lv1 criteria
+@app.callback(
+    Output("popover-mod-dim-lv1-kccq","is_open"),
+    [Input("button-mod-dim-lv1-kccq","n_clicks"),],
+   # Input("mod-button-mod-measure","n_clicks"),
+    [State("popover-mod-dim-lv1-kccq", "is_open")],
+)
+def toggle_popover_mod_criteria(n1, is_open):
+    if n1 :
+        return not is_open
+    return is_open
+
+
+#update patient lv1 table  and filter1 on following page based on criteria button
+@app.callback(
+   [ Output("drill_patient_lv1_kccq","children"),
+     Output("filter_patient_1_2_name_kccq","children"),
+     Output("filter_patient_1_2_contain_kccq",'children'),
+     Output("dimname_on_patient_lv1_kccq","children"),
+   ],
+   [Input("list-dim-lv1-kccq","value")] 
+)
+def update_table_dimension(dim):
+    df=drilldata_process_kccq(df_drilldown,dim)
+
+    return drillgraph_lv1_kccq(df,"dashtable_patient_lv1_kccq",dim),dim,filter_template_crhr(dim,"filter_patient_1_2_value_kccq"),'By '+dim
+
+
+#update patient filter1 on following page based on selected rows
+
+@app.callback(
+    Output("filter_patient_1_2_value_kccq","value"),   
+   [ Input("dashtable_patient_lv1_kccq","selected_row_ids"),
+   ] 
+)
+def update_filter1value_patient(row):
+
+    if row is None or row==[]:
+        row_1='All'
+    else:row_1=row[0]        
+    
+    return row_1
+
+#update patient data lv2 on filter1
+
+@app.callback(
+    Output("dashtable_patient_lv2_kccq","data"),   
+   [Input("filter_patient_1_2_value_kccq","value"),], 
+   [State("filter_patient_1_2_name_kccq","children"),]
+)
+def update_filter1value_patient(val,dim):
+
+    df= drilldata_process_kccq(df_drilldown,'Category',dim,val)       
+    
+    return df.to_dict('records')
 
 
 if __name__ == "__main__":

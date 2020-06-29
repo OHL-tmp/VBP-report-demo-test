@@ -31,12 +31,7 @@ df_driver_all_crhr=pd.read_csv("data/Drilldown All Drivers ip.csv")
 
 data_lv2_crhr=drilldata_process_crhr(df_drilldown,'Sub Category')
 
-all_dimension=[]
-for i in list(df_drilldown.columns[0:14]):
-    all_dimension.append([i,'All'])
-    for j in list(df_drilldown[i].unique()):
-        all_dimension.append([i,j])
-all_dimension=pd.DataFrame(all_dimension,columns=['dimension','value'])
+all_dimension=pd.read_csv('data/all_dimension.csv')
 
 #for modify criteria list
 dimensions = ['Age Band' , 'Gender'  , 'Patient Health Risk Level' , 'NYHA Class' , 'Medication Adherence' , 'Comorbidity Type',  'Weight Band' , 'Comorbidity Score' , 'Ejection Fraction' , 'Years Since HF Diagnosis' , 'Prior Use of ACE/ARB' ]

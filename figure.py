@@ -25,8 +25,8 @@ import dash_daq as daq
 df_dim_order=pd.read_csv("data/dimvalue_ordering.csv")
 
 
-colors={'blue':'rgba(18,85,222,100)','yellow':'rgba(246,177,17,100)','transparent':'rgba(255,255,255,0)','grey':'rgba(191,191,191,100)',
-       'lightblue':'rgba(143,170,220,100)'}
+colors={'blue':'rgba(18,85,222,1)','yellow':'rgba(246,177,17,1)','transparent':'rgba(255,255,255,0)','grey':'rgba(191,191,191,1)',
+       'lightblue':'rgba(143,170,220,1)'}
 
 domain_set = ["Cost & Utilization  Reduction", "Improving Disease Outcome",
                  "Decreasing Health Disparities", "Increasing Patient Safety",
@@ -838,6 +838,274 @@ def tbl_non_contract(df,measures):
 ####################################################################################################################################################################################
 ######################################################################       Drilldown         ##################################################################################### 
 #################################################################################################################################################################################### 
+def drill_waterfall(df):
+
+    x_waterfall=['Target','Adj','Target Adj']
+    y_base=df[['base']][3:4].values[0,0]
+    y_adjust=df[['adjusted']][4:5].values[0,0]
+
+    if y_base<1500:
+        num_format='%{y:.0f}'
+    else:
+        num_format='%{y:$,.0f}'
+
+    fig_waterfall = go.Figure(data=[
+        go.Bar(
+            
+            x=x_waterfall, 
+            y=[y_base,y_base,y_base+y_adjust],
+            text=[y_base,y_base,y_base+y_adjust],
+            textposition='inside',
+            textangle=0,
+            constraintext='none',
+            width=0.5,
+            textfont=dict(color=['black',colors['transparent'],'black'],
+                          family="NotoSans-Condensed",
+                          size=14,
+                          ),
+            texttemplate=num_format,
+            marker=dict(
+                    color=[colors['grey'],colors['transparent'],colors['grey']],
+                    opacity=[0.5,0,0.7]
+                    ),
+            marker_line=dict( color = colors['transparent'] )
+            
+        ),
+        go.Bar(     
+            x=x_waterfall, 
+            y=[0,y_adjust,0],
+            width=0.5,
+            text=[0,y_adjust,0],
+            textposition='outside',
+            constraintext='none',
+            textfont=dict(color=[colors['transparent'],'black',colors['transparent']],
+                          family="NotoSans-Condensed",
+                          size=14,
+                          ),
+            texttemplate=num_format,
+            marker=dict(
+                    color=colors['yellow'],
+                    opacity=0.7
+                    )
+        )
+    ])
+    # Change the bar mode
+    fig_waterfall.update_layout(
+        barmode='stack',
+        plot_bgcolor=colors['transparent'],
+        paper_bgcolor=colors['transparent'],
+        xaxis=dict(
+                tickfont=dict(family="NotoSans-Condensed",
+                          size=14,)
+                ),
+        yaxis = dict(
+            showgrid = True, 
+            range=[0,y_base*1.4],
+            gridcolor =colors['grey'],
+            nticks=5,
+            showticklabels=True,
+            zeroline=True,
+            zerolinecolor=colors['grey'],
+            zerolinewidth=1,
+        ),
+        showlegend=False,
+        hovermode=False,
+        modebar=dict(
+            bgcolor=colors['transparent']
+        ),
+        #margin=dict(l=10,r=10,b=100,t=40,pad=0),
+        font=dict(
+            family="NotoSans-Condensed",
+            size=12,
+            color="#38160f"
+        ),
+        margin=dict(l=30,r=30,b=0,t=40,pad=0,),
+        
+        
+    )
+    return fig_waterfall 
+
+def drill_bar(df):
+    bar1_y=df['base'][0:3].values.tolist()
+
+    if bar1_y[0]<1500:
+        num_format='%{y:.0f}'
+    else:
+        num_format='%{y:$,.0f}'
+
+    fig_bar = go.Figure(data=[
+        go.Bar(        
+            x=['YTD','Annualized','Target Adj'], 
+            y=bar1_y,
+            text=bar1_y,
+            textposition='inside',
+            texttemplate=num_format,
+            textfont=dict(family="NotoSans-Condensed",
+                          size=14,),
+            textangle=0,
+            width=0.5,
+            marker=dict(
+                color=[colors['blue'],colors['blue'],colors['grey']],
+                opacity=[1,0.7,0.7]
+                       )
+
+        ),
+    ])
+    fig_bar.update_layout(
+        paper_bgcolor=colors['transparent'],
+        plot_bgcolor=colors['transparent'],
+        showlegend=False,
+        modebar=dict( bgcolor=colors['transparent'] ),
+        xaxis=dict(showline=True,linecolor=colors['grey'],zeroline=True ,zerolinecolor=colors['grey'], tickfont=dict(family="NotoSans-Condensed", size=14,) ), 
+        yaxis=dict(showline=True,linecolor=colors['grey'],gridcolor=colors['grey'],zeroline=True ,zerolinecolor=colors['grey']),  
+        hovermode=False,
+        #margin=dict(l=10,r=10,b=100,t=40,pad=0),
+        font=dict(
+            family="NotoSans-Condensed",
+            size=12,
+            color="#38160f"
+        ),
+        margin=dict(l=30,r=30,b=80,t=40,pad=0),
+    )
+    return fig_bar
+
+
+def gaugegraph(df,row):
+    fig=daq.Gauge(
+            #showCurrentValue=True,
+            scale={'start': -5, 'interval': 1, 'labelInterval': 2},
+            #units="%",
+            color={"gradient":True,"ranges":{"#18cc75":[-5,-1],"#39db44":[-1,0],"#aeff78":[0,2],"#ffeb78":[2,3.5],"#ff4d17":[3.5,5]}}, #
+            value=df['%'][row]*100,
+            label=df['Name'][row],
+            labelPosition='top',    
+            max=5,
+            min=-5,
+            size=110,
+            style={"font-family":"NotoSans-CondensedLight","font-size":"0.4rem"}
+        )  
+    return fig
+
+def table_driver_all(df):        
+    table=dash_table.DataTable(
+        data=df.to_dict('records'),
+        #id=tableid,
+        columns=[{"name": c, "id": c,} for c in df.columns ],  
+        sort_action="native",
+        sort_mode='single',
+        sort_by=[{"column_id":"Impact to Overall Difference","direction":"desc"},],
+        style_data={
+            'whiteSpace': 'normal',
+            'height': 'auto'
+        },
+       
+        style_cell={
+            'textAlign': 'center',
+            'font-family':'NotoSans-Regular',
+            'fontSize':12
+        },
+        style_cell_conditional=[
+            {'if': {'column_id': df.columns[0]},
+             
+             'fontWeight': 'bold',
+            }, 
+            
+        ],
+        style_table={
+            'back':  colors['blue'],
+        },
+        style_header={
+            'height': '4rem',
+            'minWidth': '3rem',
+            'maxWidth':'3rem',
+            'whiteSpace': 'normal',
+            'backgroundColor': '#f1f6ff',
+            'fontWeight': 'bold',
+            'font-family':'NotoSans-CondensedLight',
+            'fontSize':14,
+            'color': '#1357DD',
+            'text-align':'center',
+        },
+    )
+    return table
+
+def barchart_kccq(df):
+    
+    bar1_y=df['base'][0:3].values.tolist()
+
+    if bar1_y[0]<1500:
+        num_format='%{y:.0f}'
+    else:
+        num_format='%{y:$,.0f}'
+
+    fig_bar = go.Figure(data=[
+        go.Bar(        
+            x=df['label'], 
+            y=df['base'],
+            text=df['base'],
+            textposition='outside',
+            texttemplate='%{y:.0f}',
+            textfont=dict(family="NotoSans-Condensed",
+                          size=14,),
+            textangle=0,
+            width=0.5,
+            marker=dict(
+                color=colors['blue'],
+                opacity=[1,0.7]
+                       )
+
+        ),
+    ])
+    fig_bar.update_layout(
+        paper_bgcolor=colors['transparent'],
+        plot_bgcolor=colors['transparent'],
+        showlegend=False,
+        modebar=dict( bgcolor=colors['transparent'] ),
+        xaxis=dict(showline=True,linecolor=colors['grey'],zeroline=True ,zerolinecolor=colors['grey'], tickfont=dict(family="NotoSans-Condensed", size=14,) ), 
+        yaxis=dict(showline=True,linecolor=colors['grey'],range=[0,df['base'].max()*1.2],gridcolor=colors['grey'],zeroline=True ,zerolinecolor=colors['grey']),  
+        hovermode=False,
+        #margin=dict(l=10,r=10,b=100,t=40,pad=0),
+        font=dict(
+            family="NotoSans-Condensed",
+            size=12,
+            color="#38160f"
+        ),
+        margin=dict(l=30,r=30,b=80,t=40,pad=0),
+    )
+    return fig_bar
+
+def piechart_kccq(df):
+
+    fig = go.Figure(data=[
+        go.Pie(        
+            labels=df['label'], 
+            values=df['size'],
+            name='',
+#            pull=[0,0,0.1,0],
+            marker=dict(
+                    colors=["#1357DD","F5B111","#df8885"]            
+                    ),
+            textinfo='percent',
+            textposition='auto',
+            texttemplate='%{percent:.1%}',
+            insidetextorientation='horizontal',
+            hoverinfo='label+value+percent',
+            hovertemplate='%{label}<br>%{value:,.0f}<br> %{percent:.1%}',
+        )
+    ])
+    fig.update_layout(
+       showlegend=True,
+       legend=dict(orientation='h',x=0,y=0),
+       margin=dict(l=0,r=0,b=0,t=0,pad=0),
+       paper_bgcolor=colors["transparent"],
+       font=dict(
+            family="NotoSans-Condensed",
+            size=14,
+            color="#38160f"
+        ),
+    )   
+    return fig
+
 def drill_bubble(df):
     df['Weight']=df['Pt_Count']/df.values[0,7]
     n=len(df)
@@ -1327,89 +1595,9 @@ def drillgraph_lv1_crhr(df_table,tableid,dim):
         },
     )
     return tbl
-
-def drillgraph_lv1_kccq(df_table,tableid,dim):
-
-    df_table=df_table.merge(df_dim_order[df_dim_order['dimension']==df_table.columns[0]],how='left',left_on=df_table.columns[0],right_on='value').sort_values(by='ordering')  
-    
-#    drillgraph= [html.Div([drillgraph_table(df,tableid,dim)],style={"padding-left":"3rem","padding-right":"5rem"}),]
-    
-#    return drillgraph
-
-#def drillgraph_table(df_table,tableid,dim):
-#    df1=df_table[0:len(df_table)-1].sort_values(by='Contribution to Overall Performance Difference',ascending= 'desc')
- #   df_table=pd.concat([df1,df_table.tail(1)])
-
-    df_table['id']=df_table[dim]
-
-    df_table.set_index('id', inplace=True, drop=False)
-
-    col_max=max(df_table['Contribution to Overall Performance Difference'].max(),df_table['% Cost Diff from Benchmark'].max())
-
-    tbl=dash_table.DataTable(
-        id=tableid,
-        data=df_table.to_dict('records'),
-        columns=[ 
-        {'id': dim, 'name': dim} ,
-        {'id': 'Patient %', 'name': 'Patient %','type': 'numeric',"format":FormatTemplate.percentage(1)} ,
-        {'id': 'Cost %', 'name': 'Inpatient Cost %','type': 'numeric',"format":FormatTemplate.percentage(1)} ,
-        {'id': 'YTD Hospitalization Rate', 'name': 'YTD Hospitalization Rate Per 1000','type': 'numeric',"format":Format( precision=0,group=',', scheme=Scheme.fixed,)} ,
-        {'id': '% Hospitalization Rate Diff from Benchmark', 'name': '% Diff from Benchmark','type': 'numeric',"format":FormatTemplate.percentage(1)} ,
-        {'id': 'Contribution to Overall Performance Difference', 'name': 'Contribution to Overall Performance Difference','type': 'numeric',"format":FormatTemplate.percentage(1)} ,
-         ],
-        row_selectable="single",
-        selected_rows=[len(df_table)-1],
-        sort_action="custom",
-        sort_mode='single',
-#        sort_by=[{"column_id":"Contribution to Overall Performance Difference","direction":"desc"},],
-        style_data={
-            'whiteSpace': 'normal',
-            'height': 'auto'
-        },
-
-        style_data_conditional=(
-        data_bars_diverging(df_table, '% Hospitalization Rate Diff from Benchmark',col_max) +
-        data_bars_diverging(df_table, 'Contribution to Overall Performance Difference',col_max)+
-        [{'if': {'column_id':'% Hospitalization Rate Diff from Benchmark'},
-             
-             'width': '20rem',
-            }, 
-        {'if': {'column_id': 'Contribution to Overall Performance Difference'},
-             
-             'width': '20rem',
-            },
-
-        ]
-        ),
        
-        style_cell={
-            'textAlign': 'center',
-            'font-family':'NotoSans-Condensed',
-            'fontSize':14
-        },
-        
-        style_header={
-            'height': '4rem',
-            'minWidth': '3rem',
-            'maxWidth':'3rem',
-            'whiteSpace': 'normal',
-            'backgroundColor': "#f1f6ff",
-            'fontWeight': 'bold',
-            'font-family':'NotoSans-CondensedLight',
-            'fontSize':16,
-            'color': '#1357DD',
-            'text-align':'center',
-        },
-    )
-    return tbl
-       
-   
 def dashtable_lv3_crhr(df,dimension,tableid,row_select):#row_select: numeric 0 or 1
     
-    #df1=df[0:len(df)-1].sort_values(by='Contribution to Overall Performance Difference',ascending=False)
-    #df1.append(df[len(df)-1:len(df)])
-    #df1['id']=df1[df1.columns[0]]
-    #df1.set_index('id', inplace=True, drop=False)
     df['id']=df[df.columns[0]]
     df.set_index('id', inplace=True, drop=False)
 
@@ -1472,39 +1660,73 @@ def dashtable_lv3_crhr(df,dimension,tableid,row_select):#row_select: numeric 0 o
     )
     return table_lv3
 
-def dashtable_lv3_kccq(df,dimension,tableid,row_select):#row_select: numeric 0 or 1
-    
-    #df1=df[0:len(df)-1].sort_values(by='Contribution to Overall Performance Difference',ascending=False)
-    #df1.append(df[len(df)-1:len(df)])
-    #df1['id']=df1[df1.columns[0]]
-    #df1.set_index('id', inplace=True, drop=False)
-    df['id']=df[df.columns[0]]
-    df.set_index('id', inplace=True, drop=False)
+def drillgraph_lv1_kccq(df_table,tableid,dim):
 
-    if row_select==0:
-        row_sel=False
-    else:
-        row_sel='single'
+    df_table=df_table.merge(df_dim_order[df_dim_order['dimension']==df_table.columns[0]],how='left',left_on=df_table.columns[0],right_on='value').sort_values(by='ordering')   
+
+    df_table['id']=df_table[df_table.columns[0]]
+
+    df_table.set_index('id', inplace=True, drop=False)
+
+    tbl=dash_table.DataTable(
+        id=tableid,
+        data=df_table.to_dict('records'),
+        columns=[ 
+        {'id': dim, 'name':dim} ,
+        {'id': 'Patient %', 'name': 'Patient %','type': 'numeric',"format":FormatTemplate.percentage(1)} ,
+        {'id': 'Baseline Average KCCQ Score', 'name': 'Baseline Average KCCQ Score','type': 'numeric',"format":Format( precision=0,group=',', scheme=Scheme.fixed,)} ,
+        {'id': 'YTD Average KCCQ Score', 'name': 'YTD Average KCCQ Score','type': 'numeric',"format":Format( precision=0,group=',', scheme=Scheme.fixed,)} ,
+        {'id': 'Improvement from Baseline', 'name': 'Improvement from Baseline','type': 'numeric',"format":Format( precision=0,group=',', scheme=Scheme.fixed,)} ,
+        {'id': 'Improvement Level', 'name': 'Improvement Level','type': 'numeric',"format":Format( precision=0,group=',', scheme=Scheme.fixed,)} ,
+         ],
+        row_selectable="single",
+        selected_rows=[len(df_table)-1],
+        style_data={
+            'whiteSpace': 'normal',
+            'height': 'auto'
+        },
+
+        style_cell_conditional=[
+            {'if': {'column_id': df_table.columns[0]},
+             
+             'fontWeight': 'bold',
+            }, 
+            
+        ],
+       
+        style_cell={
+            'textAlign': 'center',
+            'font-family':'NotoSans-Condensed',
+            'fontSize':14
+        },
+        
+        style_header={
+            'height': '4rem',
+            'minWidth': '3rem',
+            'maxWidth':'3rem',
+            'whiteSpace': 'normal',
+            'backgroundColor': "#f1f6ff",
+            'fontWeight': 'bold',
+            'font-family':'NotoSans-CondensedLight',
+            'fontSize':16,
+            'color': '#1357DD',
+            'text-align':'center',
+        },
+    )
+    return tbl
+
+def dashtable_lv3_kccq(df,tableid):
    
     table_lv3=dash_table.DataTable(
         data=df.to_dict('records'),
         id=tableid,
-        columns=[
-        {"name": ["", dimension], "id": dimension},
-        {"name": ["Average Hospitalization Rate", "YTD Hospitalization Rate per 1000"], "id": "YTD Hospitalization Rate",'type': 'numeric',"format":Format( precision=0,group=',', scheme=Scheme.fixed,)},
-        {"name": ["Average Hospitalization Rate", "% Diff from Benchmark"], "id": "% Hospitalization Rate Diff from Benchmark",'type': 'numeric',"format":FormatTemplate.percentage(1)},
-        {"name": ["Average Hospitalization Rate", "Contribution to Overall Performance Difference"], "id": "Contribution to Overall Performance Difference",'type': 'numeric',"format":FormatTemplate.percentage(1)},
-        {"name": ["Average CHF Related Cost Per Patient", "YTD Avg Inpatient Cost"], "id": "YTD Avg Episode Cost",'type': 'numeric',"format":FormatTemplate.money(0),},
-#        {"name": ["Average CHF Related Cost Per Patient", "% Diff from Benchmark"], "id": "% Cost Diff from Target",'type': 'numeric',"format":FormatTemplate.percentage(1)},
-#        {"name": ["Average Unit Cost", "YTD Avg Unit Cost"], "id": "YTD Avg Cost per Unit",'type': 'numeric',"format":FormatTemplate.money(0)},
-#        {"name": ["Average Unit Cost", "% Diff from Benchmark"], "id": "% Unit Cost Diff from Target",'type': 'numeric',"format":FormatTemplate.percentage(1)},
-    ],
-        merge_duplicate_headers=True,
-        sort_action="custom",
-        sort_mode='single',
-        sort_by=[{"column_id":"Contribution to Overall Performance Difference","direction":"desc"},],
-        row_selectable=row_sel,
-        selected_rows=[(len(df)-1)],
+        columns=[ 
+        {'id':  df.columns[0], 'name':  df.columns[0]} ,
+        {'id': 'Baseline Average KCCQ Score', 'name': 'Baseline Average KCCQ Score','type': 'numeric',"format":Format( precision=0,group=',', scheme=Scheme.fixed,)} ,
+        {'id': 'YTD Average KCCQ Score', 'name': 'YTD Average KCCQ Score','type': 'numeric',"format":Format( precision=0,group=',', scheme=Scheme.fixed,)} ,
+        {'id': 'Improvement from Baseline', 'name': 'Improvement from Baseline','type': 'numeric',"format":Format( precision=0,group=',', scheme=Scheme.fixed,)} ,
+         ],
+
         style_data={
             'whiteSpace': 'normal',
             'height': 'auto'
@@ -1669,263 +1891,43 @@ def drilldata_process_crhr(df_drilldown,dimension,dim1='All',f1='All',dim2='All'
     return df
 
 
-def drilldata_process_kccq(df_drilldown,dimension,dim1='All',f1='All',dim2='All',f2='All',dim3='All',f3='All'):#dimension='Sub Category'    
+def drilldata_process_kccq(df_drilldown,dimension,dim1='All',f1='All'):#dimension='Category'    
     
     df_pre=df_drilldown
     
     if f1!='All':
         df_pre=df_pre[df_pre[dim1]==f1]
-        
-    if f2!='All':
-        df_pre=df_pre[df_pre[dim2]==f2]
-        
-    if  f3!='All':
-        df_pre=df_pre[df_pre[dim3]==f3]
 
-    df_pre2=df_pre.groupby(list(np.unique([dimension,'Service Category', 'Sub Category'])))[df_pre.columns[14:]].agg(np.sum).reset_index()
-    
-    df=df_pre2[df_pre2['Service Category']=='Inpatient'].groupby([dimension]).agg(YTD_Total_cost=pd.NamedAgg(column='YTD Total Cost',aggfunc=sum)
-                                             ,Annualized_Total_cost=pd.NamedAgg(column='Annualized Total Cost',aggfunc=sum)
-                                             ,Target_Total_cost=pd.NamedAgg(column='Benchmark Total Cost',aggfunc=sum)
-                                             ,YTD_Utilization=pd.NamedAgg(column='YTD Utilization',aggfunc=sum)
-                                             ,Annualized_Utilization=pd.NamedAgg(column='Annualized Utilization',aggfunc=sum)
-                                             ,Target_Utilization=pd.NamedAgg(column='Benchmark Utilization',aggfunc=sum)
-                                             ,Pt_Count=pd.NamedAgg(column='Pt Count',aggfunc=np.mean)
-                                             ).reset_index()
-
-    allvalue=df.sum().values 
-    allvalue[0]='All'
-    if dimension in ['Service Category', 'Sub Category']:
-        allvalue[-1]=df['Pt_Count'].mean()
-
-    if len(df[df[dimension]=='Others'])>0:
-        otherpos=df[df[dimension]=='Others'].index[0]
-        otherlist=df.loc[otherpos]
-        df.loc[otherpos]=df.loc[len(df)-1]
-        df.loc[len(df)-1]=otherlist
-  
-    df.loc[len(df)] = allvalue
-
-    df['Patient %'] = df['Pt_Count']/(df.tail(1)['Pt_Count'].values[0])
-    df['Cost %'] = df['YTD_Total_cost']/(df.tail(1)['YTD_Total_cost'].values[0])
-    
-    df['YTD Avg Episode Cost']=df['YTD_Total_cost']/df['Pt_Count']
-    df['Target Avg Episode Cost']=df['Target_Total_cost']/df['Pt_Count']
-    df['Annualized Avg Episode Cost']=df['Annualized_Total_cost']/df['Pt_Count']
-
-    df['% Cost Diff from Benchmark']=(df['Annualized Avg Episode Cost']-df['Target Avg Episode Cost'])/df['Target Avg Episode Cost']
-#    df['Contribution to Overall Performance Difference']=(df['Annualized_Total_cost']-df['Target_Total_cost'])/allvalue[3]
-
-    df['YTD Hospitalization Rate']=df['YTD_Utilization']/df['Pt_Count']*1000
-    df['Target Hospitalization Rate']=df['Target_Utilization']/df['Pt_Count']*1000
-    df['Annualized Hospitalization Rate']=df['Annualized_Utilization']/df['Pt_Count']*1000
-
-#    df['% Util Diff from Target']=(df['Annualized Avg Utilization Rate']-df['Target Avg Utilization Rate'])/df['Target Avg Utilization Rate']
-
-    df['YTD Avg Cost per Unit']=df['YTD_Total_cost']/df['YTD_Utilization']
-    df['Target Avg Cost per Unit']=df['Target_Total_cost']/df['Target_Utilization']
-    df['Annualized Avg Cost per Unit']=df['Annualized_Total_cost']/df['Annualized_Utilization']
-
-    df['% Unit Cost Diff from Target']=(df['Annualized Avg Cost per Unit']-df['Target Avg Cost per Unit'])/df['Target Avg Cost per Unit']
-
-
-    df['% Hospitalization Rate Diff from Benchmark']=(df['Annualized Hospitalization Rate']-df['Target Hospitalization Rate'])/df['Target Hospitalization Rate']
-    df['Contribution to Overall Performance Difference']=(df['Annualized_Utilization']-df['Target_Utilization'])/(df.tail(1)['Target_Utilization'].values[0])
-    
-#    df.to_csv(dimension+'.csv')
-    return df
-
-
-def drill_waterfall(df):
-
-    x_waterfall=['Target','Adj','Target Adj']
-    y_base=df[['base']][3:4].values[0,0]
-    y_adjust=df[['adjusted']][4:5].values[0,0]
-
-    if y_base<1500:
-        num_format='%{y:.0f}'
-    else:
-        num_format='%{y:$,.0f}'
-
-    fig_waterfall = go.Figure(data=[
-        go.Bar(
-            
-            x=x_waterfall, 
-            y=[y_base,y_base,y_base+y_adjust],
-            text=[y_base,y_base,y_base+y_adjust],
-            textposition='inside',
-            textangle=0,
-            constraintext='none',
-            width=0.5,
-            textfont=dict(color=['black',colors['transparent'],'black'],
-                          family="NotoSans-Condensed",
-                          size=14,
-                          ),
-            texttemplate=num_format,
-            marker=dict(
-                    color=[colors['grey'],colors['transparent'],colors['grey']],
-                    opacity=[0.5,0,0.7]
-                    ),
-            marker_line=dict( color = colors['transparent'] )
-            
-        ),
-        go.Bar(     
-            x=x_waterfall, 
-            y=[0,y_adjust,0],
-            width=0.5,
-            text=[0,y_adjust,0],
-            textposition='outside',
-            constraintext='none',
-            textfont=dict(color=[colors['transparent'],'black',colors['transparent']],
-                          family="NotoSans-Condensed",
-                          size=14,
-                          ),
-            texttemplate=num_format,
-            marker=dict(
-                    color=colors['yellow'],
-                    opacity=0.7
-                    )
+    if dimension in ['Category']:
+        df_pre2=df_pre.groupby(['Service Category','Sub Category'])[df_pre.columns[14:]].agg(np.sum).reset_index()
+        df_pre3=df_pre2.mean()
+        Pt_Count=df_pre2['Pt Count'].mean()
+        df=pd.DataFrame(
+        {"Category":['Physical Limitaion','Symptom Frequency','Quality of Life','Social Limitaion','All'],
+         "Pt_Count":[Pt_Count]*5,
+         "Baseline KCCQ Score":df_pre3[7:12].values,
+         "YTD KCCQ Score":df_pre3[12:17].values,
+        }
         )
-    ])
-    # Change the bar mode
-    fig_waterfall.update_layout(
-        barmode='stack',
-        plot_bgcolor=colors['transparent'],
-        paper_bgcolor=colors['transparent'],
-        xaxis=dict(
-                tickfont=dict(family="NotoSans-Condensed",
-                          size=14,)
-                ),
-        yaxis = dict(
-            showgrid = True, 
-            range=[0,y_base*1.4],
-            gridcolor =colors['grey'],
-            nticks=5,
-            showticklabels=True,
-            zeroline=True,
-            zerolinecolor=colors['grey'],
-            zerolinewidth=1,
-        ),
-        showlegend=False,
-        hovermode=False,
-        modebar=dict(
-            bgcolor=colors['transparent']
-        ),
-        #margin=dict(l=10,r=10,b=100,t=40,pad=0),
-        font=dict(
-            family="NotoSans-Condensed",
-            size=12,
-            color="#38160f"
-        ),
-        margin=dict(l=30,r=30,b=0,t=40,pad=0,),
         
-        
-    )
-    return fig_waterfall 
-
-def drill_bar(df):
-    bar1_y=df['base'][0:3].values.tolist()
-
-    if bar1_y[0]<1500:
-        num_format='%{y:.0f}'
     else:
-        num_format='%{y:$,.0f}'
+        df_pre2=df_pre.groupby(list(np.unique([dimension,'Service Category', 'Sub Category'])))[df_pre.columns[14:]].agg(np.sum).reset_index()
+        df=df_pre2.groupby([dimension]).agg(**{
+                    'Pt_Count':('Pt Count','mean'),
+                    'Baseline KCCQ Score':('KCCQ BL ALL Score','mean'),
+                    'YTD KCCQ Score':('KCCQ YTD ALL Score','mean'),
+                    }).reset_index()
+        allvalue=df.sum().values 
+        allvalue[0]='All'
+        df.loc[len(df)] = allvalue
+        df['Patient %'] = df['Pt_Count']/(df.tail(1)['Pt_Count'].values[0])
 
-    fig_bar = go.Figure(data=[
-        go.Bar(        
-            x=['YTD','Annualized','Target Adj'], 
-            y=bar1_y,
-            text=bar1_y,
-            textposition='inside',
-            texttemplate=num_format,
-            textfont=dict(family="NotoSans-Condensed",
-                          size=14,),
-            textangle=0,
-            width=0.5,
-            marker=dict(
-                color=[colors['blue'],colors['blue'],colors['grey']],
-                opacity=[1,0.7,0.7]
-                       )
+    df['Baseline Average KCCQ Score']=df['Baseline KCCQ Score']/df['Pt_Count']
+    df['YTD Average KCCQ Score']=df['YTD KCCQ Score']/df['Pt_Count']
+    df['Improvement from Baseline']=df['YTD Average KCCQ Score']-df['Baseline Average KCCQ Score']
+    df['Improvement Level']=df['Improvement from Baseline'].apply(lambda x: 'Large Improvement' if x>20 else 'Moderate Improvement' if x>10 else 'Small Improvement' if x>5 else 'No Improvement' if x>-5 else 'Worse')
 
-        ),
-    ])
-    fig_bar.update_layout(
-        paper_bgcolor=colors['transparent'],
-        plot_bgcolor=colors['transparent'],
-        showlegend=False,
-        modebar=dict( bgcolor=colors['transparent'] ),
-        xaxis=dict(showline=True,linecolor=colors['grey'],zeroline=True ,zerolinecolor=colors['grey'], tickfont=dict(family="NotoSans-Condensed", size=14,) ), 
-        yaxis=dict(showline=True,linecolor=colors['grey'],gridcolor=colors['grey'],zeroline=True ,zerolinecolor=colors['grey']),  
-        hovermode=False,
-        #margin=dict(l=10,r=10,b=100,t=40,pad=0),
-        font=dict(
-            family="NotoSans-Condensed",
-            size=12,
-            color="#38160f"
-        ),
-        margin=dict(l=30,r=30,b=80,t=40,pad=0),
-    )
-    return fig_bar
-
-
-def gaugegraph(df,row):
-    fig=daq.Gauge(
-            #showCurrentValue=True,
-            scale={'start': -5, 'interval': 1, 'labelInterval': 2},
-            #units="%",
-            color={"gradient":True,"ranges":{"#18cc75":[-5,-1],"#39db44":[-1,0],"#aeff78":[0,2],"#ffeb78":[2,3.5],"#ff4d17":[3.5,5]}}, #
-            value=df['%'][row]*100,
-            label=df['Name'][row],
-            labelPosition='top',    
-            max=5,
-            min=-5,
-            size=110,
-            style={"font-family":"NotoSans-CondensedLight","font-size":"0.4rem"}
-        )  
-    return fig
-
-def table_driver_all(df):        
-    table=dash_table.DataTable(
-        data=df.to_dict('records'),
-        #id=tableid,
-        columns=[{"name": c, "id": c,} for c in df.columns ],  
-        sort_action="native",
-        sort_mode='single',
-        sort_by=[{"column_id":"Impact to Overall Difference","direction":"desc"},],
-        style_data={
-            'whiteSpace': 'normal',
-            'height': 'auto'
-        },
-       
-        style_cell={
-            'textAlign': 'center',
-            'font-family':'NotoSans-Regular',
-            'fontSize':12
-        },
-        style_cell_conditional=[
-            {'if': {'column_id': df.columns[0]},
-             
-             'fontWeight': 'bold',
-            }, 
-            
-        ],
-        style_table={
-            'back':  colors['blue'],
-        },
-        style_header={
-            'height': '4rem',
-            'minWidth': '3rem',
-            'maxWidth':'3rem',
-            'whiteSpace': 'normal',
-            'backgroundColor': '#f1f6ff',
-            'fontWeight': 'bold',
-            'font-family':'NotoSans-CondensedLight',
-            'fontSize':14,
-            'color': '#1357DD',
-            'text-align':'center',
-        },
-    )
-    return table
+    return df
 
 ####################################################################################################################################################################################
 ######################################################################       Simulation         ####################################################################################

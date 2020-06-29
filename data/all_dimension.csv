@@ -1,0 +1,86 @@
+,dimension,value
+0,Age Band,All
+1,Age Band,<65
+2,Age Band,65-74
+3,Age Band,75-85
+4,Age Band,>=85
+5,Gender,All
+6,Gender,F
+7,Gender,M
+8,Weight Band,All
+9,Weight Band,
+10,Comorbidity Type,All
+11,Comorbidity Type,
+12,Comorbidity Score,All
+13,Comorbidity Score,
+14,Patient Health Risk Level,All
+15,Patient Health Risk Level,Low
+16,Patient Health Risk Level,Mid
+17,Patient Health Risk Level,High
+18,NYHA Class,All
+19,NYHA Class,I
+20,NYHA Class,II
+21,NYHA Class,III
+22,NYHA Class,IV
+23,Ejection Fraction,All
+24,Ejection Fraction,
+25,Years Since HF Diagnosis,All
+26,Years Since HF Diagnosis,
+27,Prior Use of ACE/ARB,All
+28,Prior Use of ACE/ARB,
+29,Medication Adherence,All
+30,Medication Adherence,Compliant
+31,Medication Adherence,Non-compliant
+32,Managing Physician (Group),All
+33,Managing Physician (Group),Group A
+34,Managing Physician (Group),Group B
+35,Managing Physician (Group),Group C
+36,Managing Physician (Group),Group D
+37,Service Category,All
+38,Service Category,Inpatient
+39,Service Category,Outpatient ER
+40,Service Category,Outpatient Others (Non ER)
+41,Service Category,Professional Services
+42,Service Category,Drug Others (Excl. Entrestro)
+43,Service Category,Drug Entresto
+44,Service Category,Home Health
+45,Service Category,Skilled Nursing Facility
+46,Service Category,Hospice
+47,Sub Category,All
+48,Sub Category,Heart Failure
+49,Sub Category,Renal Failure
+50,Sub Category,Pleural effusion
+51,Sub Category,Acute myocardial infarction
+52,Sub Category,Cardiac Arrhythmia
+53,Sub Category,Cardiac arrest and ventricular fibrillation
+54,Sub Category,Hypertension
+55,Sub Category,CABG
+56,Sub Category,Pacemaker Implant
+57,Sub Category,PCI
+58,Sub Category,ICD
+59,Sub Category,Others
+60,Sub Category,Cardiac dysrhythmias
+61,Sub Category,Respiratory system and chest symptoms
+62,Sub Category,COPD
+63,Sub Category,Diabetes
+64,Sub Category,AMI
+65,Sub Category,Aftercare following surgery
+66,Sub Category,Durable Medical Equipment (DME)
+67,Sub Category,Lab/Pathology
+68,Sub Category,Radiology
+69,Sub Category,Ambulance
+70,Sub Category,Observation
+71,Sub Category,Outpatient Surgery
+72,Sub Category,Administered Drugs
+73,Sub Category,Anesthesia
+74,Sub Category,Office Visits
+75,Sub Category,Surgical
+76,Sub Category,ACE /ARB
+77,Sub Category,Beta Blocker
+78,Sub Category,Aldosterone receptor antagonists
+79,Sub Category,Vasodilators
+80,Sub Category,Diuretics
+81,Sub Category,Entresto
+82,Sub Category,Home Health
+83,Sub Category,Skilled Nursing Facility
+84,Sub Category,Hospice

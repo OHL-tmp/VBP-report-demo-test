@@ -22,21 +22,16 @@ from modal_drilldown_tableview_kccq import *
 
 from app import app
 
+
+df_drill_barchart_kccq=pd.read_csv("data/drilldown barchart kccq.csv")
+df_drill_piechart_kccq=pd.read_csv("data/drilldown piechart kccq.csv")
+
+df_driver_kccq=pd.read_csv("data/Drilldown Odometer kccq.csv")
+
 df_drilldown=pd.read_csv("data/drilldown_sample_6.csv")
+data_lv2_kccq=drilldata_process_kccq(df_drilldown,'Category')
 
-#dimensions=df_drilldown.columns[0:12]
-df_drill_waterfall_kccq=pd.read_csv("data/drilldown waterfall graph ip.csv")
-df_driver_kccq=pd.read_csv("data/Drilldown Odometer ip.csv")
-df_driver_all_kccq=pd.read_csv("data/Drilldown All Drivers ip.csv")
-
-data_lv2_kccq=drilldata_process_kccq(df_drilldown,'Sub Category')
-
-all_dimension=[]
-for i in list(df_drilldown.columns[0:14]):
-    all_dimension.append([i,'All'])
-    for j in list(df_drilldown[i].unique()):
-        all_dimension.append([i,j])
-all_dimension=pd.DataFrame(all_dimension,columns=['dimension','value'])
+all_dimension=pd.read_csv('data/all_dimension.csv')
 
 #for modify criteria list
 dimensions = ['Age Band' , 'Gender'  , 'Patient Health Risk Level' , 'NYHA Class' , 'Medication Adherence' , 'Comorbidity Type',  'Weight Band' , 'Comorbidity Score' , 'Ejection Fraction' , 'Years Since HF Diagnosis' , 'Prior Use of ACE/ARB' ]
@@ -53,11 +48,11 @@ def col_content_drilldown_kccq(app):
 			[
                 dbc.Row(
 					[
-						dbc.Col(card_overview_drilldown_kccq(0.03),width=8),
+						dbc.Col(card_overview_drilldown_kccq(18),width=8),
 						dbc.Col(card_key_driver_drilldown_kccq(app),width=4),
 					]
 				),
-				card_confounding_factors_kccq(app),
+#				card_confounding_factors_kccq(app),
                 html.Div(
                     [
                         dbc.Row(
@@ -79,7 +74,7 @@ def col_content_drilldown_kccq(app):
                     dbc.Tabs(
                         [
                             dbc.Tab(tab_patient_analysis_kccq(app), label="Patient Analysis", style={"background-color":"#fff"}, tab_style={"font-family":"NotoSans-Condensed"}),
-                            dbc.Tab(tab_physician_analysis_kccq(app), label="Physician Analysis", style={"background-color":"#fff"}, tab_style={"font-family":"NotoSans-Condensed"}),
+#                            dbc.Tab(tab_physician_analysis_kccq(app), label="Physician Analysis", style={"background-color":"#fff"}, tab_style={"font-family":"NotoSans-Condensed"}),
                         ], 
                         # id = 'tab_container'
                     ),
@@ -90,10 +85,10 @@ def col_content_drilldown_kccq(app):
 
 
 def card_overview_drilldown_kccq(percentage):
-    if percentage > 0:
+    if percentage < 10:
         color = "#dc3545"
         condition = "worse than target"
-    elif percentage == 0:
+    elif percentage <20:
         color = "#1357DD"
         condition = "same as target"
     else:
@@ -104,12 +99,12 @@ def card_overview_drilldown_kccq(percentage):
 			[
 				dbc.Row(
                         [
-                            dbc.Col(html.H1("CHF Related Hospitalization Rate (per 1,000)", style={"font-size":"1.6rem"}), width="auto"),
+                            dbc.Col(html.H1("KCCQ Score (Patient Reported Outcome)", style={"font-size":"1.6rem"}), width="auto"),
                             dbc.Card(
                                 dbc.CardBody(
                                     [
-                                        html.H3("worse than target", style={"font-size":"0.8rem", "color":"#fff"}),
-                                        html.H2(str(percentage*100)+"%", style={"font-size":"1.2rem", "margin-top":"-9px", "color":"#fff"}),
+                                        html.H3("Improvement from Baseline", style={"font-size":"0.8rem", "color":"#fff"}),
+                                        html.H2(str(percentage)+" points", style={"font-size":"1.2rem", "margin-top":"-9px", "color":"#fff"}),
                                     ],
                                     style={"margin-top":"-20px"}
                                 ),
@@ -122,10 +117,10 @@ def card_overview_drilldown_kccq(percentage):
                 dbc.Row(
                     [
                         dbc.Col(
-                            [
+                            [   html.H1("KCCQ Score Performance Year Results", style={"font-size":"1.6rem"}),
                                 html.Div(
                                     [
-                                        dcc.Graph(figure=drill_bar(df_drill_waterfall_kccq),config={'modeBarButtonsToRemove': button_to_rm,'displaylogo': False,},style={"height":"28rem"}),
+                                        dcc.Graph(figure=barchart_kccq(df_drill_barchart_kccq),config={'modeBarButtonsToRemove': button_to_rm,'displaylogo': False,},style={"height":"28rem"}),
                                     ]
                                 )
                             ],
@@ -135,9 +130,9 @@ def card_overview_drilldown_kccq(percentage):
                         dbc.Col(
                             [
                                 html.Div(
-                                    [
+                                    [   html.H1("Patient Distribution by Improvement Level", style={"font-size":"1.6rem"}),
                                         html.H3("Risk Adjustment Details", style={"font-size":"0.8rem","margin-top":"-1.8rem","color":"#919191","background-color":"#f5f5f5","width":"9rem","padding-left":"1rem","padding-right":"1rem","text-align":"center"}),
-                                        html.Div([dcc.Graph(figure=drill_waterfall(df_drill_waterfall_kccq),style={"height":"24rem","padding-bottom":"1rem"},config={'modeBarButtonsToRemove': button_to_rm,'displaylogo': False,})]),
+                                        html.Div([dcc.Graph(figure=piechart_kccq(df_drill_piechart_kccq),style={"height":"24rem","padding-bottom":"1rem"},config={'modeBarButtonsToRemove': button_to_rm,'displaylogo': False,})]),
                                     ],
                                     style={"border-radius":"0.5rem","border":"2px solid #d2d2d2","padding":"1rem","height":"25.5rem"}
                                 )
@@ -158,21 +153,7 @@ def card_key_driver_drilldown_kccq(app):
                         dbc.Row(
                             [
                                 dbc.Col(html.Img(src=app.get_asset_url("bullet-round-blue.png"), width="10px"), width="auto", align="start", style={"margin-top":"-4px"}),
-		                        dbc.Col(html.H4("Key Drivers", style={"font-size":"1rem", "margin-left":"10px"}), width=8),
-                                dbc.Col([dbc.Button("See All Drivers", id = 'button-all-driver-kccq',
-                                                        style={"background-color":"#38160f", "border":"none", "border-radius":"10rem", "font-family":"NotoSans-Regular", "font-size":"0.6rem"},
-                                                    ),
-                                        dbc.Modal([
-                                                dbc.ModalHeader("All Drivers"),
-                                                dbc.ModalBody(children = html.Div([table_driver_all(df_driver_all_kccq)], style={"padding":"1rem"})),
-                                                dbc.ModalFooter(
-                                                        dbc.Button("Close", id = 'close-all-driver-kccq',
-                                                                        style={"background-color":"#38160f", "border":"none", "border-radius":"10rem", "font-family":"NotoSans-Regular", "font-size":"0.8rem"},
-                                                                    )
-                                                        )
-                                                ], id = 'modal-all-driver-kccq', size="lg")],
-                                        width=3,
-                                        ),
+		                        dbc.Col(html.H4("Patient Cohort with Least Improvement (bottom 3)", style={"font-size":"1rem", "margin-left":"10px"}), width=8),
                             ],
                             no_gutters=True,
                         ),
@@ -197,12 +178,7 @@ def card_key_driver_drilldown_kccq(app):
                                         html.Div(html.H4("{:.1f} %".format(abs(df_driver_kccq['%'][2]*100)),style={"color":"#ff4d17"}), style={"margin-top":"-1.5rem","text-align":"center","font-size":"1rem","color":"#39db44"}),
                                     ],
                                     width=6),
-                                dbc.Col(
-                                    [
-                                        html.Div([gaugegraph(df_driver_kccq,3)], style={"padding-top":"1.5rem"}),
-                                        html.Div(html.H4("{:.1f} %".format(abs(df_driver_kccq['%'][3]*100)),style={"color":"#18cc75"}), style={"margin-top":"-1.5rem","text-align":"center","font-size":"1rem","color":"#39db44"}),
-                                    ],
-                                    width=6),
+
                                 
                             ],
                         ),
@@ -383,8 +359,6 @@ def card_graph1_patient_performance_drilldown_kccq(app):
                 style={"box-shadow":"0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05)", "border":"none", "border-radius":"0.5rem"}
             )
 
-
-
 def filter_template_kccq(dim,idname,default_val='All'):
     return(dcc.Dropdown(
                                 id=idname,
@@ -400,7 +374,7 @@ def card_table1_patient_performance_drilldown_kccq(app):
                         dbc.Row(
                             [
                                 dbc.Col(html.Img(src=app.get_asset_url("bullet-round-blue.png"), width="10px"), width="auto", align="start", style={"margin-top":"-4px"}),
-                                dbc.Col(html.H4("Hospitalization Rate by Medical Condition", style={"font-size":"1rem", "margin-left":"10px"}), width=8),
+                                dbc.Col(html.H4("KCCQ Category Analysis", style={"font-size":"1rem", "margin-left":"10px"}), width=8),
                             ],
                             no_gutters=True,
                         ),
@@ -411,8 +385,7 @@ def card_table1_patient_performance_drilldown_kccq(app):
                                     [
                                         dbc.Row(
                                             [
-                                                dbc.Col(html.H1("By Medical Condition", style={"color":"#f0a800", "font-size":"1.5rem","padding-top":"1.2rem"}), width=5),
-                                                
+                                                dbc.Col(html.H1("By Category", style={"color":"#f0a800", "font-size":"1.5rem","padding-top":"1.2rem"}), width=5),
                                                 dbc.Col(
                                                     [
                                                         html.Div("Medication Adherence",id="filter_patient_1_2_name_kccq", style={"font-size":"0.6rem"}),
@@ -421,14 +394,15 @@ def card_table1_patient_performance_drilldown_kccq(app):
                                                     style={"padding":"0.8rem"},
                                                     width=2,
                                                 ),
+                                                
                                                                                     
                                             ]
                                         )
                                     ],
                                     style={"padding-left":"2rem","padding-right":"1rem","border-radius":"5rem","background-color":"#f7f7f7","margin-top":"2rem"}
                                 ), 
-                                html.H4("* Default sorting: by Contribution to Overall Performance Difference", style={"font-size":"0.8rem","color":"#919191","padding-top":"1rem","margin-bottom":"-1rem"}), 
-                                html.Div([dashtable_lv3_kccq(data_lv2_kccq,'Sub Category','dashtable_patient_lv2_kccq',0)],id="drill_patient_lv2_kccq",style={"padding":"1rem"})
+#                                html.H4("* Default sorting: by Contribution to Overall Performance Difference", style={"font-size":"0.8rem","color":"#919191","padding-top":"1rem","margin-bottom":"-1rem"}), 
+                                html.Div([dashtable_lv3_kccq(data_lv2_kccq,'dashtable_patient_lv2_kccq')],style={"padding":"1rem"})
                             ], 
                             style={"max-height":"120rem"}
                         ),
@@ -440,88 +414,7 @@ def card_table1_patient_performance_drilldown_kccq(app):
                 style={"box-shadow":"0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05)", "border":"none", "border-radius":"0.5rem"}
             )
 
-def card_graph2_physician_performance_drilldown_kccq(app):
-    return dbc.Card(
-                dbc.CardBody(
-                    [
-                        dbc.Row(
-                            [
-                                dbc.Col(html.Img(src=app.get_asset_url("bullet-round-blue.png"), width="10px"), width="auto", align="start", style={"margin-top":"-4px"}),
-                                dbc.Col(html.H4("Performance Drilldown by Managing Physician (Group)", style={"font-size":"1rem", "margin-left":"10px"}), width=8),
-                            ],
-                            no_gutters=True,
-                        ),
 
-                        html.Div(
-                            [
-                                html.Div(
-                                    [
-                                        dbc.Row(
-                                            [
-                                                dbc.Col(html.H1("By Managing Physician (Group)", style={"color":"#f0a800", "font-size":"1.5rem","padding-top":"1.2rem"}), width=6),
-                                                
-                                            ]
-                                        )
-                                    ],
-                                    style={"padding-left":"2rem","padding-right":"1rem","border-radius":"5rem","background-color":"#f7f7f7","margin-top":"2rem"}
-                                ), 
-                                html.Div(drillgraph_lv1_kccq(drilldata_process_kccq(df_drilldown,'Managing Physician (Group)'),'dashtable_physician_lv1_kccq','Managing Physician (Group)'),id="drill_physician_lv1_kccq",style={"padding-top":"2rem","padding-bottom":"2rem"}), 
-                            ], 
-                            style={"max-height":"80rem"}
-                        ),
-                    ]
-                ),
-                className="mb-3",
-                style={"box-shadow":"0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05)", "border":"none", "border-radius":"0.5rem"}
-            )
-
-
-def card_table1_physician_performance_drilldown_kccq(app):
-	return dbc.Card(
-                dbc.CardBody(
-                    [
-                        dbc.Row(
-                            [
-                                dbc.Col(html.Img(src=app.get_asset_url("bullet-round-blue.png"), width="10px"), width="auto", align="start", style={"margin-top":"-4px"}),
-                                dbc.Col(html.H4("Hospitalization Rate by Medical Condition", style={"font-size":"1rem", "margin-left":"10px"}), width=8),
-                            ],
-                            no_gutters=True,
-                        ),
-
-                        html.Div(
-                            [
-                                html.Div(
-                                    [
-                                        dbc.Row(
-                                            [
-                                                dbc.Col(html.H1("By Medical Condition", style={"color":"#f0a800", "font-size":"1.5rem","padding-top":"1.2rem"}), width=5),
-                                                
-                                                dbc.Col(
-                                                    [
-                                                        html.Div("Managing Physician (Group)",id="filter_physician_1_2_name_kccq", style={"font-size":"0.6rem"}),
-                                                        html.Div(filter_template_kccq("Managing Physician (Group)","filter_physician_1_2_value_kccq",default_val='All'),id='filter_physician_1_2_contain_kccq'),
-                                                    ], 
-                                                    style={"padding":"0.8rem"},
-                                                    width=2,
-                                                ),
-                                                    
-                                            ]
-                                        )
-                                    ],
-                                    style={"padding-left":"2rem","padding-right":"1rem","border-radius":"5rem","background-color":"#f7f7f7","margin-top":"2rem"}
-                                ), 
-                                html.H4("* Default sorting: by Contribution to Overall Performance Difference", style={"font-size":"0.8rem","color":"#919191","padding-top":"1rem","margin-bottom":"-1rem"}), 
-                                html.Div([dashtable_lv3_kccq(data_lv2_kccq,'Sub Category','dashtable_physician_lv2_kccq',0)],id="drill_physician_lv2_kccq",style={"padding":"1rem"})
-                            ], 
-                            style={"max-height":"120rem"}
-                        ),
-                        
-
-                    ]
-                ),
-                className="mb-3",
-                style={"box-shadow":"0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05)", "border":"none", "border-radius":"0.5rem"}
-            )
 
 if __name__ == "__main__":
     app.run_server(host="127.0.0.1",debug=True)
