@@ -1327,9 +1327,152 @@ def drillgraph_lv1_crhr(df_table,tableid,dim):
         },
     )
     return tbl
+
+def drillgraph_lv1_kccq(df_table,tableid,dim):
+
+    df_table=df_table.merge(df_dim_order[df_dim_order['dimension']==df_table.columns[0]],how='left',left_on=df_table.columns[0],right_on='value').sort_values(by='ordering')  
+    
+#    drillgraph= [html.Div([drillgraph_table(df,tableid,dim)],style={"padding-left":"3rem","padding-right":"5rem"}),]
+    
+#    return drillgraph
+
+#def drillgraph_table(df_table,tableid,dim):
+#    df1=df_table[0:len(df_table)-1].sort_values(by='Contribution to Overall Performance Difference',ascending= 'desc')
+ #   df_table=pd.concat([df1,df_table.tail(1)])
+
+    df_table['id']=df_table[dim]
+
+    df_table.set_index('id', inplace=True, drop=False)
+
+    col_max=max(df_table['Contribution to Overall Performance Difference'].max(),df_table['% Cost Diff from Benchmark'].max())
+
+    tbl=dash_table.DataTable(
+        id=tableid,
+        data=df_table.to_dict('records'),
+        columns=[ 
+        {'id': dim, 'name': dim} ,
+        {'id': 'Patient %', 'name': 'Patient %','type': 'numeric',"format":FormatTemplate.percentage(1)} ,
+        {'id': 'Cost %', 'name': 'Inpatient Cost %','type': 'numeric',"format":FormatTemplate.percentage(1)} ,
+        {'id': 'YTD Hospitalization Rate', 'name': 'YTD Hospitalization Rate Per 1000','type': 'numeric',"format":Format( precision=0,group=',', scheme=Scheme.fixed,)} ,
+        {'id': '% Hospitalization Rate Diff from Benchmark', 'name': '% Diff from Benchmark','type': 'numeric',"format":FormatTemplate.percentage(1)} ,
+        {'id': 'Contribution to Overall Performance Difference', 'name': 'Contribution to Overall Performance Difference','type': 'numeric',"format":FormatTemplate.percentage(1)} ,
+         ],
+        row_selectable="single",
+        selected_rows=[len(df_table)-1],
+        sort_action="custom",
+        sort_mode='single',
+#        sort_by=[{"column_id":"Contribution to Overall Performance Difference","direction":"desc"},],
+        style_data={
+            'whiteSpace': 'normal',
+            'height': 'auto'
+        },
+
+        style_data_conditional=(
+        data_bars_diverging(df_table, '% Hospitalization Rate Diff from Benchmark',col_max) +
+        data_bars_diverging(df_table, 'Contribution to Overall Performance Difference',col_max)+
+        [{'if': {'column_id':'% Hospitalization Rate Diff from Benchmark'},
+             
+             'width': '20rem',
+            }, 
+        {'if': {'column_id': 'Contribution to Overall Performance Difference'},
+             
+             'width': '20rem',
+            },
+
+        ]
+        ),
+       
+        style_cell={
+            'textAlign': 'center',
+            'font-family':'NotoSans-Condensed',
+            'fontSize':14
+        },
+        
+        style_header={
+            'height': '4rem',
+            'minWidth': '3rem',
+            'maxWidth':'3rem',
+            'whiteSpace': 'normal',
+            'backgroundColor': "#f1f6ff",
+            'fontWeight': 'bold',
+            'font-family':'NotoSans-CondensedLight',
+            'fontSize':16,
+            'color': '#1357DD',
+            'text-align':'center',
+        },
+    )
+    return tbl
        
    
 def dashtable_lv3_crhr(df,dimension,tableid,row_select):#row_select: numeric 0 or 1
+    
+    #df1=df[0:len(df)-1].sort_values(by='Contribution to Overall Performance Difference',ascending=False)
+    #df1.append(df[len(df)-1:len(df)])
+    #df1['id']=df1[df1.columns[0]]
+    #df1.set_index('id', inplace=True, drop=False)
+    df['id']=df[df.columns[0]]
+    df.set_index('id', inplace=True, drop=False)
+
+    if row_select==0:
+        row_sel=False
+    else:
+        row_sel='single'
+   
+    table_lv3=dash_table.DataTable(
+        data=df.to_dict('records'),
+        id=tableid,
+        columns=[
+        {"name": ["", dimension], "id": dimension},
+        {"name": ["Average Hospitalization Rate", "YTD Hospitalization Rate per 1000"], "id": "YTD Hospitalization Rate",'type': 'numeric',"format":Format( precision=0,group=',', scheme=Scheme.fixed,)},
+        {"name": ["Average Hospitalization Rate", "% Diff from Benchmark"], "id": "% Hospitalization Rate Diff from Benchmark",'type': 'numeric',"format":FormatTemplate.percentage(1)},
+        {"name": ["Average Hospitalization Rate", "Contribution to Overall Performance Difference"], "id": "Contribution to Overall Performance Difference",'type': 'numeric',"format":FormatTemplate.percentage(1)},
+        {"name": ["Average CHF Related Cost Per Patient", "YTD Avg Inpatient Cost"], "id": "YTD Avg Episode Cost",'type': 'numeric',"format":FormatTemplate.money(0),},
+#        {"name": ["Average CHF Related Cost Per Patient", "% Diff from Benchmark"], "id": "% Cost Diff from Target",'type': 'numeric',"format":FormatTemplate.percentage(1)},
+#        {"name": ["Average Unit Cost", "YTD Avg Unit Cost"], "id": "YTD Avg Cost per Unit",'type': 'numeric',"format":FormatTemplate.money(0)},
+#        {"name": ["Average Unit Cost", "% Diff from Benchmark"], "id": "% Unit Cost Diff from Target",'type': 'numeric',"format":FormatTemplate.percentage(1)},
+    ],
+        merge_duplicate_headers=True,
+        sort_action="custom",
+        sort_mode='single',
+        sort_by=[{"column_id":"Contribution to Overall Performance Difference","direction":"desc"},],
+        row_selectable=row_sel,
+        selected_rows=[(len(df)-1)],
+        style_data={
+            'whiteSpace': 'normal',
+            'height': 'auto'
+        },
+       
+        style_cell={
+            'textAlign': 'center',
+            'font-family':'NotoSans-Regular',
+            'fontSize':12
+        },
+        style_cell_conditional=[
+            {'if': {'column_id': df.columns[0]},
+             
+             'fontWeight': 'bold',
+            }, 
+            
+        ],
+        style_table={
+            'back':  colors['blue'],
+        },
+        style_header={
+            'height': '4rem',
+            'minWidth': '3rem',
+            'maxWidth':'3rem',
+            'whiteSpace': 'normal',
+            'backgroundColor': '#f1f6ff',
+            'fontWeight': 'bold',
+            'font-family':'NotoSans-CondensedLight',
+            'fontSize':14,
+            'color': '#1357DD',
+            'text-align':'center',
+        },
+    )
+    return table_lv3
+
+def dashtable_lv3_kccq(df,dimension,tableid,row_select):#row_select: numeric 0 or 1
     
     #df1=df[0:len(df)-1].sort_values(by='Contribution to Overall Performance Difference',ascending=False)
     #df1.append(df[len(df)-1:len(df)])
@@ -1524,6 +1667,74 @@ def drilldata_process_crhr(df_drilldown,dimension,dim1='All',f1='All',dim2='All'
     
 #    df.to_csv(dimension+'.csv')
     return df
+
+
+def drilldata_process_kccq(df_drilldown,dimension,dim1='All',f1='All',dim2='All',f2='All',dim3='All',f3='All'):#dimension='Sub Category'    
+    
+    df_pre=df_drilldown
+    
+    if f1!='All':
+        df_pre=df_pre[df_pre[dim1]==f1]
+        
+    if f2!='All':
+        df_pre=df_pre[df_pre[dim2]==f2]
+        
+    if  f3!='All':
+        df_pre=df_pre[df_pre[dim3]==f3]
+
+    df_pre2=df_pre.groupby(list(np.unique([dimension,'Service Category', 'Sub Category'])))[df_pre.columns[14:]].agg(np.sum).reset_index()
+    
+    df=df_pre2[df_pre2['Service Category']=='Inpatient'].groupby([dimension]).agg(YTD_Total_cost=pd.NamedAgg(column='YTD Total Cost',aggfunc=sum)
+                                             ,Annualized_Total_cost=pd.NamedAgg(column='Annualized Total Cost',aggfunc=sum)
+                                             ,Target_Total_cost=pd.NamedAgg(column='Benchmark Total Cost',aggfunc=sum)
+                                             ,YTD_Utilization=pd.NamedAgg(column='YTD Utilization',aggfunc=sum)
+                                             ,Annualized_Utilization=pd.NamedAgg(column='Annualized Utilization',aggfunc=sum)
+                                             ,Target_Utilization=pd.NamedAgg(column='Benchmark Utilization',aggfunc=sum)
+                                             ,Pt_Count=pd.NamedAgg(column='Pt Count',aggfunc=np.mean)
+                                             ).reset_index()
+
+    allvalue=df.sum().values 
+    allvalue[0]='All'
+    if dimension in ['Service Category', 'Sub Category']:
+        allvalue[-1]=df['Pt_Count'].mean()
+
+    if len(df[df[dimension]=='Others'])>0:
+        otherpos=df[df[dimension]=='Others'].index[0]
+        otherlist=df.loc[otherpos]
+        df.loc[otherpos]=df.loc[len(df)-1]
+        df.loc[len(df)-1]=otherlist
+  
+    df.loc[len(df)] = allvalue
+
+    df['Patient %'] = df['Pt_Count']/(df.tail(1)['Pt_Count'].values[0])
+    df['Cost %'] = df['YTD_Total_cost']/(df.tail(1)['YTD_Total_cost'].values[0])
+    
+    df['YTD Avg Episode Cost']=df['YTD_Total_cost']/df['Pt_Count']
+    df['Target Avg Episode Cost']=df['Target_Total_cost']/df['Pt_Count']
+    df['Annualized Avg Episode Cost']=df['Annualized_Total_cost']/df['Pt_Count']
+
+    df['% Cost Diff from Benchmark']=(df['Annualized Avg Episode Cost']-df['Target Avg Episode Cost'])/df['Target Avg Episode Cost']
+#    df['Contribution to Overall Performance Difference']=(df['Annualized_Total_cost']-df['Target_Total_cost'])/allvalue[3]
+
+    df['YTD Hospitalization Rate']=df['YTD_Utilization']/df['Pt_Count']*1000
+    df['Target Hospitalization Rate']=df['Target_Utilization']/df['Pt_Count']*1000
+    df['Annualized Hospitalization Rate']=df['Annualized_Utilization']/df['Pt_Count']*1000
+
+#    df['% Util Diff from Target']=(df['Annualized Avg Utilization Rate']-df['Target Avg Utilization Rate'])/df['Target Avg Utilization Rate']
+
+    df['YTD Avg Cost per Unit']=df['YTD_Total_cost']/df['YTD_Utilization']
+    df['Target Avg Cost per Unit']=df['Target_Total_cost']/df['Target_Utilization']
+    df['Annualized Avg Cost per Unit']=df['Annualized_Total_cost']/df['Annualized_Utilization']
+
+    df['% Unit Cost Diff from Target']=(df['Annualized Avg Cost per Unit']-df['Target Avg Cost per Unit'])/df['Target Avg Cost per Unit']
+
+
+    df['% Hospitalization Rate Diff from Benchmark']=(df['Annualized Hospitalization Rate']-df['Target Hospitalization Rate'])/df['Target Hospitalization Rate']
+    df['Contribution to Overall Performance Difference']=(df['Annualized_Utilization']-df['Target_Utilization'])/(df.tail(1)['Target_Utilization'].values[0])
+    
+#    df.to_csv(dimension+'.csv')
+    return df
+
 
 def drill_waterfall(df):
 

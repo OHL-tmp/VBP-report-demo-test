@@ -20,6 +20,7 @@ from figure import *
 
 from contract_manager_drilldown_hosp_rate import *
 from contract_manager_drilldown_avg_cost import *
+from contract_manager_drilldown_kccq import *
 
 
 from modal_drilldown_tableview import *
@@ -68,6 +69,7 @@ def create_layout(app):
                         [
                             html.Div(col_content_drilldown(app), id='drilldown-div-avgcost-container', hidden=False),
                             html.Div(col_content_drilldown_crhr(app), id='drilldown-div-crhr-container', hidden=True),
+                            html.Div(col_content_drilldown_kccq(app), id='drilldown-div-kccq-container', hidden=True),
                         ],
                         className="mb-3",
                         style={"padding-left":"3rem", "padding-right":"3rem","padding-top":"1rem"},
@@ -116,6 +118,7 @@ def dropdownmenu_select_measures():
                     dbc.DropdownMenuItem("Value Based Measures", header=True),
                     dbc.DropdownMenuItem("CHF Related Average Cost per Patient", id="avg_cost"),
                     dbc.DropdownMenuItem("CHF Related Hospitalization Rate", id="crhr"),
+                    dbc.DropdownMenuItem("KCCQ", id="kccq"),
                     dbc.DropdownMenuItem("NT - proBNP Change %", disabled=True),
                     dbc.DropdownMenuItem("LVEF LS Mean Change %", disabled=True),
                     dbc.DropdownMenuItem(divider=True),
@@ -146,16 +149,18 @@ layout = create_layout(app)
     [
     Output('drilldown-dropdownmenu','label'),
     Output('drilldown-div-avgcost-container', 'hidden'),
-    Output('drilldown-div-crhr-container', 'hidden')],
+    Output('drilldown-div-crhr-container', 'hidden'),
+    Output('drilldown-div-kccq-container', 'hidden')],
     [
         Input("avg_cost", "n_clicks"),
         Input("crhr", "n_clicks"),
-        
+        Input("kccq", "n_clicks"),
     ],
 )
 def select_drilldown(*args):
     state_avg_cost = True
     state_crhr = True
+    state_kccq = True
 
     ctx = dash.callback_context
 
@@ -172,9 +177,12 @@ def select_drilldown(*args):
         elif button_id == "avg_cost":
             state_avg_cost = False
             label = "CHF Related Average Cost per Patient"
+        elif button_id == "kccq":
+            state_kccq = False
+            label = "KCCQ"
 
 
-    return label, state_avg_cost, state_crhr
+    return label, state_avg_cost, state_crhr, state_kccq
 
 
 
