@@ -747,9 +747,12 @@ def toggle_collapse_domain_selection_measures_1(v1, v2, v3, v4):
 	Output("dashboard-card-selected-domain-2", "children")],
 	[Input("checklist-domain-measures-lv2-2-1", "value"),
 	Input("checklist-domain-measures-lv2-2-2", "value"),
-	Input("checklist-domain-measures-lv2-2-3", "value")],
+	Input("checklist-domain-measures-lv2-2-3", "value"),
+	Input("checklist-domain-measures-lv2-2-4", "value"),
+	Input("checklist-domain-measures-lv2-2-5", "value"),
+	Input("checklist-domain-measures-lv2-2-6", "value")],
 )
-def toggle_collapse_domain_selection_measures_2(v1, v2, v3):
+def toggle_collapse_domain_selection_measures_2(v1, v2, v3, v4, v5, v6):
 	if v1:
 		len1 = len(v1)
 	else:
@@ -762,7 +765,19 @@ def toggle_collapse_domain_selection_measures_2(v1, v2, v3):
 		len3 = len(v3)
 	else:
 		len3= 0
-	measure_count = len1 + len2 +len3
+	if v4:
+		len4 = len(v4)
+	else:
+		len4= 0
+	if v5:
+		len5 = len(v5)
+	else:
+		len5= 0
+	if v6:
+		len6 = len(v6)
+	else:
+		len6= 0
+	measure_count = len1 + len2 +len3 + len4 + len5 + len6
 	if measure_count > 0: 
 		return  "primary", True, u"{} measures selected".format(measure_count)
 	return "light", False, "" 

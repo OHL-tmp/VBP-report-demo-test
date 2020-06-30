@@ -666,14 +666,14 @@ def datatable_data_selection(v1, v2, v3, d1, d2, f1, f2, m):
     if v3 is not None:
         selected_dimension.append(v3)
 
-    table_column.extend(list(set(selected_dimension + ['Service Category', 'Sub Category'])))
+    table_column.extend(list(set(selected_dimension + ['Service Category', 'Sub Category', 'KCCQ Category'])))
     table_column.append("Pt Count")
     percent_list = ['Diff % from Benchmark Utilization per Thousand', 'Diff % from Benchmark Total Cost', 'Diff % from Benchmark Unit Cost', 'Patient %', 'Diff % from Benchmark Hospitalization Rate per Thousand']
     dollar_list = ['YTD Total Cost', 'Annualized Total Cost', 'Benchmark Total Cost', 'YTD Unit Cost', 'Annualized Unit Cost', 'Benchmark Unit Cost']
     if len(selected_dimension) > 0:
 
         table_column.extend(measure_ori) 
-        df_agg_pre = df_drilldown_filtered[table_column].groupby(by = list(set(selected_dimension + ['Service Category', 'Sub Category']))).sum().reset_index()
+        df_agg_pre = df_drilldown_filtered[table_column].groupby(by = list(set(selected_dimension + ['Service Category', 'Sub Category', 'KCCQ Category']))).sum().reset_index()
         df_agg = df_agg_pre[table_column].groupby(by = selected_dimension).agg({'Pt Count':'mean', 'YTD Utilization':'sum', 'Annualized Utilization':'sum', 'Benchmark Utilization':'sum', 
             'YTD Total Cost':'sum', 'Annualized Total Cost':'sum', 'Benchmark Total Cost':'sum', 'YTD IP Utilization':'sum', 'Annualized IP Utilization':'sum', 'Benchmark IP Utilization':'sum',
             'Baseline Average KCCQ Score':'mean', 'YTD Average KCCQ Score':'mean'}).reset_index()
@@ -1071,14 +1071,14 @@ def datatable_data_selection(v1, v2, v3, d1, d2, f1, f2, m):
     if v3 is not None:
         selected_dimension.append(v3)
 
-    table_column.extend(list(set(selected_dimension + ['Service Category', 'Sub Category'])))
+    table_column.extend(list(set(selected_dimension + ['Service Category', 'Sub Category', 'KCCQ Category'])))
     table_column.append("Pt Count")
     percent_list = ['Diff % from Benchmark Utilization per Thousand', 'Diff % from Benchmark Total Cost', 'Diff % from Benchmark Unit Cost', 'Patient %', 'Diff % from Benchmark Hospitalization Rate per Thousand']
     dollar_list = ['YTD Total Cost', 'Annualized Total Cost', 'Benchmark Total Cost', 'YTD Unit Cost', 'Annualized Unit Cost', 'Benchmark Unit Cost']
     if len(selected_dimension) > 0:
 
         table_column.extend(measure_ori) 
-        df_agg_pre = df_drilldown_filtered[table_column].groupby(by = list(set(selected_dimension + ['Service Category', 'Sub Category']))).sum().reset_index()
+        df_agg_pre = df_drilldown_filtered[table_column].groupby(by = list(set(selected_dimension + ['Service Category', 'Sub Category', 'KCCQ Category']))).sum().reset_index()
         df_agg = df_agg_pre[table_column].groupby(by = selected_dimension).agg({'Pt Count':'mean', 'YTD Utilization':'sum', 'Annualized Utilization':'sum', 'Benchmark Utilization':'sum', 
             'YTD Total Cost':'sum', 'Annualized Total Cost':'sum', 'Benchmark Total Cost':'sum', 'YTD IP Utilization':'sum', 'Annualized IP Utilization':'sum', 'Benchmark IP Utilization':'sum',
             'Baseline Average KCCQ Score':'mean', 'YTD Average KCCQ Score':'mean'}).reset_index()
@@ -1371,14 +1371,14 @@ def datatable_data_selection(v1, v2, v3, d1, d2, f1, f2, m):
     if v3 is not None:
         selected_dimension.append(v3)
 
-    table_column.extend(list(set(selected_dimension + ['Service Category', 'Sub Category'])))
+    table_column.extend(list(set(selected_dimension + ['Service Category', 'Sub Category', 'KCCQ Category'])))
     table_column.append("Pt Count")
     percent_list = ['Diff % from Benchmark Utilization per Thousand', 'Diff % from Benchmark Total Cost', 'Diff % from Benchmark Unit Cost', 'Patient %', 'Diff % from Benchmark Hospitalization Rate per Thousand']
     dollar_list = ['YTD Total Cost', 'Annualized Total Cost', 'Benchmark Total Cost', 'YTD Unit Cost', 'Annualized Unit Cost', 'Benchmark Unit Cost']
     if len(selected_dimension) > 0:
 
         table_column.extend(measure_ori) 
-        df_agg_pre = df_drilldown_filtered[table_column].groupby(by = list(set(selected_dimension + ['Service Category', 'Sub Category']))).sum().reset_index()
+        df_agg_pre = df_drilldown_filtered[table_column].groupby(by = list(set(selected_dimension + ['Service Category', 'Sub Category', 'KCCQ Category']))).sum().reset_index()
         df_agg = df_agg_pre[table_column].groupby(by = selected_dimension).agg({'Pt Count':'mean', 'YTD Utilization':'sum', 'Annualized Utilization':'sum', 'Benchmark Utilization':'sum', 
             'YTD Total Cost':'sum', 'Annualized Total Cost':'sum', 'Benchmark Total Cost':'sum', 'YTD IP Utilization':'sum', 'Annualized IP Utilization':'sum', 'Benchmark IP Utilization':'sum',
             'Baseline Average KCCQ Score':'mean', 'YTD Average KCCQ Score':'mean'}).reset_index()
@@ -1422,7 +1422,7 @@ def datatable_data_selection(v1, v2, v3, d1, d2, f1, f2, m):
 
 
 if __name__ == "__main__":
-    app.run_server(host="127.0.0.1",debug=True)
+    app.run_server(host="127.0.0.1",debug=True, port = 8052)
 
 
 

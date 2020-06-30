@@ -41,7 +41,7 @@ Domain_options ={
     "Life Expectancy" : ["CV Mortality Rate"],
     "Disease Progression" : ["Rate of CHF Progression for 24 months"],
     "Clinical Measures Adherence Level" : [],
-    "Depressive Symptom Measures" : [],
+    "Self-reported Outcome" : ["KCCQ-12 Score"],
     "Psychosocial Outcome" : []
 },
 

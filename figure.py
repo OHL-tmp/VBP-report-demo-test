@@ -795,9 +795,9 @@ def tbl_non_contract(df,measures):
     measure_tbl=dash_table.DataTable(
         data=df.to_dict('records'),
         columns=[ {'id': c, 'name': c,'type': 'numeric',"format":FormatTemplate.percentage(1)} if c in percent_list else {'id': c, 'name': c} for c in df.columns ],
-#        sort_action="native",
-#        sort_mode='single',
-#        sort_by=[{"column_id":"Performance Diff from Target","direction":"desc"},],
+        sort_action="native",
+        sort_mode='single',
+        sort_by=[{"column_id":"Performance Diff from Target","direction":"desc"},],
         style_data={
             'whiteSpace': 'normal',
             'height': 'auto',

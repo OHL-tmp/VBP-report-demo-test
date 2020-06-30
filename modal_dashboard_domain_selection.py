@@ -46,9 +46,9 @@ Domain_options ={
                                          "LVEDVi LS Mean Change", "LVESVi LS Mean Change", "E/e' LS Mean Change"],
     "Functional Outcomes" : ["Change in Self-Care Score", "Change in Mobility Score"  ],
     "Life Expectancy" : ["CV Mortality Rate"],
-    "Disease Progression" : [],
+    "Disease Progression" : ["Rate of CHF Progression for 24 months"],
     "Clinical Measures Adherence Level" : [],
-    "Depressive Symptom Measures" : [],
+    "Self-reported Outcome" : ["KCCQ-12 Score"],
     "Psychosocial Outcome" : []
 },
 
@@ -72,11 +72,14 @@ Domain_options ={
 
 "checklist-domain-measures-lv1-6" : {
     "Symptom management" : ["Patient Reported SOB changes", "Patient Reported Fatigue and Tiredness Changes",
-                           "Patient Reported Peripheral Oedema Changes"],
+                           "Patient Reported Peripheral Oedema Changes", "Patient Reported Disturbed Sleep Changes"],
     "Patient Satisfaction" : []
 }}
 
 default_measure = ["CHF Related Average Cost per Patient", "CHF Related Hospitalization Rate", "NT-proBNP Change %", "LVEF LS Mean Change %"]
+undisabled_list = ["KCCQ-12 Score"]
+
+domain_button_disabled_status = [True, False, True, True, True, True]
 
 domain_focus = list(Domain_options.keys())
 
@@ -208,7 +211,8 @@ def collapse_domain_selection_measures(n):
                                 id=u"collapse-button-{}".format(n+1),
                                 color="primary",
                                 className="mr-1",
-                                style={"margin-right":"20px", "border":"none", "border-radius":"10rem", "font-family":"NotoSans-Regular", "font-size":"0.6rem", "height":"1.6rem"}
+                                style={"margin-right":"20px", "border":"none", "border-radius":"10rem", "font-family":"NotoSans-Regular", "font-size":"0.6rem", "height":"1.6rem"},
+                                disabled = domain_button_disabled_status[n]
                             ),
                         ]
                     ),
@@ -269,7 +273,8 @@ def checklist_domain_measures_lv1(d):
                     dbc.Collapse(
                            dbc.FormGroup([
                                dbc.Checklist(
-                                   options = [{"label" : k, "value": k} for k in measures_lv1[key[i]] if k not in default],
+#                                   options = [{"label" : k, "value": k} for k in measures_lv1[key[i]] if k not in default],
+                                   options = [{"label" : k, "value": k, "disabled" : False} if k in undisabled_list else {"label" : k, "value": k, "disabled" : True} for k in measures_lv1[key[i]]],
                                    value=[],
                                    id=u"checklist-domain-measures-lv2-{}-{}".format(d+1,i+1),
                                    inline=True,
