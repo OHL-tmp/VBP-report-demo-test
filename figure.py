@@ -1078,23 +1078,26 @@ def piechart_kccq(df):
 
     fig = go.Figure(data=[
         go.Pie(        
-            labels=df['label'], 
-            values=df['size'],
+            labels=df['label'].tolist(), 
+            values=df['size'].tolist(),
             name='',
 #            pull=[0,0,0.1,0],
             marker=dict(
-                    colors=["#df8885","F5B111","#00b065"]            
+                    colors=["#DF8885","#ED7D31","#F5B111","#70AD47"]         #00B065   
                     ),
-            textinfo='percent',
-            textposition='auto',
-            texttemplate='%{percent:.1%}',
+            direction='counterclockwise',
+            sort=False,
+            rotation=-75,
+            textinfo='label+percent',
+            textposition='inside',
+            texttemplate='%{label}<br>%{percent:.1%}',
             insidetextorientation='horizontal',
             hoverinfo='label+value+percent',
             hovertemplate='%{label}<br>%{value:,.0f}<br> %{percent:.1%}',
         )
     ])
     fig.update_layout(
-       showlegend=True,
+       showlegend=False,
        legend=dict(orientation='h',x=0,y=0),
        margin=dict(l=0,r=0,b=0,t=0,pad=0),
        paper_bgcolor=colors["transparent"],
