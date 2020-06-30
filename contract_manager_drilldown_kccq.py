@@ -121,6 +121,7 @@ def card_overview_drilldown_kccq(percentage):
                                 html.Div(
                                     [
                                         dcc.Graph(figure=barchart_kccq(df_drill_barchart_kccq),config={'modeBarButtonsToRemove': button_to_rm,'displaylogo': False,},style={"height":"28rem"}),
+
                                     ]
                                 )
                             ],
@@ -130,11 +131,12 @@ def card_overview_drilldown_kccq(percentage):
                         dbc.Col(
                             [
                                 html.Div(
-                                    [   html.H1("Patient Distribution by Improvement Level", style={"font-size":"1.6rem"}),
-                                        html.H3("Risk Adjustment Details", style={"font-size":"0.8rem","margin-top":"-1.8rem","color":"#919191","background-color":"#f5f5f5","width":"9rem","padding-left":"1rem","padding-right":"1rem","text-align":"center"}),
-                                        html.Div([dcc.Graph(figure=piechart_kccq(df_drill_piechart_kccq),style={"height":"24rem","padding-bottom":"1rem"},config={'modeBarButtonsToRemove': button_to_rm,'displaylogo': False,})]),
+                                    [
+                                     html.H1("Patient Distribution by Improvement Level", style={"font-size":"1.6rem"}),
+#                                        html.H3("Risk Adjustment Details", style={"font-size":"0.8rem","margin-top":"-1.8rem","color":"#919191","background-color":"#f5f5f5","width":"9rem","padding-left":"1rem","padding-right":"1rem","text-align":"center"}),
+                                     html.Div([dcc.Graph(figure=piechart_kccq(df_drill_piechart_kccq),style={"height":"24rem","padding-bottom":"1rem"},config={'modeBarButtonsToRemove': button_to_rm,'displaylogo': False,})]),   
                                     ],
-                                    style={"border-radius":"0.5rem","border":"2px solid #d2d2d2","padding":"1rem","height":"25.5rem"}
+#                                    style={"border-radius":"0.5rem","border":"2px solid #d2d2d2","padding":"1rem","height":"25.5rem"}
                                 )
                             ],
                             width=4,
@@ -172,12 +174,12 @@ def card_key_driver_drilldown_kccq(app):
                                         html.Div(html.H4("{:.1f}".format(abs(df_driver_kccq['%'][1])),style={"color":'rgba(246,177,17,1)'}), style={"margin-top":"-1.5rem","text-align":"center","font-size":"1rem","color":"#aeff78"}),
                                     ],
                                     width=6),
-                                dbc.Col(
-                                    [
-                                        html.Div([gaugegraph_kccq(df_driver_kccq,2)], style={"padding-top":"1.5rem"}),
-                                        html.Div(html.H4("{:.1f}".format(abs(df_driver_kccq['%'][2])),style={"color":'rgba(246,177,17,1)'}), style={"margin-top":"-1.5rem","text-align":"center","font-size":"1rem","color":"#39db44"}),
-                                    ],
-                                    width=6),
+#                                dbc.Col(
+#                                    [
+#                                        html.Div([gaugegraph_kccq(df_driver_kccq,2)], style={"padding-top":"1.5rem"}),
+#                                        html.Div(html.H4("{:.1f}".format(abs(df_driver_kccq['%'][2])),style={"color":'rgba(246,177,17,1)'}), style={"margin-top":"-1.5rem","text-align":"center","font-size":"1rem","color":"#39db44"}),
+#                                    ],
+#                                    width=6),
 
                                 
                             ],
