@@ -245,6 +245,10 @@ def checklist_domain_measures_lv1(d):
             hidden_status = True
         else:
             hidden_status = False
+        if key[i] == "Self-reported Outcome":
+            disabled_status = False
+        else:
+            disabled_status = True
         default = []    
         for v in measures_lv1[key[i]]:
             if v in default_measure:
@@ -256,7 +260,8 @@ def checklist_domain_measures_lv1(d):
                             u"{}".format(key[i]),
                             id=u"measures-lv1-{}-{}".format(d+1,i+1),
                             color = "light",
-                            style={"background-color":"#ebebeb","border":"none", "border-radius":"10rem", "font-family":"NotoSans-Regular", "font-size":"0.8rem", "height":"2rem"}
+                            style={"background-color":"#ebebeb","border":"none", "border-radius":"10rem", "font-family":"NotoSans-Regular", "font-size":"0.8rem", "height":"2rem"},
+                            disabled = disabled_status
                         ),
                         html.Div(
                             [
@@ -284,7 +289,8 @@ def checklist_domain_measures_lv1(d):
                                html.Hr(className="my-2")
                            ]),
                         id=u"checklist-domain-measures-lv2-container-{}-{}".format(d+1,i+1),
-                        style={"margin-top":"1rem", "font-family":"NotoSans-Regular", "font-size":"0.8rem"}
+                        style={"margin-top":"1rem", "font-family":"NotoSans-Regular", "font-size":"0.8rem"},
+                        
                     )
                 ]
             )],
