@@ -150,7 +150,7 @@ def dropdownmenu_select_measures():
                     dbc.DropdownMenuItem("Value Based Measures", header=True),
                     dbc.DropdownMenuItem("CHF Related Average Cost per Patient", id="avg_cost"),
                     dbc.DropdownMenuItem("CHF Related Hospitalization Rate", id="crhr"),
-                    dbc.DropdownMenuItem("KCCQ", id="kccq"),
+                    dbc.DropdownMenuItem("KCCQ-12 Score", id="kccq"),
                     dbc.DropdownMenuItem("NT - proBNP Change %", disabled=True),
                     dbc.DropdownMenuItem("LVEF LS Mean Change %", disabled=True),
                     dbc.DropdownMenuItem(divider=True),
@@ -211,7 +211,7 @@ def select_drilldown(*args):
             label = "CHF Related Average Cost per Patient"
         elif button_id == "kccq":
             state_kccq = False
-            label = "KCCQ"
+            label = "KCCQ-12 Score"
 
 
     return label, state_avg_cost, state_crhr, state_kccq

@@ -48,7 +48,7 @@ def col_content_drilldown_kccq(app):
 			[
                 dbc.Row(
 					[
-						dbc.Col(card_overview_drilldown_kccq(18),width=8),
+						dbc.Col(card_overview_drilldown_kccq(16.8),width=8),
 						dbc.Col(card_key_driver_drilldown_kccq(app),width=4),
 					]
 				),
@@ -99,7 +99,7 @@ def card_overview_drilldown_kccq(percentage):
 			[
 				dbc.Row(
                         [
-                            dbc.Col(html.H1("KCCQ Score (Patient Reported Outcome)", style={"font-size":"1.6rem"}), width="auto"),
+                            dbc.Col(html.H1("KCCQ-12 Score", style={"font-size":"1.6rem"}), width="auto"),
                             dbc.Card(
                                 dbc.CardBody(
                                     [
@@ -117,7 +117,7 @@ def card_overview_drilldown_kccq(percentage):
                 dbc.Row(
                     [
                         dbc.Col(
-                            [   html.H1("KCCQ Score Performance Year Results", style={"font-size":"1.6rem"}),
+                            [   html.H1("Average KCCQ-12 Score per Patient Improvement", style={"font-size":"0.8rem"}),
                                 html.Div(
                                     [
                                         dcc.Graph(figure=barchart_kccq(df_drill_barchart_kccq),config={'modeBarButtonsToRemove': button_to_rm,'displaylogo': False,},style={"height":"28rem"}),
@@ -132,7 +132,7 @@ def card_overview_drilldown_kccq(percentage):
                             [
                                 html.Div(
                                     [
-                                     html.H1("Patient Distribution by Improvement Level", style={"font-size":"1.6rem"}),
+                                     html.H1("Patient Distribution by Improvement Level", style={"font-size":"0.8rem"}),
 #                                        html.H3("Risk Adjustment Details", style={"font-size":"0.8rem","margin-top":"-1.8rem","color":"#919191","background-color":"#f5f5f5","width":"9rem","padding-left":"1rem","padding-right":"1rem","text-align":"center"}),
                                      html.Div([dcc.Graph(figure=piechart_kccq(df_drill_piechart_kccq),style={"height":"24rem","padding-bottom":"1rem"},config={'modeBarButtonsToRemove': button_to_rm,'displaylogo': False,})]),   
                                     ],
@@ -155,7 +155,7 @@ def card_key_driver_drilldown_kccq(app):
                         dbc.Row(
                             [
                                 dbc.Col(html.Img(src=app.get_asset_url("bullet-round-blue.png"), width="10px"), width="auto", align="start", style={"margin-top":"-4px"}),
-		                        dbc.Col(html.H4("Patient Cohort with Least Improvement (bottom 3)", style={"font-size":"1rem", "margin-left":"10px"}), width=8),
+		                        dbc.Col(html.H4("Patient Cohorts with No or Small Improvement", style={"font-size":"1rem", "margin-left":"10px"}), width=8),
                             ],
                             no_gutters=True,
                         ),
@@ -164,25 +164,23 @@ def card_key_driver_drilldown_kccq(app):
                             [
                                 dbc.Col(
                                     [
-                                        html.Div([gaugegraph_kccq(df_driver_kccq,0)], style={"padding-top":"1.5rem"}),
-                                        html.Div(html.H4("{:.1f} ".format(abs(df_driver_kccq['%'][0])),style={"color":"#ff4d17"}), style={"margin-top":"-1.5rem","text-align":"center","font-size":"1rem","color":"#ffeb78"}),
+                                        html.H2("Patient Cohort", style={"font-size":"1rem", "height":"2.5rem"}),
+                                        html.Hr(),
+                                        html.H3("Non-compliant Patient", style={"font-size":"1rem"}),
+                                        html.H3("High Risk Patient", style={"font-size":"1rem"})
                                     ],
                                     width=6),
                                 dbc.Col(
                                     [
-                                        html.Div([gaugegraph_kccq(df_driver_kccq,1)], style={"padding-top":"1.5rem"}),
-                                        html.Div(html.H4("{:.1f}".format(abs(df_driver_kccq['%'][1])),style={"color":'rgba(246,177,17,1)'}), style={"margin-top":"-1.5rem","text-align":"center","font-size":"1rem","color":"#aeff78"}),
+                                        html.H2("KCCQ Improvement", style={"font-size":"1rem", "height":"2.5rem"}),
+                                        html.Hr(),
+                                        html.H3("4.1", style={"font-size":"1rem"}),
+                                        html.H3("7.8", style={"font-size":"1rem"})
                                     ],
                                     width=6),
-#                                dbc.Col(
-#                                    [
-#                                        html.Div([gaugegraph_kccq(df_driver_kccq,2)], style={"padding-top":"1.5rem"}),
-#                                        html.Div(html.H4("{:.1f}".format(abs(df_driver_kccq['%'][2])),style={"color":'rgba(246,177,17,1)'}), style={"margin-top":"-1.5rem","text-align":"center","font-size":"1rem","color":"#39db44"}),
-#                                    ],
-#                                    width=6),
-
                                 
                             ],
+                            style={"padding":"1rem", "text-align":"center"}
                         ),
                     ]
                 ),
