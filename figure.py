@@ -1034,7 +1034,7 @@ def barchart_kccq(df):
     bar1_y=df['base'][0:3].values.tolist()
 
     if bar1_y[0]<1500:
-        num_format='%{y:.0f}'
+        num_format='%{y:.1f}'
     else:
         num_format='%{y:$,.0f}'
 
@@ -1044,7 +1044,7 @@ def barchart_kccq(df):
             y=df['base'],
             text=df['base'],
             textposition='outside',
-            texttemplate='%{y:.0f}',
+            texttemplate='%{y:.1f}',
             textfont=dict(family="NotoSans-Condensed",
                           size=14,),
             textangle=0,
@@ -1083,7 +1083,7 @@ def piechart_kccq(df):
             name='',
 #            pull=[0,0,0.1,0],
             marker=dict(
-                    colors=["#1357DD","F5B111","#df8885"]            
+                    colors=["#df8885","F5B111","#00b065"]            
                     ),
             textinfo='percent',
             textposition='auto',
@@ -1690,10 +1690,10 @@ def drillgraph_lv1_kccq(df_table,tableid,dim):
         columns=[ 
         {'id': dim, 'name':dim} ,
         {'id': 'Patient %', 'name': 'Patient %','type': 'numeric',"format":FormatTemplate.percentage(1)} ,
-        {'id': 'Baseline Average KCCQ Score', 'name': 'Baseline Average KCCQ Score','type': 'numeric',"format":Format( precision=0,group=',', scheme=Scheme.fixed,)} ,
-        {'id': 'YTD Average KCCQ Score', 'name': 'YTD Average KCCQ Score','type': 'numeric',"format":Format( precision=0,group=',', scheme=Scheme.fixed,)} ,
-        {'id': 'Improvement from Baseline', 'name': 'Improvement from Baseline','type': 'numeric',"format":Format( precision=0,group=',', scheme=Scheme.fixed,)} ,
-        {'id': 'Improvement Level', 'name': 'Improvement Level','type': 'numeric',"format":Format( precision=0,group=',', scheme=Scheme.fixed,)} ,
+        {'id': 'Baseline Average KCCQ Score', 'name': 'Baseline Average KCCQ Score','type': 'numeric',"format":Format( precision=1,group=',', scheme=Scheme.fixed,)} ,
+        {'id': 'YTD Average KCCQ Score', 'name': 'YTD Average KCCQ Score','type': 'numeric',"format":Format( precision=1,group=',', scheme=Scheme.fixed,)} ,
+        {'id': 'Improvement from Baseline', 'name': 'Improvement from Baseline','type': 'numeric',"format":Format( precision=1,group=',', scheme=Scheme.fixed,)} ,
+        {'id': 'Improvement Level', 'name': 'Improvement Level','type': 'numeric',"format":Format( precision=1,group=',', scheme=Scheme.fixed,)} ,
          ],
         row_selectable="single",
         selected_rows=[len(df_table)-1],
@@ -1738,9 +1738,9 @@ def dashtable_lv3_kccq(df,tableid):
         id=tableid,
         columns=[ 
         {'id':  df.columns[0], 'name':  df.columns[0]} ,
-        {'id': 'Baseline Average KCCQ Score', 'name': 'Baseline Average KCCQ Score','type': 'numeric',"format":Format( precision=0,group=',', scheme=Scheme.fixed,)} ,
-        {'id': 'YTD Average KCCQ Score', 'name': 'YTD Average KCCQ Score','type': 'numeric',"format":Format( precision=0,group=',', scheme=Scheme.fixed,)} ,
-        {'id': 'Improvement from Baseline', 'name': 'Improvement from Baseline','type': 'numeric',"format":Format( precision=0,group=',', scheme=Scheme.fixed,)} ,
+        {'id': 'Baseline Average KCCQ Score', 'name': 'Baseline Average KCCQ Score','type': 'numeric',"format":Format( precision=1,group=',', scheme=Scheme.fixed,)} ,
+        {'id': 'YTD Average KCCQ Score', 'name': 'YTD Average KCCQ Score','type': 'numeric',"format":Format( precision=1,group=',', scheme=Scheme.fixed,)} ,
+        {'id': 'Improvement from Baseline', 'name': 'Improvement from Baseline','type': 'numeric',"format":Format( precision=1,group=',', scheme=Scheme.fixed,)} ,
          ],
 
         style_data={

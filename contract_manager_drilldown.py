@@ -101,6 +101,7 @@ def create_layout(app):
                         [
                             html.Div(col_content_drilldown(app), id='drilldown-div-avgcost-container', hidden=False),
                             html.Div(col_content_drilldown_crhr(app), id='drilldown-div-crhr-container', hidden=True),
+                            html.Div(col_content_drilldown_kccq(app), id='drilldown-div-kccq-container', hidden=True),
                         ],
                         className="mb-3",
                         style={"padding-left":"3rem", "padding-right":"3rem","padding-top":"1rem"},
@@ -1178,7 +1179,15 @@ def update_filter1value_patient(val,dim):
 
 
 ## kccq modal
-
+@app.callback(
+    Output("drilldown-modal-centered-kccq", "is_open"),
+    [Input("drilldown-open-centered-kccq", "n_clicks"), Input("drilldown-close-centered-kccq", "n_clicks")],
+    [State("drilldown-modal-centered-kccq", "is_open")],
+)
+def toggle_modal_dashboard_domain_selection(n1, n2, is_open):
+    if n1 or n2:
+        return not is_open
+    return is_open
 
 
 @app.callback(
