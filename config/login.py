@@ -1,3 +1,3 @@
 VALID_USERNAME_PASSWORD_PAIRS = {
-    'coeus': 'demo2020'
+    'yi': 'orangejungle'
 }
