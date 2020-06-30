@@ -132,7 +132,8 @@ def create_layout(app):
 						],
 						className="mb-3",
 						style={"padding-top":"5rem", "padding-left":"3rem", "padding-right":"3rem"},
-					)
+					),
+					
 				],
 				style={"background-color":"#f5f5f5"},
 			)
@@ -388,6 +389,7 @@ def tab_additional_measures(app):
 			)
 
 def card_additonal_monitor_measures(app):
+	
 	return dbc.Card(
 				dbc.CardBody(
 					[
@@ -405,6 +407,11 @@ def card_additonal_monitor_measures(app):
 								html.Div(
 									[
 										html.Div(id = "table_measure_watchlist", style={"width":"100%"}),
+										dcc.Interval(
+											id = 'dashboard-watchlist-interval',
+											interval = 600*1000,
+											n_intervals = 0
+											)
 									],
 									style={"padding-left":"0.5rem","padding-right":"0.5rem"}
 								)
@@ -694,7 +701,7 @@ for d in range(len(list(Domain_options.keys()))):
 		)(open_measure_lv2)
 
 	
-def sum_selected_measure(v):
+def sum_selected_measure(v, n):
 	if v and len(v) > 0:
 		return "primary", u"{}".format(len(v))
 	return "light", ""
@@ -704,7 +711,7 @@ for d in range(len(list(Domain_options.keys()))):
 		app.callback(
 			[Output(f"dashboard-card-selected-{d+1}-{i+1}", "color"),
 			Output(f"dashboard-card-selected-{d+1}-{i+1}", "children")],
-			[Input(f"checklist-domain-measures-lv2-{d+1}-{i+1}", "value")],
+			[Input(f"checklist-domain-measures-lv2-{d+1}-{i+1}", "value"),Input("open-centered", 'n_clicks')],
 		)(sum_selected_measure)
 	
 
@@ -750,9 +757,10 @@ def toggle_collapse_domain_selection_measures_1(v1, v2, v3, v4):
 	Input("checklist-domain-measures-lv2-2-3", "value"),
 	Input("checklist-domain-measures-lv2-2-4", "value"),
 	Input("checklist-domain-measures-lv2-2-5", "value"),
-	Input("checklist-domain-measures-lv2-2-6", "value")],
+	Input("checklist-domain-measures-lv2-2-6", "value"),
+	Input("open-centered", "n_clicks")],
 )
-def toggle_collapse_domain_selection_measures_2(v1, v2, v3, v4, v5, v6):
+def toggle_collapse_domain_selection_measures_2(v1, v2, v3, v4, v5, v6, n):
 	if v1:
 		len1 = len(v1)
 	else:
@@ -831,28 +839,31 @@ def toggle_collapse_domain_selection_measures_6(v1):
 	return "light", False, "" 
 
 
-# submit measure selection
+#submit measure selection
 @app.callback(
 	Output("table_measure_watchlist", "children"),
-	[Input("close-centered","n_clicks")],
-	[State(f"checklist-domain-measures-lv2-{d+1}-{i+1}", "value") for d in range(domain_ct) for i in range(len(list(Domain_options[list(Domain_options.keys())[d]].keys())))],
+	[Input("close-centered","n_clicks"), Input('dashboard-watchlist-interval', 'n_intervals')]+
+	[Input(f"checklist-domain-measures-lv2-{d+1}-{i+1}", "value") for d in range(domain_ct) for i in range(len(list(Domain_options[list(Domain_options.keys())[d]].keys())))],
 	)
-def generate_measure_watchlist(n, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24):
+def generate_measure_watchlist(n, interval, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24):
+#	global watchlist
 #    triggered = [t["prop_id"] for t in dash.callback_context.triggered]
 #    submit = len([1 for i in triggered if i == "close-centered.n_clicks"])
-    #switch = len([1 for i in triggered if i == "switch-contract-additional-view.n_clicks"])
-    measure_to_watch = []
+	#switch = len([1 for i in triggered if i == "switch-contract-additional-view.n_clicks"])
+	measure_to_watch = []
 #if submit:
-    for i in range(24):
-        if eval("v"+str(i+1)) and len(eval("v"+str(i+1))) > 0:
-            measure_to_watch.extend(eval("v"+str(i+1)))
-    if len(measure_to_watch)>0:
-        return tbl_non_contract(df_nocontract,measure_to_watch)
-    else:
-        return ""
-#    return ""
-    
+	for i in range(24):
+		if eval("v"+str(i+1)) and len(eval("v"+str(i+1))) > 0:
+			measure_to_watch.extend(eval("v"+str(i+1)))
+
+	if len(measure_to_watch)>0:
+		return tbl_non_contract(df_nocontract,measure_to_watch)
+	else:
+		return ""
+
+
+
 
 
 if __name__ == "__main__":
-    app.run_server(host="127.0.0.1",debug=True, port = 8052)
+	app.run_server(host="127.0.0.1",debug=True, port = 8052)
