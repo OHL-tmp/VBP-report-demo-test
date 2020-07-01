@@ -11,6 +11,8 @@ server = app.server
 
 app.config.suppress_callback_exceptions = True
 
+app.title = "ValueGen"
+
 
 auth = dash_auth.BasicAuth(
     app,

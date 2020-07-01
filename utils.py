@@ -55,7 +55,7 @@ def get_header_mgmt(app, dashboard_active, drilldown_active, report_active, Home
                     # Use row and col to control vertical alignment of logo / brand
                     dbc.Row(
                         [
-                            dbc.Col(html.Img(src=app.get_asset_url("logo-demo.png"), style={"height":"4rem", "padding-top":"1px", "padding-left":"2rem"})),
+                            dbc.Col(html.Img(src=app.get_asset_url("logo-demo.png"), style={"height":"2rem", "padding-top":"1px", "padding-left":"2rem"})),
                             dbc.Col(dbc.NavbarBrand("Contract Manager", className="ml-2", style={"font-family":"NotoSans-Black","font-size":"1.5rem","color":"#bfd4ff"})),
                         ],
                         align="center",
@@ -120,7 +120,7 @@ def get_header_contract(app, simulation_active, library_active, contract_active,
                     # Use row and col to control vertical alignment of logo / brand
                     dbc.Row(
                         [
-                            dbc.Col(html.Img(src=app.get_asset_url("logo-demo.png"), style={"height":"4rem", "padding-top":"1px"})),
+                            dbc.Col(html.Img(src=app.get_asset_url("logo-demo.png"), style={"height":"2rem", "padding-top":"1px"})),
                             dbc.Col(dbc.NavbarBrand("Contract Optimizer", className="ml-2", style={"font-family":"NotoSans-Black","font-size":"1.5rem","color":"#bfd4ff"})),
                             ],
 
