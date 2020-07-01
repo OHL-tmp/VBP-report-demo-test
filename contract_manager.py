@@ -409,7 +409,7 @@ def card_additonal_monitor_measures(app):
 										html.Div(id = "table_measure_watchlist", style={"width":"100%"}),
 										dcc.Interval(
 											id = 'dashboard-watchlist-interval',
-											interval = 600*1000,
+											interval = 3*1000,
 											n_intervals = 0
 											)
 									],

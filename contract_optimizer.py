@@ -2265,9 +2265,6 @@ def data_prep(save_assump, cost_trend,util_trend,hr_input,probnp_input,lvef_inpu
 		df_setup1=t7
 		df_setup2=t6
 
-		t1.to_csv('df_perfom_assump.csv')
-		t2.to_csv('df_recom_measure.csv')
-
 		if t3=='CHF+AF':
 			df_setup_filter=df_setup1
 		else:
@@ -2472,10 +2469,6 @@ def simulation(submit_button, re_pos_perf, re_neg_perf, re_pos_adj, re_neg_adj, 
 		else:
 			rebate_vbc_flat = rebate_vbc/100
 		
-		Recom_Contract.to_csv('Recom_Contract.csv')
-		UD_Measure.to_csv('UD_Measure.csv')
-		UD_Contract.to_csv('UD_Contract.csv')
-
 		t1,t2,t3=Contract_Calculation(Recom_Contract, UD_Measure,UD_Contract,cohort_selected,rebate_novbc_flat, rebate_vbc_flat, Rebate_noVBC_table,Rebate_VBC_table, MarketShare_table, utilizer/100, script, Performance_assumption, Recom_Measure_all)
 		t1.reset_index(inplace = True)
 		t2.reset_index(inplace = True)
