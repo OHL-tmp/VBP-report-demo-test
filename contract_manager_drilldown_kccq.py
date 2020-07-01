@@ -48,11 +48,12 @@ def col_content_drilldown_kccq(app):
 			[
                 dbc.Row(
 					[
-						dbc.Col(card_overview_drilldown_kccq(16.8),width=8),
+						dbc.Col(card_overview_drilldown_kccq(12.2),width=8),
 						dbc.Col(card_key_driver_drilldown_kccq(app),width=4),
 					]
 				),
 #				card_confounding_factors_kccq(app),
+                html.Hr(),
                 html.Div(
                     [
                         dbc.Row(
@@ -117,34 +118,34 @@ def card_overview_drilldown_kccq(percentage):
                 dbc.Row(
                     [
                         dbc.Col(
-                            [   html.H1("Average KCCQ-12 Score per Patient Improvement", style={"font-size":"0.8rem"}),
+                            [   
                                 html.Div(
                                     [
-                                        dcc.Graph(figure=barchart_kccq(df_drill_barchart_kccq),config={'modeBarButtonsToRemove': button_to_rm,'displaylogo': False,},style={"height":"28rem"}),
-
+                                        dcc.Graph(figure=barchart_kccq(df_drill_barchart_kccq),config={'modeBarButtonsToRemove': button_to_rm,'displaylogo': False,},style={"height":"20rem"}),
+                                        html.H1("Average KCCQ-12 Score per Patient Improvement", style={"font-size":"0.8rem"}),
                                     ]
-                                )
+                                ),
+                                
                             ],
                             width=7,
-                            style={"height":"10rem"}
+                            style={"text-align":"center",}
                         ),
                         dbc.Col(
                             [
                                 html.Div(
                                     [
-                                     html.H1("Patient Distribution by Improvement Level", style={"font-size":"0.8rem"}),
-#                                        html.H3("Risk Adjustment Details", style={"font-size":"0.8rem","margin-top":"-1.8rem","color":"#919191","background-color":"#f5f5f5","width":"9rem","padding-left":"1rem","padding-right":"1rem","text-align":"center"}),
-                                     html.Div([dcc.Graph(figure=piechart_kccq(df_drill_piechart_kccq),style={"height":"24rem","padding-bottom":"1rem"},config={'modeBarButtonsToRemove': button_to_rm,'displaylogo': False,})]),   
+                                        dcc.Graph(figure=piechart_kccq(df_drill_piechart_kccq),style={"height":"20rem","padding-bottom":"1rem"},config={'modeBarButtonsToRemove': button_to_rm,'displaylogo': False,}),   
+                                        html.H1("Patient Distribution by Improvement Level", style={"font-size":"0.8rem"}),
                                     ],
-#                                    style={"border-radius":"0.5rem","border":"2px solid #d2d2d2","padding":"1rem","height":"25.5rem"}
                                 )
                             ],
                             width=4,
-                            
+                            style={"text-align":"center"}
                         )
                     ],
                 ),
             ],
+            style={"border-radius":"0.5rem","padding":"1rem"}
 		)
 
 
@@ -155,7 +156,7 @@ def card_key_driver_drilldown_kccq(app):
                         dbc.Row(
                             [
                                 dbc.Col(html.Img(src=app.get_asset_url("bullet-round-blue.png"), width="10px"), width="auto", align="start", style={"margin-top":"-4px"}),
-		                        dbc.Col(html.H4("Patient Cohorts with No or Small Improvement", style={"font-size":"1rem", "margin-left":"10px"}), width=8),
+		                        dbc.Col(html.H4("Patient Cohorts with No Meaningful Improvement", style={"font-size":"1rem", "margin-left":"10px"}), width=8),
                             ],
                             no_gutters=True,
                         ),
@@ -180,12 +181,12 @@ def card_key_driver_drilldown_kccq(app):
                                     width=6),
                                 
                             ],
-                            style={"padding":"1rem", "text-align":"center"}
+                            style={"padding":"1rem", "text-align":"center","padding-top":"3rem","padding-bottom":"3rem"}
                         ),
                     ]
                 ),
                 className="mb-3",
-                style={"box-shadow":"0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05)", "border":"none", "border-radius":"0.5rem"}
+                style={"box-shadow":"0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05)", "border":"none", "border-radius":"0.5rem","margin-top":"5rem"}
             )
 
 

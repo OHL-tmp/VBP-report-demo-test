@@ -1083,7 +1083,7 @@ def piechart_kccq(df):
             name='',
 #            pull=[0,0,0.1,0],
             marker=dict(
-                    colors=["#DF8885","#ED7D31","#F5B111","#70AD47"]         #00B065   
+                    colors=["#b0b0b0","#ffdf94","#F5B111","#3b7fff"]         #00B065   
                     ),
             direction='counterclockwise',
             sort=False,
