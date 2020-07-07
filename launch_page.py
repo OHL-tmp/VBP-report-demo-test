@@ -20,6 +20,7 @@ import contract_manager_drilldown
 import contract_optimizer
 import contract_report_generator
 import contract_measures_library
+import tele_case_manager_portal
 
 df_test=pd.read_excel("downloads/test.xlsx", index_col = 0)
 
@@ -89,6 +90,8 @@ def display_page(pathname):
         return contract_measures_library.layout
     elif pathname == "/vbc-demo/contract-manager/report-generator/":
         return contract_report_generator.layout
+    elif pathname == "/vbc-demo/tele-case-manager/":
+        return tele_case_manager_portal.layout
     else:
         return launch_layout()
 
@@ -106,5 +109,5 @@ def serve_static(filename):
 
 
 if __name__ == "__main__":
-    app.run_server(host="0.0.0.0", port = 8098)
+    app.run_server(host="127.0.0.1", port = 8098)
                         
