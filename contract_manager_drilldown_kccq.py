@@ -175,8 +175,8 @@ def card_key_driver_drilldown_kccq(app):
                                     [
                                         html.H2("KCCQ Improvement", style={"font-size":"1rem", "height":"2.5rem"}),
                                         html.Hr(),
-                                        html.H3("4.1", style={"font-size":"1rem"}),
-                                        html.H3("7.8", style={"font-size":"1rem"})
+                                        html.H3("2.8", style={"font-size":"1rem"}),
+                                        html.H3("4.4", style={"font-size":"1rem"})
                                     ],
                                     width=6),
                                 

@@ -402,21 +402,18 @@ def card_additonal_monitor_measures(app):
 								no_gutters=True,
 							),
 						
-						dbc.Row(
+						html.Div(
 							[
-								html.Div(
-									[
-										html.Div(id = "table_measure_watchlist", style={"width":"100%"}),
-										dcc.Interval(
-											id = 'dashboard-watchlist-interval',
-											interval = 3*1000,
-											n_intervals = 0
-											)
-									],
-									style={"padding-left":"0.5rem","padding-right":"0.5rem"}
-								)
-							]
+								html.Div(id = "table_measure_watchlist", style={"width":"100%"}),
+								dcc.Interval(
+									id = 'dashboard-watchlist-interval',
+									interval = 3*1000,
+									n_intervals = 0
+									)
+							],
+							style={"padding-left":"0.5rem","padding-right":"0.5rem"}
 						)
+					
 					]
 				),
 				style={"border":"none"}
